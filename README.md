@@ -1,2 +1,4 @@
 # adversarial.js
-Break neural networks in your browser
+Break neural networks in your browser.
+
+Work in progress.
