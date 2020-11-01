@@ -7,7 +7,7 @@ let x, y;
 function loadData() {
   let csvUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_test.csv?alt=media';
   let csvDataset = tf.data.csv(csvUrl, {columnConfigs: {label: {isLabel: true}}});
-  
+
   return loadingData = csvDataset.map(({xs, ys}) => {
     xs = Object.values(xs).map(e => e/255);  // Convert from feature object to array, and normalize
     ys = tf.oneHot(Object.values(ys), 10).squeeze();  // Convert from feature object to scalar, and turn into one-hot vector
@@ -35,11 +35,11 @@ function loadModel() {
 
 document.getElementById('start-evaluation').addEventListener("click", () => {
   document.getElementById('start-evaluation').style.display = 'none';
-  
+
   addStatus('\nLoading model and data...');
   let loadingModel = loadModel();
   let loadingData = loadData();
-  
+
   Promise.all([loadingData, loadingModel]).then(() => {
     addStatus('Loaded model and data.');
     addStatus('Evaluating model...');
