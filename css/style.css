@@ -1,0 +1,74 @@
+/**
+ * @license
+ * Copyright 2018 Google LLC. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =============================================================================
+ */
+
+/* CSS files add styling rules to your content */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  margin: 2em;
+}
+
+h1 {
+  font-style: italic;
+  color: #FF6F00;
+  font-weight: 600;
+  font-size: 4.0rem;
+}
+
+h2 {
+  font-weight: 500;
+  font-size: 3.0rem;
+  margin-top: 3.0rem;
+}
+
+thead {
+  font-weight: 500;
+}
+
+thead td {
+  text-align: center;
+}
+
+th, td {
+  padding: 5px;
+  text-align: left;
+  border: none;
+}
+
+button[disabled] {
+    background:#ccc;
+    border-color: #ccc;
+    text-shadow:none;
+}
+
+button[disabled]:hover {
+    background:#ccc;
+    border-color: #ccc;
+    text-shadow:none;
+}
+
+.tableimg {
+  border: 1px solid #000000;
+}
+
+.caption {
+  font-size: 8px;
+  display: block;
+  text-align: center;
+}
