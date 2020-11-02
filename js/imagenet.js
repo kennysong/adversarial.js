@@ -4,9 +4,18 @@ import {IMAGENET_CLASSES} from './imagenet_classes.js';
 * Load Model
 ************************************************************************/
 
+// Note: The asynchronous calls are a little bit funky. Data is loaded immediately
+// at page load, since it's easy and fast. The `loadingX` promise tracks that the
+// data loaded successfully. The model is a bit too heavy to load immediately, since
+// it'll block the page for a few seconds. Instead, we manually call loadModel()
+// when the user clicks the button. There is no promise that tracks the status of
+// the model load, since we just await on loadModel() in the inline script in
+// imagenet.html.
+
 let model;
-let loadingModel = mobilenet.load({version: 2, alpha: 1.0}).then(m => {
-  model = m;
+export async function loadModel() {
+  if (model !== undefined) { return; }
+  model = await mobilenet.load({version: 2, alpha: 1.0});
 
   // Monkey patch the mobilenet object to have a predict() method like a normal tf.LayersModel
   model.predict = function (img) {
@@ -15,7 +24,7 @@ let loadingModel = mobilenet.load({version: 2, alpha: 1.0}).then(m => {
     const logits1001 = this.model.predict(img);
     return logits1001.slice([0, 1], [-1, 1000]).softmax();
   }
-});
+}
 
 /************************************************************************
  * Load Dataset
@@ -58,9 +67,6 @@ Promise.all(loadingX).then(() => {
   }
 });
 
-// Promise that resolves after data and model are both loaded
-let allLoaded = Promise.all(loadingX.concat(loadingModel));
-
 /************************************************************************
  * Visualize Attacks
  ************************************************************************/
@@ -79,8 +85,7 @@ async function drawImg(img, element, attackName, msg, success) {
 }
 
 export async function runUntargeted(attack) {
-  document.body.offsetLeft;
-  await allLoaded;
+  await loadingX;
   let successes = 0;
 
   for (let i = 0; i < 6; i++) {  // For each row

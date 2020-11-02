@@ -95,7 +95,7 @@
     <script src="js/imagenet_classes.js" type="module"></script>
     <script type="module">
       import {fgsm, bim} from './js/attacks.js';
-      import {runUntargeted} from './js/imagenet.js';
+      import {runUntargeted, loadModel} from './js/imagenet.js';
 
       [fgsm, bim].forEach((attack) => {
         let name = attack.name;
@@ -103,6 +103,7 @@
           document.getElementById(name).style.display = 'table';
           document.getElementById(`${name}-run`).disabled = true;
           document.getElementById(`${name}-run`).innerText = 'Running...';
+          await loadModel();
           await runUntargeted(attack);
           document.getElementById(`${name}-run`).innerText = 'Done!';
         });
