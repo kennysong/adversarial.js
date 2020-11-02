@@ -72,3 +72,9 @@ button[disabled]:hover {
   display: block;
   text-align: center;
 }
+
+.imagenet-caption {
+  font-size: 15px;
+  display: block;
+  text-align: center;
+}

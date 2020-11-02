@@ -27,69 +27,69 @@ let allLoaded = Promise.all([loadingData, loadingModel]);
 
 let CLASS_NAMES = ['Plane', 'Car', 'Bird', 'Car', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
 
-function drawImg(img, element, attackName, msg, success) {
+async function drawImg(img, element, attackName, msg, success) {
   let canvas = document.getElementById(attackName).getElementsByClassName(element)[0];
-  if (msg !== undefined) { 
+  let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([32, 32, 3]), [64, 64]);
+  await tf.browser.toPixels(resizedImg, canvas);
+
+  if (msg !== undefined) {
     canvas.nextSibling.innerHTML = msg;
   }
   if (success === true) {
     canvas.style.borderColor = 'lime';
     canvas.style.borderWidth = '2px';
   }
-  
-  let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([32, 32, 3]), [64, 64]);
-  return tf.browser.toPixels(resizedImg, canvas);
 }
 
 export async function runUntargeted(attack) {
   await allLoaded;
   let successes = 0;
-  
+
   for (let i = 0; i < 10; i++) {  // For each row
     let img = dataset[i].xs;
     let lbl = dataset[i].ys;
-    
+
     let p = model.predict(img).dataSync()[i];
     await drawImg(img, i.toString(), attack.name, `Class: ${CLASS_NAMES[i]}<br/>Prob: ${p.toFixed(3)}`);
-    
+
     let aimg = tf.tidy(() => attack(model, img, lbl));
-    
+
     p = model.predict(aimg).max(1).dataSync()[0];
     let albl = model.predict(aimg).argMax(1).dataSync()[0];
     let oldlbl = lbl.argMax(1).dataSync()[0];
-    if (p > 0.8 && albl !== oldlbl) {
+    if (albl !== oldlbl) {
       successes++;
       await drawImg(aimg, `${i}a`, attack.name, `Class: ${CLASS_NAMES[albl]}<br/>Prob: ${p.toFixed(3)}`, true);
     }
     await drawImg(aimg, `${i}a`, attack.name, `Class: ${CLASS_NAMES[albl]}<br/>Prob: ${p.toFixed(3)}`);
   }
-  
+
   document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / 10).toFixed(1)}`;
 }
 
 export async function runTargeted(attack) {
   await allLoaded;
   let successes = 0;
-  
+
   for (let i = 0; i < 10; i++) {  // For each row
     let img = dataset[i].xs;
     let lbl = dataset[i].ys;
-    
+
     let p = model.predict(img).dataSync()[i];
     await drawImg(img, i.toString(), attack.name, `Class: ${CLASS_NAMES[i]}<br/>Prob: ${p.toFixed(3)}`);
-    
+
     for (let j = 0; j < 10; j++) {  // For each target label
-      if (j === lbl.argMax(1).dataSync()[0]) { 
+      if (j === lbl.argMax(1).dataSync()[0]) {
         await drawImg(tf.zerosLike(img), `${i}${j}`, attack.name);
         continue;
       }
 
       let targetLbl = tf.oneHot(j, 10).reshape([1, 10]);
       let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl));
-      
+
       p = model.predict(aimg).dataSync()[j];
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];
-      if (predLbl === j) { 
+      if (predLbl === j) {
         successes++;
         await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${CLASS_NAMES[j]}<br/>Prob: ${p.toFixed(3)}`, true);
       } else {
@@ -97,6 +97,6 @@ export async function runTargeted(attack) {
       }
     }
   }
-  
+
   document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / 90).toFixed(2)}`;
 }
