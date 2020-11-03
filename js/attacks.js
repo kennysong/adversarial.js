@@ -1,11 +1,20 @@
-/************************************************************************
-* FGSM
-*  - [Goodfellow 15] Explaining and harnessing adversarial examples
-************************************************************************/
-
-export function fgsm(model, img, lbl) {
-  let ε = 0.2;  // L_inf distance (each pixel can change up to this amount)
-
+/**
+ * Fast Gradient Sign Method (FGSM)
+ *
+ * This is an L_infinity attack (every pixel can change up to a maximum amount).
+ *
+ * Sources:
+ * - [Goodfellow 15] Explaining and harnessing adversarial examples
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function fgsm(model, img, lbl, {ε = 0.1} = {}) {
   // Loss function that measures how close the image is to the original class
   function loss(input) {
     return tf.metrics.categoricalCrossentropy(lbl, model.predict(input));  // Make input farther from original class
@@ -19,26 +28,36 @@ export function fgsm(model, img, lbl) {
   return img;
 }
 
-/************************************************************************
-* FGSM (targeted variant)
-*  - [Kurakin 16] Adversarial Machine Learning at Scale (best description)
-*  - [Kurakin 16] Adversarial examples in the physical world (first reference)
-************************************************************************/
-
-export function fgsmTargeted(model, img, lbl, targetLbl) {
-  let ε = 0.2;  // L_inf distance (each pixel can change up to this amount)
-  let α = 0.01;
-
+/**
+ * Targeted Variant of the Fast Gradient Sign Method (FGSM)
+ *
+ * This is an L_infinity attack (every pixel can change up to a maximum amount).
+ *
+ * Sources:
+ *  - [Kurakin 16] Adversarial examples in the physical world (original paper)
+ *  - [Kurakin 16] Adversarial Machine Learning at Scale (best description)
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+ * @param {number} config.loss - The loss function to use (must be 0, 1, or 2).
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function fgsmTargeted(model, img, lbl, targetLbl, {ε = 0.1, loss = 2} = {}) {
   // Loss functions (of increasing complexity) that measure how close the image is to the target class
-  function loss(input) {
+  function loss0(input) {
     return tf.metrics.categoricalCrossentropy(targetLbl, model.predict(input));  // Make input closer to target class
   }
-  function loss2(input) {
-    return loss(input).sub(tf.metrics.categoricalCrossentropy(lbl, model.predict(input)));  // + Move input away from original class
+  function loss1(input) {
+    return loss0(input).sub(tf.metrics.categoricalCrossentropy(lbl, model.predict(input)));  // + Move input away from original class
   }
-  function loss3(input) {
+  function loss2(input) {
     let NUM_CLASSES = lbl.shape[1];  // lbl is a one-hot vector in a batch of size 1
-    let l = loss(input).mul(5);
+    let l = loss0(input).mul(5);
     for (let i = 0; i < NUM_CLASSES; i++) {
       if (i != tf.argMax(lbl)) {
         let nonlbl = tf.oneHot(i, NUM_CLASSES).reshape([1, NUM_CLASSES]);
@@ -47,99 +66,124 @@ export function fgsmTargeted(model, img, lbl, targetLbl) {
     }
     return l;
   }
+  let lossFn = [loss0, loss1, loss2][loss];
 
   // Perturb the image for one step in the direction of DECREASING loss
-  let grad = tf.grad(loss3);  // EDITED
+  let grad = tf.grad(lossFn);  // EDITED
   let delta = tf.sign(grad(img)).mul(ε);
   img = img.sub(delta).clipByValue(0, 1);
 
   return img;
 }
 
-/************************************************************************
-* BIM / I-FGSM / PGD
-*  - BIM: [Kurakin 16] Adversarial examples in the physical world
-*  - I-FGSM: [Tramer 17] Ensemble Adversarial Training: Attacks and Defenses
-*  - PGD: [Madry 19] Towards Deep Learning Models Resistant to Adversarial Attacks
-************************************************************************/
-
-export function bim(model, img, lbl) {
-  let ε = 0.2;     // L_inf distance (all pixels can change up to this amount)
-  let α = 0.01;    // Learning rate for PGD
-  let iters = 50;  // Number of iterations of PGD
-
+/**
+ * Basic Iterative Method (BIM / I-FGSM / PGD)
+ *
+ * This is an L_infinity attack (every pixel can change up to a maximum amount).
+ *
+ * Sources:
+ *  - BIM: [Kurakin 16] Adversarial examples in the physical world
+ *  - I-FGSM: [Tramer 17] Ensemble Adversarial Training: Attacks and Defenses
+ *  - PGD: [Madry 19] Towards Deep Learning Models Resistant to Adversarial Attacks
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+ * @param {number} config.α - Learning rate for gradient descent.
+ * @param {number} config.iters - Number of iterations of gradient descent.
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function bim(model, img, lbl, {ε = 0.1, α = 0.01, iters = 10} = {}) {
   // Loss function that measures how close the image is to the original class
   function loss(input) {
     return tf.metrics.categoricalCrossentropy(lbl, model.predict(input));  // Make input farther from original class
   }
 
   // Random initialization for the PGD (for even better performance, we should try multiple inits)
-  img = img.add(tf.randomUniform(img.shape, -ε, ε));
+  let aimg = img.add(tf.randomUniform(img.shape, -ε, ε)).clipByValue(0, 1);
 
-  // Run PGD to MAXIMIZE the loss w.r.t. img
+  // Run PGD to MAXIMIZE the loss w.r.t. aimg
   let grad = tf.grad(loss);
   for (let i = 0; i < iters; i++) {
-    let delta = tf.sign(grad(img)).mul(α);
-    img = img.add(delta);
-    img = tf.minimum(1, tf.minimum(img.add(ε), tf.maximum(0, tf.maximum(img.sub(ε), img))));  // Clips img to ε distance of img
+    let delta = tf.sign(grad(aimg)).mul(α);
+    aimg = aimg.add(delta);
+    aimg = tf.minimum(1, tf.minimum(img.add(ε), tf.maximum(0, tf.maximum(img.sub(ε), aimg))));  // Clips aimg to ε distance of img
   }
 
-  return img;
+  return aimg;
 }
 
-/************************************************************************
-* BIM / I-FGSM / PGD (targeted variant)
-*  - [Kurakin 16] Adversarial Machine Learning at Scale (best description)
-*  - [Kurakin 16] Adversarial examples in the physical world (first reference)
-************************************************************************/
-
-export function bimTargeted(model, img, lbl, targetLbl) {
-  let ε = 0.2;     // L_inf distance (all pixels can change up to this amount)
-  let α = 0.01;    // Learning rate for PGD
-  let iters = 50;  // Number of iterations of PGD
-
+/**
+ * Targeted Variant of the Basic Iterative Method (BIM / I-FGSM / PGD)
+ *
+ * This is an L_infinity attack (every pixel can change up to a maximum amount).
+ *
+ * Sources:
+ *  - [Kurakin 16] Adversarial examples in the physical world (original paper)
+ *  - [Kurakin 16] Adversarial Machine Learning at Scale (best description)
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+ * @param {number} config.iters - Number of iterations of gradient descent.
+ * @param {number} config.loss - The loss function to use (must be 0 or 1). Note: loss2 from fgsmTargeted theoretically works, but it's too slow in practice.
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function bimTargeted(model, img, lbl, targetLbl, {ε = 0.1, α = 0.01, iters = 10, loss = 1} = {}) {
   // Loss functions (of increasing complexity) that measure how close the image is to the target class
-  function loss(input) {
+  function loss0(input) {
     return tf.metrics.categoricalCrossentropy(targetLbl, model.predict(input));  // Make input closer to target class
   }
-  function loss2(input) {
-    return loss(input).sub(tf.metrics.categoricalCrossentropy(lbl, model.predict(input)));  // + Move input away from original class
+  function loss1(input) {
+    return loss0(input).sub(tf.metrics.categoricalCrossentropy(lbl, model.predict(input)));  // + Move input away from original class
   }
-  function loss3(input) {
-    let NUM_CLASSES = lbl.shape[1];  // lbl is a one-hot vector in a batch of size 1
-    let l = loss(input).mul(5);
-    for (let i = 0; i < NUM_CLASSES; i++) {
-      if (i != tf.argMax(lbl)) {
-        let nonlbl = tf.oneHot(i, NUM_CLASSES).reshape([1, NUM_CLASSES]);
-        l = l.sub(tf.metrics.categoricalCrossentropy(nonlbl, model.predict(input)))  // + Move input away from all other classes
-      }
-    }
-    return l;
-  }
+  let lossFn = [loss0, loss1][loss];
 
   // Random initialization for the PGD (for even better performance, we should try multiple inits)
-  img = img.add(tf.randomUniform(img.shape, -ε, ε));
+  let aimg = img.add(tf.randomUniform(img.shape, -ε, ε)).clipByValue(0, 1);
 
-  // Run PGD to MINIMIZE the loss w.r.t. img
-  let grad = tf.grad(loss2); // Loss3 is too slow
+  // Run PGD to MINIMIZE the loss w.r.t. aimg
+  let grad = tf.grad(lossFn);
   for (let i = 0; i < iters; i++) {
-    let delta = tf.sign(grad(img)).mul(α);
-    img = img.sub(delta);
-    img = tf.minimum(1, tf.minimum(img.add(ε), tf.maximum(0, tf.maximum(img.sub(ε), img))));  // Clips img to ε distance of img
+    let delta = tf.sign(grad(aimg)).mul(α);
+    aimg = aimg.sub(delta);
+    aimg = tf.minimum(1, tf.minimum(img.add(ε), tf.maximum(0, tf.maximum(img.sub(ε), aimg))));  // Clips aimg to ε distance of img
   }
 
-  return img;
+  return aimg;
 }
 
-/************************************************************************
-* JSMA / JSMA-F (one pixel variant)
-*  - JSMA: [Papernot 15] The Limitations of Deep Learning in Adversarial Settings
-*  - JSMA-F: [Carlini 17] Towards Evaluating the Robustness of Neural Networks
-************************************************************************/
-
-export function jsmaOnePixel(model, img, lbl, targetLbl) {
-  let ε = 100;  // L0 distance (we can change up to this many pixels)  // EDITED
-
+/**
+ * One-Pixel Variant of the Jacobian-based Saliency Map Attack (JSMA / JSMA-F)
+ *
+ * This is an L0 attack (we can change a limited number of pixels as much as we want).
+ *
+ * This is a much simplified version of the normal JSMA attack, where we only
+ * consider single pixels at a time, rather than pairs of pixels. Additionally,
+ * instead of computing the full saliency, we rely only on the gradient of the
+ * target class wrt the image. This is much faster and scalable than JSMA, and
+ * has similar performance on MNIST and CIFAR-10.
+ *
+ * Sources:
+ *  - JSMA: [Papernot 15] The Limitations of Deep Learning in Adversarial Settings
+ *  - JSMA-F: [Carlini 17] Towards Evaluating the Robustness of Neural Networks
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.ε - Max L0 distance (we can change up to this many pixels).
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function jsmaOnePixel(model, img, lbl, targetLbl, {ε = 28} = {}) {
   // Compute useful constants
   let NUM_PIXELS = img.flatten().shape[0];  // Number of pixels in the image (for RGB, each channel counts as one "pixel")
 
@@ -182,20 +226,34 @@ export function jsmaOnePixel(model, img, lbl, targetLbl) {
   return aimg;
 }
 
-/************************************************************************
-* JSMA / JSMA-F
-*  - JSMA: [Papernot 15] The Limitations of Deep Learning in Adversarial Settings
-*  - JSMA-F: [Carlini 17] Towards Evaluating the Robustness of Neural Networks
-*  (Note: For some reason, using logits instead of softmax probabilities results in much worse
-*   performance for this attack. I'm not sure why there's a huge discrepancy.)
-************************************************************************/
-
-export function jsma(model, img, lbl, targetLbl) {
-  let ε = 30;  // L0 distance (we can change up to this many pixels)
-
+/**
+ * Jacobian-based Saliency Map Attack (JSMA / JSMA-F)
+ *
+ * This is an L0 attack (we can change a limited number of pixels as much as we want).
+ *
+ * (Note: I tried JSMA-Z as well, which uses logits instead of softmax probabilities.
+ *  This results in much worse performance for this attack, even though JSMA-Z was
+ *  the original variant of this attack (see Carlini 17). I'm not sure why there's
+ *  a huge discrepancy.)
+ *
+ * Sources:
+ *  - JSMA: [Papernot 15] The Limitations of Deep Learning in Adversarial Settings
+ *  - JSMA-F: [Carlini 17] Towards Evaluating the Robustness of Neural Networks
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.ε - Max L0 distance (we can change up to this many pixels).
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function jsma(model, img, lbl, targetLbl, {ε = 28} = {}) {
   // Compute useful constants
   let NUM_PIXELS = img.flatten().shape[0];      // Number of pixels in the image (for RGB, each channel counts as one "pixel")
   let LT = targetLbl.argMax(1).arraySync()[0];  // Target label as an index rather than a one-hot vector
+  if (NUM_PIXELS > 32*32*3) { throw 'JSMA does not scale to images larger than CIFAR-10 (32x32x3)!'; }
 
   // Function that outputs the target class probability of an image (used for per-pixel saliency)
   let classProbs = [];
@@ -261,20 +319,30 @@ export function jsma(model, img, lbl, targetLbl) {
   return aimg;
 }
 
-/************************************************************************
-* C&W
-*  - [Carlini 17] Towards Evaluating the Robustness of Neural Networks
-*  - [Carlini 17] Adversarial Examples Are Not Easily Detected - Bypassing Ten Detection Methods
-*  (The description in the latter paper is easier to understand)
-************************************************************************/
-
-export function cw(model, img, lbl, targetLbl) {
-  let c = 5;        // Higher = higher success rate, but higher distortion
-  let κ = 0.2;      // Higher = more confident adv example
-  let λ = 0.1;      // Higher learning rate = faster convergence, but higher distortion
-  let iters = 250;  // Iterations of gradient descent to produce adv example
-                    // Note: This attack does not allow us to set a max L2 distance!
-
+/**
+ * Carlini & Wagner (C&W)
+ *
+ * This is an L2 attack (we are incentivized to change many pixels by very small amounts).
+ *
+ * Note that this attack does NOT allow us to set a maximum L2 perturbation.
+ *
+ * Sources:
+ *  - [Carlini 17] Towards Evaluating the Robustness of Neural Networks
+ *  - [Carlini 17] Adversarial Examples Are Not Easily Detected - Bypassing Ten Detection Methods
+ *
+ * @param {tf.LayersModel} model - The model to construct an adversarial example for.
+ * @param {tf.Tensor} img - The input image to construct an adversarial example for.
+ * @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+ * @param {Object} config - Optional configuration for this attack.
+ * @param {number} config.c - Higher = higher success rate, but higher distortion.
+ * @param {number} config.κ - Higher = more confident adv example.
+ * @param {number} config.λ - Higher learning rate = faster convergence, but higher distortion.
+ * @param {number} config.iters - Number of iterations of gradient descent (Adam).
+ *
+ * @returns {tf.Tensor} The adversarial image.
+ */
+export function cw(model, img, lbl, targetLbl, {c = 5, κ = 1, λ = 0.1, iters = 100} = {}) {
   // C&W requires using logits, rather than softmax class probabilities
   let modelLogits = getModelLogits(model);
 
@@ -311,6 +379,9 @@ export function cw(model, img, lbl, targetLbl) {
 * Utils
 ************************************************************************/
 
+/**
+* Returns the [row, col] coordinate of the maximum element in a square matrix.
+*/
 function argmax2d(m) {
   if (m.shape[0] !== m.shape[1]) { throw 'argmax2d() only supports square matrices!'; }
   let N = m.shape[0];
@@ -320,6 +391,9 @@ function argmax2d(m) {
   return [row, col];
 }
 
+/**
+* Sanity test of the argmax2d() utility function.
+*/
 function testArgmax2d() {
   for (let i = 0; i < 10; i++) {
     let m = tf.randomUniform([784, 784]);

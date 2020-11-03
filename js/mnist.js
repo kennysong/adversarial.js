@@ -28,6 +28,11 @@ let allLoaded = Promise.all([loadingDataset, loadingModel]);
 * Visualize Attacks
 ************************************************************************/
 
+const CONFIGS = {
+  'fgsmTargeted': {ε: 0.2},  // Targeted FGSM works slightly better on MNIST with higher distortion
+  'bimTargeted': {iters: 20},  // Targeted BIM works slightly better on MNIST with more iterations (pushes misclassification confidence up)
+};
+
 async function drawImg(img, element, attackName, msg, success) {
   let canvas = document.getElementById(attackName).getElementsByClassName(element)[0];
   let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([28, 28, 1]), [56, 56]);
@@ -53,7 +58,7 @@ export async function runUntargeted(attack) {
     let p = model.predict(img).dataSync()[i];
     await drawImg(img, i.toString(), attack.name, `Class: ${i}<br/>Prob: ${p.toFixed(3)}`);
 
-    let aimg = tf.tidy(() => attack(model, img, lbl));
+    let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
 
     p = model.predict(aimg).max(1).dataSync()[0];
     let albl = model.predict(aimg).argMax(1).dataSync()[0];
@@ -86,7 +91,7 @@ export async function runTargeted(attack) {
       }
 
       let targetLbl = tf.oneHot(j, 10).reshape([1, 10]);
-      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl));
+      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl, CONFIGS[attack.name]));
 
       p = model.predict(aimg).dataSync()[j];
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];

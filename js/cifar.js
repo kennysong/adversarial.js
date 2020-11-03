@@ -25,7 +25,14 @@ let allLoaded = Promise.all([loadingData, loadingModel]);
 * Visualize Attacks
 ************************************************************************/
 
-let CLASS_NAMES = ['Plane', 'Car', 'Bird', 'Car', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
+const CONFIGS = {
+  'fgsm': {ε: 0.05},  // 0.1 L_inf perturbation is too visible in color
+  'jsmaOnePixel': {ε: 75},  // JSMA one-pixel on CIFAR-10 requires more ~3x pixels than MNIST
+  'jsma': {ε: 75},  // JSMA on CIFAR-10 also requires more ~3x pixels than MNIST
+  'cw': {c: 1, λ: 0.05}  // Tried to minimize distortion, but not sure it worked
+};
+
+const CLASS_NAMES = ['Plane', 'Car', 'Bird', 'Car', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
 
 async function drawImg(img, element, attackName, msg, success) {
   let canvas = document.getElementById(attackName).getElementsByClassName(element)[0];
@@ -52,7 +59,7 @@ export async function runUntargeted(attack) {
     let p = model.predict(img).dataSync()[i];
     await drawImg(img, i.toString(), attack.name, `Class: ${CLASS_NAMES[i]}<br/>Prob: ${p.toFixed(3)}`);
 
-    let aimg = tf.tidy(() => attack(model, img, lbl));
+    let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
 
     p = model.predict(aimg).max(1).dataSync()[0];
     let albl = model.predict(aimg).argMax(1).dataSync()[0];
@@ -85,7 +92,7 @@ export async function runTargeted(attack) {
       }
 
       let targetLbl = tf.oneHot(j, 10).reshape([1, 10]);
-      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl));
+      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl, CONFIGS[attack.name]));
 
       p = model.predict(aimg).dataSync()[j];
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];

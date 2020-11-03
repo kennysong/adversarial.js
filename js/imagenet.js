@@ -77,6 +77,13 @@ loadedData.then(() => {
  * Visualize Attacks
  ************************************************************************/
 
+const CONFIGS = {
+  'fgsm': {ε: 0.05},  // 0.1 L_inf perturbation is too visible in color
+  'fgsmTargeted': {loss: 1},  // The 2nd loss function is too heavy for ImageNet
+  'jsmaOnePixel': {ε: 75},  // This is unsuccessful. I estimate that it requires ~50x higher ε than CIFAR-10 to be successful on ImageNet, but that is too slow
+  'cw': {κ: 5, c: 1, λ: 0.05}  // Generate higher confidence adversarial examples, and minimize distortion
+};
+
 async function drawImg(img, element, attackName, msg, success) {
   let canvas = document.getElementById(attackName).getElementsByClassName(element)[0];
   await tf.browser.toPixels(img.reshape([224, 224, 3]), canvas);
@@ -106,7 +113,7 @@ export async function runUntargeted(attack) {
     status.innerHTML = `Class: ${IMAGENET_CLASSES[lblIdx]}<br/>Prob: ${p.toFixed(3)}`;
 
     // Generate adversarial image from attack
-    let aimg = tf.tidy(() => attack(model, img, lbl));
+    let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
 
     // Display adversarial image and its probability
     p = model.predict(aimg).max(1).dataSync()[0];
@@ -144,7 +151,7 @@ export async function runTargeted(attack) {
       let targetLbl = tf.oneHot(targetLblIdx, 1000).reshape([1, 1000]);
 
       // Generate adversarial image from attack
-      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl));
+      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl, CONFIGS[attack.name]));
 
       // Display adversarial image and its probability
       p = model.predict(aimg).dataSync()[targetLblIdx];
@@ -160,3 +167,4 @@ export async function runTargeted(attack) {
 
   document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / (NUM_ROWS*NUM_COLS)).toFixed(2)}`;
 }
+
