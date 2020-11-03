@@ -19,10 +19,15 @@ export async function loadModel() {
 
   // Monkey patch the mobilenet object to have a predict() method like a normal tf.LayersModel
   model.predict = function (img) {
+    return this.predictLogits(img).softmax();
+  }
+
+  // Also monkey patch the mobilenet object with a method to predict logits
+  model.predictLogits = function (img) {
     // Remove the first "background noise" logit
     // Copied from: https://github.com/tensorflow/tfjs-models/blob/708e3911fb01d0dfe70448acc3e8ca736fae82d3/mobilenet/src/index.ts#L232
     const logits1001 = this.model.predict(img);
-    return logits1001.slice([0, 1], [-1, 1000]).softmax();
+    return logits1001.slice([0, 1], [-1, 1000]);
   }
 }
 
@@ -60,7 +65,8 @@ for (let i = 0; i < xUrls.length; i++) {
 
 // Collect pixel data from each image
 let x = [];
-Promise.all(loadingX).then(() => {
+let loadedData = Promise.all(loadingX);
+loadedData.then(() => {
   for (let i = 0; i < xUrls.length; i++) {
     let img = document.getElementsByClassName(i.toString())[0];
     x.push(tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]));
@@ -85,10 +91,11 @@ async function drawImg(img, element, attackName, msg, success) {
 }
 
 export async function runUntargeted(attack) {
-  await loadingX;
+  await loadedData;
   let successes = 0;
+  let NUM_ROWS = x.length;
 
-  for (let i = 0; i < 6; i++) {  // For each row
+  for (let i = 0; i < NUM_ROWS; i++) {  // For each row
     let img = x[i];
     let lbl = y[i];
     let lblIdx = yLbls[i];
@@ -111,5 +118,45 @@ export async function runUntargeted(attack) {
     await drawImg(aimg, `${i}a`, attack.name, `Class: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`);
   }
 
-  document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / 6).toFixed(1)}`;
+  document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / NUM_ROWS).toFixed(1)}`;
+}
+
+export async function runTargeted(attack) {
+  await loadedData;
+  let successes = 0;
+  let targetLblIdxs = [934, 413, 151];
+
+  let NUM_ROWS = x.length;
+  let NUM_COLS = targetLblIdxs.length;
+
+  for (let i = 0; i < NUM_ROWS; i++) {  // For each row
+    let img = x[i];
+    let lbl = y[i];
+    let lblIdx = yLbls[i];
+
+    // Compute and display original class probability
+    let p = model.predict(img).dataSync()[lblIdx];
+    let status = document.getElementById(attack.name).getElementsByClassName(i.toString())[0].nextSibling;
+    status.innerHTML = `Class: ${IMAGENET_CLASSES[lblIdx]}<br/>Prob: ${p.toFixed(3)}`;
+
+    for (let j = 0; j < NUM_COLS; j++) {  // For each target label
+      let targetLblIdx = targetLblIdxs[j];
+      let targetLbl = tf.oneHot(targetLblIdx, 1000).reshape([1, 1000]);
+
+      // Generate adversarial image from attack
+      let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl));
+
+      // Display adversarial image and its probability
+      p = model.predict(aimg).dataSync()[targetLblIdx];
+      let predLbl = model.predict(aimg).argMax(1).dataSync()[0];
+      if (predLbl === targetLblIdx) {
+        successes++;
+        await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${IMAGENET_CLASSES[targetLblIdx]}<br/>Prob: ${p.toFixed(3)}`, true);
+      } else {
+        await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${IMAGENET_CLASSES[targetLblIdx]}<br/>Prob: ${p.toFixed(3)}`);
+      }
+    }
+  }
+
+  document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / (NUM_ROWS*NUM_COLS)).toFixed(2)}`;
 }

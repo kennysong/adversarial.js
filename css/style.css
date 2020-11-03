@@ -78,3 +78,9 @@ button[disabled]:hover {
   display: block;
   text-align: center;
 }
+
+.warning {
+  font-size: 10px;
+  color: red;
+  margin-left: 10px;
+}

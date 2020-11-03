@@ -37,10 +37,11 @@ export function fgsmTargeted(model, img, lbl, targetLbl) {
     return loss(input).sub(tf.metrics.categoricalCrossentropy(lbl, model.predict(input)));  // + Move input away from original class
   }
   function loss3(input) {
+    let NUM_CLASSES = lbl.shape[1];  // lbl is a one-hot vector in a batch of size 1
     let l = loss(input).mul(5);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < NUM_CLASSES; i++) {
       if (i != tf.argMax(lbl)) {
-        let nonlbl = tf.oneHot(i, 10).reshape([1, 10]);
+        let nonlbl = tf.oneHot(i, NUM_CLASSES).reshape([1, NUM_CLASSES]);
         l = l.sub(tf.metrics.categoricalCrossentropy(nonlbl, model.predict(input)))  // + Move input away from all other classes
       }
     }
@@ -48,7 +49,7 @@ export function fgsmTargeted(model, img, lbl, targetLbl) {
   }
 
   // Perturb the image for one step in the direction of DECREASING loss
-  let grad = tf.grad(loss3);
+  let grad = tf.grad(loss3);  // EDITED
   let delta = tf.sign(grad(img)).mul(ε);
   img = img.sub(delta).clipByValue(0, 1);
 
@@ -105,10 +106,11 @@ export function bimTargeted(model, img, lbl, targetLbl) {
     return loss(input).sub(tf.metrics.categoricalCrossentropy(lbl, model.predict(input)));  // + Move input away from original class
   }
   function loss3(input) {
+    let NUM_CLASSES = lbl.shape[1];  // lbl is a one-hot vector in a batch of size 1
     let l = loss(input).mul(5);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < NUM_CLASSES; i++) {
       if (i != tf.argMax(lbl)) {
-        let nonlbl = tf.oneHot(i, 10).reshape([1, 10]);
+        let nonlbl = tf.oneHot(i, NUM_CLASSES).reshape([1, NUM_CLASSES]);
         l = l.sub(tf.metrics.categoricalCrossentropy(nonlbl, model.predict(input)))  // + Move input away from all other classes
       }
     }
@@ -136,7 +138,7 @@ export function bimTargeted(model, img, lbl, targetLbl) {
 ************************************************************************/
 
 export function jsmaOnePixel(model, img, lbl, targetLbl) {
-  let ε = 30;  // L0 distance (we can change up to this many pixels)
+  let ε = 100;  // L0 distance (we can change up to this many pixels)  // EDITED
 
   // Compute useful constants
   let NUM_PIXELS = img.flatten().shape[0];  // Number of pixels in the image (for RGB, each channel counts as one "pixel")
@@ -146,29 +148,38 @@ export function jsmaOnePixel(model, img, lbl, targetLbl) {
     return tf.dot(model.predict(img), targetLbl.squeeze());
   }
 
+  // We copy image data into an array to easily make per-pixel perturbations
+  let imgArr = img.flatten().arraySync();
+
   // Track what pixels we've changed and should not change again (set bit to 0 in this mask)
   let changedPixels = tf.ones([NUM_PIXELS]).arraySync();
 
   // Modify the pixel with the highest impact (gradient) on the target class probability, and repeat
   let grad = tf.grad(classProb);
+  let aimg = tf.tensor(imgArr, img.shape);
   for (let i = 0; i < ε; i++) {
-    // Compute pixel with maximum gradient value
-    // (Note: in this simplified variant, we just use the raw gradient as the "saliency",
-    //  not the more robust saliency function in the paper (Eq. 8).)
-    let g = grad(img);
-    let changedPixelsMask = tf.tensor(changedPixels);
-    let pixelToChange = tf.mul(g.flatten(), changedPixelsMask).argMax().dataSync()[0];
+    // Compute highest impact pixel to change, and update that pixel in imgArr
+    tf.tidy(() => {  // (This should be in tf.tidy() since the number of iterations can be large for ImageNet)
+      // Compute pixel with maximum gradient value
+      // (Note: in this simplified variant, we just use the raw gradient as the "saliency",
+      //  not the more robust saliency function in the paper (Eq. 8).)
+      let g = grad(aimg);
+      let changedPixelsMask = tf.tensor(changedPixels);
+      let pixelToChange = tf.mul(g.flatten(), changedPixelsMask).argMax().dataSync()[0];
 
-    // Modify that pixel in the image
-    let imgArr = img.flatten().arraySync();
-    imgArr[pixelToChange] = 1;
-    img = tf.tensor(imgArr, img.shape);
+      // Change that pixel in the image data array
+      imgArr[pixelToChange] = 1;
 
-    // Remember that we've modified this pixel
-    changedPixels[pixelToChange] = 0;
+      // Remember that we've modified this pixel
+      changedPixels[pixelToChange] = 0;
+    });
+
+    // Update the aimg tensor with the latest imgArr data
+    aimg.dispose();  // Delete old data, otherwise the old tensor becomes an orphaned memory leak
+    aimg = tf.tensor(imgArr, img.shape);
   }
 
-  return img;
+  return aimg;
 }
 
 /************************************************************************
@@ -192,6 +203,9 @@ export function jsma(model, img, lbl, targetLbl) {
     classProbs.push(img => tf.dot(model.predict(img), tf.oneHot(l, 10)));
   }
 
+  // We copy image data into an array to easily make per-pixel perturbations
+  let imgArr = img.flatten().arraySync();
+
   // Track what pixels we've changed and should not change again (set bit to 0 in this mask)
   let changedPixels = tf.ones([NUM_PIXELS, NUM_PIXELS]).arraySync();
   for (let p = 0; p < NUM_PIXELS; p++) {
@@ -200,11 +214,13 @@ export function jsma(model, img, lbl, targetLbl) {
 
   // Modify the pixel pair with the highest impact (saliency) on the target class probability, and repeat
   let grads = classProbs.map(classProb => tf.grad(classProb));
+  let aimg = tf.tensor(imgArr, img.shape);
   for (let i = 0; i < Math.floor(ε/2); i++) {
+    // Compute highest impact pixel pair to change, and update that pixel pair in imgArr
     tf.tidy(() => {  // (This must be in tf.tidy() as there are many intermediate NUM_PIXELS^2 matrices)
       // Compute all gradients ∂classProb / ∂img
       let gs = [];
-      for (let l = 0; l < 10; l++) { gs.push(grads[l](img)); }
+      for (let l = 0; l < 10; l++) { gs.push(grads[l](aimg)); }
 
       // Compute α_pq for all pairs of pixels (p, q), vectorized using an outer sum
       // (Outer sum works by broadcasting: https://stackoverflow.com/a/33848814/908744)
@@ -224,27 +240,25 @@ export function jsma(model, img, lbl, targetLbl) {
       let changedPixelsMask = tf.tensor(changedPixels);
       let [p, q] = argmax2d(saliencyGrid.mul(changedPixelsMask));
 
-      // Modify that pixel in the image
-      let imgArr = img.flatten().arraySync();
+      // Change that pixel pair in the image data array
       imgArr[p] = 1;
       imgArr[q] = 1;
-      img = tf.tensor(imgArr, img.shape);
 
-      // Remember that we've modified this pixel
+      // Remember that we've modified this pixel pair
       for (let j = 0; j < NUM_PIXELS; j++) {
         changedPixels[j][p] = 0;
         changedPixels[j][q] = 0;
         changedPixels[p][j] = 0;
         changedPixels[q][j] = 0;
       }
-
-      // Make sure our global tensors are not garbage collected by tf.tidy()
-      img = tf.keep(img);
-      changedPixels = tf.keep(changedPixels);
     });
+
+    // Update the aimg tensor with the latest imgArr data
+    aimg.dispose();  // Delete old data, otherwise the old tensor becomes an orphaned memory leak
+    aimg = tf.tensor(imgArr, img.shape);
   }
 
-  return img;
+  return aimg;
 }
 
 /************************************************************************
@@ -318,6 +332,10 @@ function testArgmax2d() {
 * Returns a copy of model without the softmax layer, so it predict()'s logits.
 */
 function getModelLogits(model) {
+  // Our monkey-patched MobileNet model has a predictLogits method already
+  if (model.predictLogits !== undefined) { return {predict: img => model.predictLogits(img)}; }
+
+  // Otherwise, for LayersModels, clone the model with all layers except the last one
   if (!model.layers[model.layers.length-1].name.includes('softmax')) { throw 'The last layer of the model must be softmax!' }
   let logitsModel = tf.sequential();
   for (let i = 0; i < model.layers.length-1; i++) {
