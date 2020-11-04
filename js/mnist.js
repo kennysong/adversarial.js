@@ -55,19 +55,23 @@ export async function runUntargeted(attack) {
     let img = dataset[i].xs;
     let lbl = dataset[i].ys;
 
+    // Compute and display original class probability
     let p = model.predict(img).dataSync()[i];
     await drawImg(img, i.toString(), attack.name, `Class: ${i}<br/>Prob: ${p.toFixed(3)}`);
 
+    // Generate adversarial image from attack
     let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
 
+    // Display adversarial image and its probability
     p = model.predict(aimg).max(1).dataSync()[0];
     let albl = model.predict(aimg).argMax(1).dataSync()[0];
     let oldlbl = lbl.argMax(1).dataSync()[0];
     if (albl !== oldlbl) {
       successes++;
       await drawImg(aimg, `${i}a`, attack.name, `Class: ${albl}<br/>Prob: ${p.toFixed(3)}`, true);
+    } else {
+      await drawImg(aimg, `${i}a`, attack.name, `Class: ${albl}<br/>Prob: ${p.toFixed(3)}`);
     }
-    await drawImg(aimg, `${i}a`, attack.name, `Class: ${albl}<br/>Prob: ${p.toFixed(3)}`);
   }
 
   document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / 10).toFixed(1)}`;
@@ -81,18 +85,22 @@ export async function runTargeted(attack) {
     let img = dataset[i].xs;
     let lbl = dataset[i].ys;
 
+    // Compute and display original class probability
     let p = model.predict(img).dataSync()[i];
     await drawImg(img, i.toString(), attack.name, `Class: ${i}<br/>Prob: ${p.toFixed(3)}`);
 
     for (let j = 0; j < 10; j++) {  // For each target label
+      // Draw a black square if the target class is just the original class
       if (j === lbl.argMax(1).dataSync()[0]) {
         await drawImg(tf.zerosLike(img), `${i}${j}`, attack.name);
         continue;
       }
 
+      // Generate adversarial image from attack
       let targetLbl = tf.oneHot(j, 10).reshape([1, 10]);
       let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl, CONFIGS[attack.name]));
 
+      // Display adversarial image and its probability
       p = model.predict(aimg).dataSync()[j];
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];
       if (predLbl === j) {

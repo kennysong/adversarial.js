@@ -121,8 +121,9 @@ export async function runUntargeted(attack) {
     if (albl !== lblIdx) {
       successes++;
       await drawImg(aimg, `${i}a`, attack.name, `Class: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`, true);
+    } else {
+      await drawImg(aimg, `${i}a`, attack.name, `Class: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`);
     }
-    await drawImg(aimg, `${i}a`, attack.name, `Class: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`);
   }
 
   document.getElementById(`${attack.name}-success-rate`).innerText = `Success rate: ${(successes / NUM_ROWS).toFixed(1)}`;
