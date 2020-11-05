@@ -57,7 +57,7 @@ export async function runUntargeted(attack) {
 
     // Compute and display original class probability
     let p = model.predict(img).dataSync()[i];
-    await drawImg(img, i.toString(), attack.name, `Class: ${i}<br/>Prob: ${p.toFixed(3)}`);
+    await drawImg(img, i.toString(), attack.name, `Pred: ${i}<br/>Prob: ${p.toFixed(3)}`);
 
     // Generate adversarial image from attack
     let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
@@ -68,9 +68,9 @@ export async function runUntargeted(attack) {
     let oldlbl = lbl.argMax(1).dataSync()[0];
     if (albl !== oldlbl) {
       successes++;
-      await drawImg(aimg, `${i}a`, attack.name, `Class: ${albl}<br/>Prob: ${p.toFixed(3)}`, true);
+      await drawImg(aimg, `${i}a`, attack.name, `Pred: ${albl}<br/>Prob: ${p.toFixed(3)}`, true);
     } else {
-      await drawImg(aimg, `${i}a`, attack.name, `Class: ${albl}<br/>Prob: ${p.toFixed(3)}`);
+      await drawImg(aimg, `${i}a`, attack.name, `Pred: ${albl}<br/>Prob: ${p.toFixed(3)}`);
     }
   }
 
@@ -87,7 +87,7 @@ export async function runTargeted(attack) {
 
     // Compute and display original class probability
     let p = model.predict(img).dataSync()[i];
-    await drawImg(img, i.toString(), attack.name, `Class: ${i}<br/>Prob: ${p.toFixed(3)}`);
+    await drawImg(img, i.toString(), attack.name, `Pred: ${i}<br/>Prob: ${p.toFixed(3)}`);
 
     for (let j = 0; j < 10; j++) {  // For each target label
       // Draw a black square if the target class is just the original class
@@ -105,9 +105,9 @@ export async function runTargeted(attack) {
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];
       if (predLbl === j) {
         successes++;
-        await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${j}<br/>Prob: ${p.toFixed(3)}`, true);
+        await drawImg(aimg, `${i}${j}`, attack.name, `Pred: ${j}<br/>Prob: ${p.toFixed(3)}`, true);
       } else {
-        await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${j}<br/>Prob: ${p.toFixed(3)}`);
+        await drawImg(aimg, `${i}${j}`, attack.name, `Pred: ${j}<br/>Prob: ${p.toFixed(3)}`);
       }
     }
   }

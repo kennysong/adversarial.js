@@ -110,7 +110,7 @@ export async function runUntargeted(attack) {
     // Compute and display original class probability
     let p = model.predict(img).dataSync()[lblIdx];
     let status = document.getElementById(attack.name).getElementsByClassName(i.toString())[0].nextSibling;
-    status.innerHTML = `Class: ${IMAGENET_CLASSES[lblIdx]}<br/>Prob: ${p.toFixed(3)}`;
+    status.innerHTML = `Prediction: ${IMAGENET_CLASSES[lblIdx]}<br/>Prob: ${p.toFixed(3)}`;
 
     // Generate adversarial image from attack
     let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
@@ -120,9 +120,9 @@ export async function runUntargeted(attack) {
     let albl = model.predict(aimg).argMax(1).dataSync()[0];
     if (albl !== lblIdx) {
       successes++;
-      await drawImg(aimg, `${i}a`, attack.name, `Class: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`, true);
+      await drawImg(aimg, `${i}a`, attack.name, `Prediction: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`, true);
     } else {
-      await drawImg(aimg, `${i}a`, attack.name, `Class: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`);
+      await drawImg(aimg, `${i}a`, attack.name, `Prediction: ${IMAGENET_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`);
     }
   }
 
@@ -145,7 +145,7 @@ export async function runTargeted(attack) {
     // Compute and display original class probability
     let p = model.predict(img).dataSync()[lblIdx];
     let status = document.getElementById(attack.name).getElementsByClassName(i.toString())[0].nextSibling;
-    status.innerHTML = `Class: ${IMAGENET_CLASSES[lblIdx]}<br/>Prob: ${p.toFixed(3)}`;
+    status.innerHTML = `Prediction: ${IMAGENET_CLASSES[lblIdx]}<br/>Prob: ${p.toFixed(3)}`;
 
     for (let j = 0; j < NUM_COLS; j++) {  // For each target label
       let targetLblIdx = targetLblIdxs[j];
@@ -159,9 +159,9 @@ export async function runTargeted(attack) {
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];
       if (predLbl === targetLblIdx) {
         successes++;
-        await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${IMAGENET_CLASSES[targetLblIdx]}<br/>Prob: ${p.toFixed(3)}`, true);
+        await drawImg(aimg, `${i}${j}`, attack.name, `Prediction: ${IMAGENET_CLASSES[targetLblIdx]}<br/>Prob: ${p.toFixed(3)}`, true);
       } else {
-        await drawImg(aimg, `${i}${j}`, attack.name, `Class: ${IMAGENET_CLASSES[targetLblIdx]}<br/>Prob: ${p.toFixed(3)}`);
+        await drawImg(aimg, `${i}${j}`, attack.name, `Prediction: ${IMAGENET_CLASSES[targetLblIdx]}<br/>Prob: ${p.toFixed(3)}`);
       }
     }
   }
