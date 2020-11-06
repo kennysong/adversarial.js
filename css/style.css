@@ -84,3 +84,85 @@ button[disabled]:hover {
   color: red;
   margin-left: 10px;
 }
+
+.center {
+  text-align: center;
+}
+
+.split {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.splitleft55 {
+  width: 55%;
+}
+
+.splitright45 {
+  width: 45%;
+}
+
+.splitleft61 {
+  width: 61%;  /* lol */
+}
+
+.splitright39 {
+  width: 39%;
+}
+
+.one-half.column  {
+  width: 50%;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #b9b9b9;
+}
+
+.border-right {
+  border-right: 1px solid #b9b9b9;
+}
+
+#panel {
+  border: 1px solid #b9b9b9;
+  border-radius: 8px;
+  min-width: 960px;
+  box-shadow: 0px 0px 2px #d4d4d4;
+  padding-top: 15px;
+}
+
+#panel .column,
+#panel .columns {
+  margin-left: 0;
+}
+
+#panel h5 {
+  margin-top: 15px;
+}
+
+#select-model-label {
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+#original,
+#adversarial {
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 20px;
+  display: block;
+}
+
+#next-image {
+  margin-top: 80px;
+}
+
+#prediction,
+#adv-prediction {
+  margin-bottom: 10px;
+}
+
+#difference {
+  font-size: 9px;
+  display: none;
+}

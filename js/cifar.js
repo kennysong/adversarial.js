@@ -1,3 +1,5 @@
+import {CIFAR_CLASSES} from './class_names.js';
+
 /************************************************************************
 * Load Dataset
 ************************************************************************/
@@ -32,8 +34,6 @@ const CONFIGS = {
   'cw': {c: 1, λ: 0.05}  // Tried to minimize distortion, but not sure it worked
 };
 
-const CLASS_NAMES = ['Plane', 'Car', 'Bird', 'Car', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
-
 async function drawImg(img, element, attackName, msg, success) {
   let canvas = document.getElementById(attackName).getElementsByClassName(element)[0];
   let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([32, 32, 3]), [64, 64]);
@@ -58,7 +58,7 @@ export async function runUntargeted(attack) {
 
     // Compute and display original class probability
     let p = model.predict(img).dataSync()[i];
-    await drawImg(img, i.toString(), attack.name, `Pred: ${CLASS_NAMES[i]}<br/>Prob: ${p.toFixed(3)}`);
+    await drawImg(img, i.toString(), attack.name, `Pred: ${CIFAR_CLASSES[i]}<br/>Prob: ${p.toFixed(3)}`);
 
     // Generate adversarial image from attack
     let aimg = tf.tidy(() => attack(model, img, lbl, CONFIGS[attack.name]));
@@ -69,9 +69,9 @@ export async function runUntargeted(attack) {
     let oldlbl = lbl.argMax(1).dataSync()[0];
     if (albl !== oldlbl) {
       successes++;
-      await drawImg(aimg, `${i}a`, attack.name, `Pred: ${CLASS_NAMES[albl]}<br/>Prob: ${p.toFixed(3)}`, true);
+      await drawImg(aimg, `${i}a`, attack.name, `Pred: ${CIFAR_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`, true);
     } else {
-      await drawImg(aimg, `${i}a`, attack.name, `Pred: ${CLASS_NAMES[albl]}<br/>Prob: ${p.toFixed(3)}`);
+      await drawImg(aimg, `${i}a`, attack.name, `Pred: ${CIFAR_CLASSES[albl]}<br/>Prob: ${p.toFixed(3)}`);
     }
   }
 
@@ -88,7 +88,7 @@ export async function runTargeted(attack) {
 
     // Compute and display original class probability
     let p = model.predict(img).dataSync()[i];
-    await drawImg(img, i.toString(), attack.name, `Pred: ${CLASS_NAMES[i]}<br/>Prob: ${p.toFixed(3)}`);
+    await drawImg(img, i.toString(), attack.name, `Pred: ${CIFAR_CLASSES[i]}<br/>Prob: ${p.toFixed(3)}`);
 
     for (let j = 0; j < 10; j++) {  // For each target label
       // Draw a black square if the target class is just the original class
@@ -106,9 +106,9 @@ export async function runTargeted(attack) {
       let predLbl = model.predict(aimg).argMax(1).dataSync()[0];
       if (predLbl === j) {
         successes++;
-        await drawImg(aimg, `${i}${j}`, attack.name, `Pred: ${CLASS_NAMES[j]}<br/>Prob: ${p.toFixed(3)}`, true);
+        await drawImg(aimg, `${i}${j}`, attack.name, `Pred: ${CIFAR_CLASSES[j]}<br/>Prob: ${p.toFixed(3)}`, true);
       } else {
-        await drawImg(aimg, `${i}${j}`, attack.name, `Pred: ${CLASS_NAMES[j]}<br/>Prob: ${p.toFixed(3)}`);
+        await drawImg(aimg, `${i}${j}`, attack.name, `Pred: ${CIFAR_CLASSES[j]}<br/>Prob: ${p.toFixed(3)}`);
       }
     }
   }

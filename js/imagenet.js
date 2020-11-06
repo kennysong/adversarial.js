@@ -1,4 +1,4 @@
-import {IMAGENET_CLASSES} from './imagenet_classes.js';
+import {IMAGENET_CLASSES} from './class_names.js';
 
 /************************************************************************
 * Load Model

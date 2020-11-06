@@ -1,6 +1,71 @@
-/**
- * Adapted from: https://github.com/tensorflow/tfjs-models/blob/master/mobilenet/src/imagenet_classes.ts
- */
+/************************************************************************
+* CIFAR-10 Classes
+************************************************************************/
+
+export const CIFAR_CLASSES = ['Plane', 'Cat', 'Bird', 'Car', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
+
+/************************************************************************
+* GTSRB Classes
+* Adapted from: ttps://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/signnames.csv
+************************************************************************/
+
+export const GTSRB_CLASSES = {
+    0: "20km/hr",
+    1: "30km/hr",
+    2: "50km/hr",
+    3: "60km/hr",
+    4: "70km/hr",
+    5: "80km/hr",
+    6: "End of 80km/hr",
+    7: "100km/hr",
+    8: "120km/hr",
+    9: "No passing",
+    10: "No passing for heavy vehicles",
+    11: "Right-of-way",
+    12: "Priority road",
+    13: "Yield",
+    14: "Stop Sign",
+    15: "No vehicles",
+    16: "No heavy vehicles",
+    17: "Do Not Enter",
+    18: "General caution",
+    19: "Dangerous left curve",
+    20: "Dangerous right curve",
+    21: "Double curve",
+    22: "Bumpy road",
+    23: "Slippery road",
+    24: "Right narrows",
+    25: "Road work",
+    26: "Traffic signals",
+    27: "Pedestrians",
+    28: "Children crossing",
+    29: "Bicycles crossing",
+    30: "Beware of ice/snow",
+    31: "Wild animals crossing",
+    32: "End speed limits",
+    33: "Turn right ahead",
+    34: "Turn left ahead",
+    35: "Ahead only",
+    36: "Go straight or right",
+    37: "Go straight or left",
+    38: "Keep right",
+    39: "Keep left",
+    40: "Roundabout mandatory",
+    41: "End of no passing",
+    42: "End of no passing by heavy vehicles",
+  };
+  // For display, truncate class names to <20 characters
+  for (let i = 0; i < 42; i++) {
+    if (GTSRB_CLASSES[i].length > 20) {
+        GTSRB_CLASSES[i] = GTSRB_CLASSES[i].slice(0, 20);
+    }
+  }
+
+
+/************************************************************************
+* ImageNet Classes
+* Adapted from: https://github.com/tensorflow/tfjs-models/blob/master/mobilenet/src/imagenet_classes.ts
+************************************************************************/
 
 /**
  * @license
