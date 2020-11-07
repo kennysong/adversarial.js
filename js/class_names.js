@@ -1,4 +1,10 @@
 /************************************************************************
+* MNIST Classes
+************************************************************************/
+
+export const MNIST_CLASSES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+/************************************************************************
 * CIFAR-10 Classes
 ************************************************************************/
 
@@ -511,7 +517,7 @@ export const IMAGENET_CLASSES = {
   411: 'apron',
   412: 'ashcan, trash can, garbage can, wastebin, ash bin, ash-bin, ashbin, ' +
       'dustbin, trash barrel, trash bin',
-  413: 'assault rifle, assault gun',
+  413: 'Assault Rifle, assault gun',
   414: 'backpack, back pack, knapsack, packsack, rucksack, haversack',
   415: 'bakery, bakeshop, bakehouse',
   416: 'balance beam, beam',
@@ -1038,7 +1044,7 @@ export const IMAGENET_CLASSES = {
   931: 'bagel, beigel',
   932: 'pretzel',
   933: 'cheeseburger',
-  934: 'hotdog, hot dog, red hot',
+  934: 'Hot Dog, hotdog, red hot',
   935: 'mashed potato',
   936: 'head cabbage',
   937: 'broccoli',

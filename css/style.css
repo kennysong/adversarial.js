@@ -116,18 +116,18 @@ button[disabled]:hover {
 }
 
 .border-bottom {
-  border-bottom: 1px solid #b9b9b9;
+  border-bottom: 1px solid #cccccc;
 }
 
 .border-right {
-  border-right: 1px solid #b9b9b9;
+  border-right: 1px solid #cccccc;
 }
 
 #panel {
   border: 1px solid #b9b9b9;
   border-radius: 8px;
   min-width: 960px;
-  box-shadow: 0px 0px 2px #d4d4d4;
+  box-shadow: 0px 0px 3px #d4d4d4;
   padding-top: 15px;
 }
 

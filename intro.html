@@ -49,8 +49,8 @@
               <canvas id="adversarial" class="tableimg" width="224" height="224"></canvas>
             </div>
             <div class="splitright45" style="padding-right:15px;">
-              <label for="select-label-mnist">Misclassify this image as a:</label>
-              <select id="select-label-mnist" class="u-full-width">
+              <label for="select-target">Misclassify this image as a:</label>
+              <select id="select-target" class="u-full-width" data-model="mnist">
                 <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -65,11 +65,11 @@
 
               <label for="select-attack">Select an attack:</label>
               <select id="select-attack" class="u-full-width">
-                <option value="fgsmTargeted">Fast Gradient Sign Method (weak)</option>
-                <option value="bimTargeted">Basic Iterative Method (stronger)</option>
-                <option value="jsmaOnePixel">Jacobian-based Saliency Map Attack 1-Pixel (stronger)</option>
-                <option value="jsma">Jacobian-based Saliency Map Attack (stronger)</option>
                 <option value="cw">Carlini & Wagner (strongest)</option>
+                <option value="jsma">Jacobian-based Saliency Map Attack (stronger)</option>
+                <option value="jsmaOnePixel">Jacobian-based Saliency Map Attack 1-Pixel (stronger)</option>
+                <option value="bimTargeted">Basic Iterative Method (stronger)</option>
+                <option value="fgsmTargeted">Fast Gradient Sign Method (weak)</option>
               </select>
 
               <div class="center">
@@ -80,34 +80,19 @@
           </div>
         </div>
 
-        <div class="row center">
+        <div class="row center" style="display:flex;"> <!-- The flex here keeps the child columns the same height -->
           <div class="one-half column border-right">
-            <h5>Neural Network's Prediction</h5>
-            <button id="predict-original" class="button-primary">Predict</button>
+            <h5>Prediction</h5>
+            <button id="predict-original" class="button-primary">Run Neural Network</button>
             <div id="prediction"></div>
           </div>
           <div class="one-half column">
-            <h5>Neural Network's Prediction</h5>
-            <button id="predict-adv" class="button-primary">Predict</button>
+            <h5>Prediction</h5>
+            <button id="predict-adv" class="button-primary">Run Neural Network</button>
             <div id="prediction-adv"></div>
           </div>
         </div>
       </div>
-
-      <h5>Attacks</h5>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vulputate mattis nibh et varius. Nunc a dui aliquet, pretium risus eu, eleifend tortor. Praesent pulvinar suscipit tristique. Phasellus venenatis pretium dui vel maximus. Etiam luctus lobortis semper. In ac convallis felis. Maecenas molestie sapien nisl, eu suscipit metus malesuada in. Morbi augue nisi, tempus non pretium sit amet, hendrerit vel velit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec sit amet rutrum magna.
-      </p>
-      <p>
-        Nulla mollis ante quis lacus tempus consequat. Ut mattis elit vitae elementum hendrerit. Sed dictum, dolor vel ornare semper, diam mauris porta arcu, eu pharetra risus lorem eget purus. Nam ac scelerisque massa. Proin nisl ante, mattis et risus at, pellentesque rhoncus purus. Sed ac mi lectus. Etiam a tellus quam. Suspendisse vitae finibus augue.
-      </p>
-
-      <h5>Learn More</h5>
-      <ul>
-        <li><a href="utils/mnist_train.html">Train MNIST DNN</a></li>
-        <li><a href="utils/mnist_eval.html">Eval MNIST DNN</a></li>
-      </ul>
-    </div>
 
     <!-- Hack to load a sample of ImageNet images that we can access in canvas -->
     <!-- Info on the crossorigin <img> property: https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image -->
