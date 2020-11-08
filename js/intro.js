@@ -229,14 +229,15 @@ async function predict() {
     let predProb = pred.max().dataSync()[0];
 
     // Display prediction
-    showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`);
+    let status = {msg: '✅ Prediction is correct.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
+    showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`, status);
   }
  }
 
 /**
  * Generates adversarial example from the current original image
  */
-let advPrediction;
+let advPrediction, advStatus;
 async function generateAdv() {
   $('#generate-adv').disabled = true;
   $('#generate-adv').innerText = 'Loading...';
@@ -285,16 +286,17 @@ async function generateAdv() {
     let pred = model.predict(aimg);
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
+    advPrediction = `Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`;
+
+    // Compute & store attack success/failure message
     let lblIdx = lbl.argMax(1).dataSync()[0];
-    let msg;
     if (predLblIdx === targetLblIdx) {
-      msg = 'Attack succeeded'
+      advStatus = {msg: '❌ Prediction is wrong. Attack succeeded!', statusClass: 'status-red'};
     } else if (predLblIdx !== lblIdx) {
-      msg = 'Attack partially succeeded'
+      advStatus = {msg: '❌ Prediction is wrong. Attack partially succeeded!', statusClass: 'status-orange'};
     } else {
-      msg = 'Attack failed'
+      advStatus = {msg: '✅ Prediction is still correct. Attack failed.', statusClass: 'status-green'};
     }
-    advPrediction = `${msg}<br/>Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`;
   }
 }
 
@@ -304,7 +306,7 @@ async function generateAdv() {
  */
 function predictAdv() {
   $('#predict-adv').disabled = true;
-  showAdvPrediction(advPrediction);
+  showAdvPrediction(advPrediction, advStatus);
 }
 
 /**
@@ -313,7 +315,10 @@ function predictAdv() {
 function resetOnNewImage() {
   $('#predict-original').disabled = false;
   $('#predict-original').innerText = 'Run Neural Network';
-  $('#prediction').innerHTML = '';
+  $('#prediction').style.display = 'none';
+  $('#prediction-status').innerHTML = '';
+  $('#prediction-status').className = '';
+  $('#prediction-status').style.marginBottom = '9px';
   resetAttack();
   resetAvailableAttacks();
 }
@@ -325,7 +330,10 @@ function resetAttack() {
   $('#generate-adv').disabled = false;
   $('#predict-adv').disabled = false;
   $('#difference').style.display = 'none';
-  $('#prediction-adv').innerHTML = '';
+  $('#prediction-adv').style.display = 'none';
+  $('#prediction-adv-status').innerHTML = '';
+  $('#prediction-adv-status').className = '';
+  $('#prediction-adv-status').style.marginBottom = '9px';
   drawImg(tf.ones([1, 224, 224, 1]), 'adversarial');
 }
 
@@ -399,12 +407,20 @@ function resetAvailableAttacks() {
 * Visualize Attacks
 ************************************************************************/
 
-function showPrediction(msg) {
+function showPrediction(msg, status) {
   $('#prediction').innerHTML = msg;
+  $('#prediction').style.display = 'block';
+  $('#prediction-status').innerHTML = status.msg;
+  $('#prediction-status').className = status.statusClass;
+  $('#prediction-status').style.marginBottom = '15px';
 }
 
-function showAdvPrediction(msg) {
+function showAdvPrediction(msg, status) {
   $('#prediction-adv').innerHTML = msg;
+  $('#prediction-adv').style.display = 'block';
+  $('#prediction-adv-status').innerHTML = status.msg;
+  $('#prediction-adv-status').className = status.statusClass;
+  $('#prediction-adv-status').style.marginBottom = '15px';
 }
 
 let mnistIdx = 0;

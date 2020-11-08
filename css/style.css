@@ -158,8 +158,34 @@ button[disabled]:hover {
 }
 
 #prediction,
-#adv-prediction {
-  margin-bottom: 10px;
+#prediction-adv {
+  margin-bottom: 5px;
+}
+
+#prediction-status,
+#prediction-adv-status {
+  margin: auto;
+  width: fit-content;
+  padding: 2px 10px;
+  margin-bottom: 9px;
+}
+
+.status-green {
+  /* border: 3px solid #38761d; */
+  color: #38761d;
+  background: #deffd6ff;
+}
+
+.status-orange {
+  /* border: 3px solid #ff9900; */
+  color: #ff9900;
+  background: #fff0d5ff;
+}
+
+.status-red {
+  /* border: 3px solid red; */
+  color: red;
+  background: #ffcece;
 }
 
 #difference {
