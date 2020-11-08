@@ -1,7 +1,35 @@
 import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './attacks.js';
 import {MNIST_CLASSES, GTSRB_CLASSES, CIFAR_CLASSES, IMAGENET_CLASSES} from './class_names.js';
 
+/************************************************************************
+* Global constants
+************************************************************************/
+
 const $ = query => document.querySelector(query);
+
+const MNIST_CONFIGS = {
+  'fgsmTargeted': {ε: 0.2},  // Targeted FGSM works slightly better on MNIST with higher distortion
+  'bimTargeted': {iters: 20},  // Targeted BIM works slightly better on MNIST with more iterations (pushes misclassification confidence up)
+};
+
+const GTSRB_CONFIGS = {
+  'bimTargeted': {iters: 50},  // Needs more iterations to work well
+  'jsmaOnePixel': {ε: 75},  // Works well with the same settings as CIFAR-10
+};
+
+const CIFAR_CONFIGS = {
+  'fgsm': {ε: 0.05},  // 0.1 L_inf perturbation is too visible in color
+  'jsmaOnePixel': {ε: 75},  // JSMA one-pixel on CIFAR-10 requires more ~3x pixels than MNIST
+  'jsma': {ε: 75},  // JSMA on CIFAR-10 also requires more ~3x pixels than MNIST
+  'cw': {c: 1, λ: 0.05}  // Tried to minimize distortion, but not sure it worked
+};
+
+const IMAGENET_CONFIGS = {
+  'fgsm': {ε: 0.05},  // 0.1 L_inf perturbation is too visible in color
+  'fgsmTargeted': {loss: 1},  // The 2nd loss function is too heavy for ImageNet
+  'jsmaOnePixel': {ε: 75},  // This is unsuccessful. I estimate that it requires ~50x higher ε than CIFAR-10 to be successful on ImageNet, but that is too slow
+  'cw': {κ: 5, c: 1, λ: 0.05}  // Generate higher confidence adversarial examples, and minimize distortion
+};
 
 /************************************************************************
 * Load Datasets
@@ -256,27 +284,27 @@ async function generateAdv() {
   if (modelName === 'mnist') {
     await loadMnistModel();
     await loadingMnist;
-    await _generateAdv(mnistModel, mnistDataset[mnistIdx].xs, mnistDataset[mnistIdx].ys, MNIST_CLASSES);
+    await _generateAdv(mnistModel, mnistDataset[mnistIdx].xs, mnistDataset[mnistIdx].ys, MNIST_CLASSES, MNIST_CONFIGS[attack.name]);
   } else if (modelName === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
-    await _generateAdv(cifarModel, cifarDataset[cifarIdx].xs, cifarDataset[cifarIdx].ys, CIFAR_CLASSES);
+    await _generateAdv(cifarModel, cifarDataset[cifarIdx].xs, cifarDataset[cifarIdx].ys, CIFAR_CLASSES, CIFAR_CONFIGS[attack.name]);
   } else if (modelName === 'gtsrb') {
     await loadGtsrbModel();
     await loadingGtsrb;
-    await _generateAdv(gtsrbModel, gtsrbDataset[gtsrbIdx].xs, gtsrbDataset[gtsrbIdx].ys, GTSRB_CLASSES);
+    await _generateAdv(gtsrbModel, gtsrbDataset[gtsrbIdx].xs, gtsrbDataset[gtsrbIdx].ys, GTSRB_CLASSES, GTSRB_CONFIGS[attack.name]);
   } else if (modelName === 'imagenet') {
     await loadImagenetModel();
     await loadedImagenetData;
-    await _generateAdv(imagenetModel, imagenetX[imagenetIdx], imagenetY[imagenetIdx], IMAGENET_CLASSES);
+    await _generateAdv(imagenetModel, imagenetX[imagenetIdx], imagenetY[imagenetIdx], IMAGENET_CLASSES, IMAGENET_CONFIGS[attack.name]);
   }
 
   $('#generate-adv').innerText = 'Generate';
 
-  async function _generateAdv(model, img, lbl, CLASS_NAMES) {
+  async function _generateAdv(model, img, lbl, CLASS_NAMES, CONFIG) {
     // Generate adversarial example
     let targetLbl = tf.oneHot(targetLblIdx, lbl.shape[1]).reshape(lbl.shape);
-    let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl));
+    let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl, CONFIG));
 
     // Display adversarial example
     $('#difference').style.display = 'block';
