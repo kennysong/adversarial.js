@@ -5,7 +5,7 @@
 let x, y;
 
 function loadData() {
-  let csvUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_test.csv?alt=media';
+  let csvUrl = 'mnist_test.csv';
   let csvDataset = tf.data.csv(csvUrl, {columnConfigs: {label: {isLabel: true}}});
 
   return loadingData = csvDataset.map(({xs, ys}) => {
@@ -25,7 +25,7 @@ function loadData() {
 let model;
 
 function loadModel() {
-  return tf.loadLayersModel('https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_dnn.json?alt=media')
+  return tf.loadLayersModel('../data/mnist/mnist_dnn.json')
   .then(m => { model = m });
 }
 

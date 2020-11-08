@@ -3,7 +3,7 @@
 ************************************************************************/
 
 let model;
-let loadingModel = tf.loadLayersModel('https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_dnn.json?alt=media')
+let loadingModel = tf.loadLayersModel('data/mnist/mnist_dnn.json')
   .then(m => { model = m });
 
 /************************************************************************
@@ -11,7 +11,7 @@ let loadingModel = tf.loadLayersModel('https://storage.googleapis.com/download/s
 ************************************************************************/
 
 let dataset;
-let dataUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_ten.csv?alt=media';
+let dataUrl = 'data/mnist/mnist_sample.csv';
 let loadingDataset = tf.data.csv(dataUrl, {columnConfigs: {label: {isLabel: true}}})
   .take(10).map(({xs, ys}) => {
     xs = Object.values(xs).map(e => e/255);  // Convert from feature object to array, and normalize

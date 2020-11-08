@@ -38,7 +38,7 @@ const IMAGENET_CONFIGS = {
 /****************************** Load MNIST ******************************/
 
 let mnistDataset;
-let mnistUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_ten.csv?alt=media';
+let mnistUrl = 'data/mnist/mnist_sample.csv';
 let loadingMnist = tf.data.csv(mnistUrl, {columnConfigs: {label: {isLabel: true}}})
   .map(({xs, ys}) => {
     xs = Object.values(xs).map(e => e/255);  // Convert from feature object to array, and normalize
@@ -51,8 +51,8 @@ let loadingMnist = tf.data.csv(mnistUrl, {columnConfigs: {label: {isLabel: true}
 
 /****************************** Load CIFAR-10 ******************************/
 
-let cifarXUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/cifar10_sample_x_1.json?alt=media';
-let cifarYUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/cifar10_sample_y_1.json?alt=media';
+let cifarXUrl = 'data/cifar/cifar10_sample_x.json';
+let cifarYUrl = 'data/cifar/cifar10_sample_y.json';
 
 // Load data in form [{xs: x0_tensor, ys: y0_tensor}, {xs: x1_tensor, ys: y1_tensor}, ...]
 let cifarX, cifarY, cifarDataset;
@@ -62,8 +62,8 @@ let loadingCifar = Promise.all([loadingCifarX, loadingCifarY]).then(() => tf.dat
 
 /****************************** Load GTSRB ******************************/
 
-let gtsrbXUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/gtsrb_sample_x_4.json?alt=media';
-let gtsrbYUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/gtsrb_sample_y_4.json?alt=media';
+let gtsrbXUrl = 'data/gtsrb/gtsrb_sample_x.json';
+let gtsrbYUrl = 'data/gtsrb/gtsrb_sample_y.json';
 
 // Load data in form [{xs: x0_tensor, ys: y0_tensor}, {xs: x1_tensor, ys: y1_tensor}, ...]
 let gtsrbX, gtsrbY, gtsrbDataset;
@@ -74,12 +74,12 @@ let loadingGtsrb = Promise.all([loadingGtsrbX, loadingGtsrbY]).then(() => tf.dat
 /****************************** Load ImageNet ******************************/
 
 let imagenetXUrls = [
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/574_golf_ball.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/217_english_springer.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/701_parachute.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/0_tench.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/497_church.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/566_french_horn.jpg?alt=media'
+  'data/imagenet/574_golf_ball.jpg',
+  'data/imagenet/217_english_springer.jpg',
+  'data/imagenet/701_parachute.jpg',
+  'data/imagenet/0_tench.jpg',
+  'data/imagenet/497_church.jpg',
+  'data/imagenet/566_french_horn.jpg'
 ]
 let imagenetYLbls = [574, 217, 701, 0, 497, 566]
 let imagenetY = imagenetYLbls.map(lbl => tf.oneHot(lbl, 1000).reshape([1, 1000]));
@@ -120,7 +120,7 @@ loadedImagenetData.then(() => {
 let mnistModel;
 async function loadMnistModel() {
   if (mnistModel !== undefined) { return; }
-  mnistModel = await tf.loadLayersModel('https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_dnn.json?alt=media');
+  mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
 /****************************** Load CIFAR-10 ******************************/
@@ -128,7 +128,7 @@ async function loadMnistModel() {
 let cifarModel;
 async function loadCifarModel() {
   if (cifarModel !== undefined) { return; }
-  cifarModel = await tf.loadLayersModel('https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/cifar10_cnn_2.json?alt=media');
+  cifarModel = await tf.loadLayersModel('data/cifar/cifar10_cnn.json');
 }
 
 /****************************** Load GTSRB ******************************/
@@ -136,7 +136,7 @@ async function loadCifarModel() {
 let gtsrbModel;
 async function loadGtsrbModel() {
   if (gtsrbModel !== undefined) { return; }
-  gtsrbModel = await tf.loadLayersModel('https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/gtsrb_cnn_3.json?alt=media');
+  gtsrbModel = await tf.loadLayersModel('data/gtsrb/gtsrb_cnn.json');
 }
 
 /****************************** Load ImageNet ******************************/

@@ -4,8 +4,8 @@ import {CIFAR_CLASSES} from './class_names.js';
 * Load Dataset
 ************************************************************************/
 
-let xUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/cifar10_sample_x_1.json?alt=media';
-let yUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/cifar10_sample_y_1.json?alt=media';
+let xUrl = 'data/cifar/cifar10_sample_x.json';
+let yUrl = 'data/cifar/cifar10_sample_y.json';
 
 // Load data in form [{xs: x0_tensor, ys: y0_tensor}, {xs: x1_tensor, ys: y1_tensor}, ...]
 let x, y, dataset;
@@ -18,7 +18,7 @@ let loadingData = Promise.all([loadingX, loadingY]).then(() => tf.data.zip([x, y
 ************************************************************************/
 
 let model;
-let loadingModel = tf.loadLayersModel('https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/cifar10_cnn_2.json?alt=media')
+let loadingModel = tf.loadLayersModel('data/cifar/cifar10_cnn.json')
   .then(m => model = m);
 
 let allLoaded = Promise.all([loadingData, loadingModel]);

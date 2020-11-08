@@ -36,12 +36,12 @@ export async function loadModel() {
  ************************************************************************/
 
 let xUrls = [
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/574_golf_ball.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/217_english_springer.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/701_parachute.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/0_tench.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/497_church.jpg?alt=media',
-  'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/566_french_horn.jpg?alt=media'
+  'data/imagenet/574_golf_ball.jpg',
+  'data/imagenet/217_english_springer.jpg',
+  'data/imagenet/701_parachute.jpg',
+  'data/imagenet/0_tench.jpg',
+  'data/imagenet/497_church.jpg',
+  'data/imagenet/566_french_horn.jpg'
 ]
 let yLbls = [574, 217, 701, 0, 497, 566]
 let y = yLbls.map(lbl => tf.oneHot(lbl, 1000).reshape([1, 1000]));

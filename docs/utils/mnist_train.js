@@ -2,7 +2,7 @@
 * Load Dataset
 ************************************************************************/
 
-let csvUrl = 'https://storage.googleapis.com/download/storage/v1/b/kennysong-mnist/o/mnist_train.csv?alt=media';
+let csvUrl = 'mnist_train.csv';
 let csvDataset = tf.data.csv(csvUrl, {columnConfigs: {label: {isLabel: true}}});
 
 let flattenedDataset = csvDataset.map(({xs, ys}) => {
@@ -26,10 +26,10 @@ model.compile({
   metrics: 'accuracy'
 });
 
-document.getElementById('start-training').addEventListener("click", () => { 
+document.getElementById('start-training').addEventListener("click", () => {
   addStatus('\nLoading data...');
   document.getElementById('start-training').style.display = 'none';
-  
+
   model.fitDataset(flattenedDataset, {
    epochs: 15,
    callbacks: {
