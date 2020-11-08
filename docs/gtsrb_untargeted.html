@@ -11,10 +11,18 @@
   </head>
   <body>
     <div class="container">
-      <h1>GTSRB: Untargeted Attacks</h1>
-      <hr/>
+      <div id="header" class="row">
+        <div id="logo" class="eight columns"><a href="/"><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="four columns">
+          <a href="/">Intro</a>&ensp;·&ensp;<a href="examples.html" class="active">Examples</a>&ensp;·&ensp;<a href="faq.html">FAQ</a>&ensp;·&ensp;<a href="api.html">API</a>
+        </div>
+      </div>
 
-      <h2>Fast Gradient Sign Method (FGSM)</h2>
+      <a href="/examples.html" class="back">‹ Back to all examples</a>
+
+      <h2>GTSRB: Untargeted Attacks</h2>
+
+      <h3>Fast Gradient Sign Method (FGSM)</h3>
       <button id="fgsm-run" class="button-primary">Run FGSM</button>
       <div id="fgsm-success-rate"></div>
       <table id="fgsm" style="display:none;">
@@ -42,7 +50,7 @@
         </tbody>
       </table>
 
-      <h2>Basic Iterative Method (BIM / PGD / I-FGSM)</h2>
+      <h3>Basic Iterative Method (BIM / PGD / I-FGSM)</h3>
       <button id="bim-run" class="button-primary">Run BIM</button>
       <div id="bim-success-rate"></div>
       <table id="bim" style="display:none;">

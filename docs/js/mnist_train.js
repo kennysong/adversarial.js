@@ -2,7 +2,7 @@
 * Load Dataset
 ************************************************************************/
 
-let csvUrl = 'mnist_train.csv';
+let csvUrl = 'data/mnist/mnist_train.csv';
 let csvDataset = tf.data.csv(csvUrl, {columnConfigs: {label: {isLabel: true}}});
 
 let flattenedDataset = csvDataset.map(({xs, ys}) => {

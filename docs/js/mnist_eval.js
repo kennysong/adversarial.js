@@ -5,7 +5,7 @@
 let x, y;
 
 function loadData() {
-  let csvUrl = 'mnist_test.csv';
+  let csvUrl = 'data/mnist/mnist_test.csv';
   let csvDataset = tf.data.csv(csvUrl, {columnConfigs: {label: {isLabel: true}}});
 
   return loadingData = csvDataset.map(({xs, ys}) => {
@@ -25,7 +25,7 @@ function loadData() {
 let model;
 
 function loadModel() {
-  return tf.loadLayersModel('../data/mnist/mnist_dnn.json')
+  return tf.loadLayersModel('data/mnist/mnist_dnn.json')
   .then(m => { model = m });
 }
 
