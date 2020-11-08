@@ -15,6 +15,10 @@
       <hr/>
 
       <div id="dashboard">
+        <div id="top-row" class="row border-bottom">
+          <div class="center">Everything here runs in your browser! There is no server.</div>
+        </div>
+
         <div class="row border-bottom">
           <span id="select-model-label">Select a model:&nbsp;</span>
           <select id="select-model">
@@ -54,7 +58,7 @@
               <canvas id="adversarial" class="tableimg" width="224" height="224"></canvas>
               <canvas id="adversarial-noise" class="tableimg" width="224" height="224"></canvas>
             </div>
-            <div class="splitright45" style="padding-right:15px;">
+            <div class="splitright45">
               <label for="select-target">Turn this image into a:</label>
               <select id="select-target" class="u-full-width" data-model="mnist">
                 <option value="0">0</option>
@@ -92,14 +96,14 @@
             <div id="original-prediction-overlay" class="overlay"></div>
             <h5>Prediction</h5>
             <button id="predict-original" class="button-primary">Run Neural Network</button>
-            <div id="prediction" style="display:none;"></div>
+            <div id="prediction"></div>
             <div id="prediction-status"></div>
           </div>
           <div class="one-half column">
             <div id="adversarial-prediction-overlay" class="overlay"></div>
             <h5>Prediction</h5>
             <button id="predict-adv" class="button-primary" disabled>Click "Generate" First</button>
-            <div id="prediction-adv" style="display:none;"></div>
+            <div id="prediction-adv"></div>
             <div id="prediction-adv-status"></div>
           </div>
         </div>

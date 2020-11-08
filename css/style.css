@@ -107,6 +107,7 @@ a {
 .splitright45 {
   width: 45%;
   margin-top: 15px;
+  padding-right:15px;
 }
 
 .splitleft61 {
@@ -167,7 +168,6 @@ a {
   border-radius: 8px;
   min-width: 960px;
   box-shadow: 0px 0px 3px #d4d4d4;
-  padding-top: 15px;
 }
 
 #dashboard .column,
@@ -181,9 +181,20 @@ a {
   margin-bottom: 5px;
 }
 
+#top-row {
+  padding: 7px;
+  border-radius: 8px 8px 0 0;
+  background: #eaeaea;
+  font-size: 12px;
+}
+
 #select-model-label {
   margin-left: 15px;
   font-weight: 500;
+}
+
+#select-model {
+  margin-top: 15px;
 }
 
 #original,
@@ -206,6 +217,7 @@ a {
 #prediction,
 #prediction-adv {
   margin-bottom: 5px;
+  display: none;
 }
 
 #prediction-status,
