@@ -14,10 +14,11 @@
       <h1>adversarial.js</h1>
       <hr/>
 
-      <div id="panel">
+      <div id="dashboard">
         <div class="row border-bottom">
           <span id="select-model-label">Select a model:&nbsp;</span>
           <select id="select-model">
+            <option value="" selected disabled>Select model</option>
             <option value="mnist">MNIST (digit recognition)</option>
             <option value="gtsrb">GTSRB (street sign recognition)</option>
             <option value="cifar">CIFAR-10 (object recognition, small)</option>
@@ -27,15 +28,18 @@
 
         <div class="row">
           <div class="one-half column border-right">
+            <div id="original-image-overlay" class="overlay"></div>
             <h5 class="center">Original Image</h5>
           </div>
           <div class="one-half column">
+            <div id="adversarial-image-overlay" class="overlay"></div>
             <h5 class="center">Adversarial Image</h5>
           </div>
         </div>
 
         <div class="row border-bottom">
           <div class="one-half column split border-right">
+            <div id="original-canvas-overlay" class="overlay"></div>
             <div class="splitleft61">
               <canvas id="original" class="tableimg" width="224" height="224"></canvas>
             </div>
@@ -45,12 +49,13 @@
           </div>
 
           <div class="one-half column split">
+            <div id="adversarial-canvas-overlay" class="overlay"></div>
             <div class="splitleft55">
               <canvas id="adversarial" class="tableimg" width="224" height="224"></canvas>
               <canvas id="adversarial-noise" class="tableimg" width="224" height="224"></canvas>
             </div>
             <div class="splitright45" style="padding-right:15px;">
-              <label for="select-target">Misclassify this image as a:</label>
+              <label for="select-target">Turn this image into a:</label>
               <select id="select-target" class="u-full-width" data-model="mnist">
                 <option value="0">0</option>
                 <option value="1">1</option>
@@ -84,14 +89,16 @@
 
         <div class="row center" style="display:flex;"> <!-- The flex here keeps the child columns the same height -->
           <div class="one-half column border-right">
+            <div id="original-prediction-overlay" class="overlay"></div>
             <h5>Prediction</h5>
             <button id="predict-original" class="button-primary">Run Neural Network</button>
             <div id="prediction" style="display:none;"></div>
             <div id="prediction-status"></div>
           </div>
           <div class="one-half column">
+            <div id="adversarial-prediction-overlay" class="overlay"></div>
             <h5>Prediction</h5>
-            <button id="predict-adv" class="button-primary">Run Neural Network</button>
+            <button id="predict-adv" class="button-primary" disabled>Click "Generate" First</button>
             <div id="prediction-adv" style="display:none;"></div>
             <div id="prediction-adv-status"></div>
           </div>

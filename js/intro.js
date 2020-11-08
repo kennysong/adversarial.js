@@ -172,6 +172,7 @@ window.addEventListener('load', resetAvailableAttacks);
 $('#select-model').addEventListener('change', showImage);
 $('#select-model').addEventListener('change', resetOnNewImage);
 $('#select-model').addEventListener('change', resetAttack);
+$('#select-model').addEventListener('change', removeLeftOverlay);
 
 // Next image button
 $('#next-image').addEventListener('click', showNextImage);
@@ -180,6 +181,7 @@ $('#next-image').addEventListener('click', resetAttack);
 
 // Predict button (original image)
 $('#predict-original').addEventListener('click', predict);
+$('#predict-original').addEventListener('click', removeTopRightOverlay);
 
 // Target label dropdown
 $('#select-target').addEventListener('change', resetAttack);
@@ -189,6 +191,7 @@ $('#select-attack').addEventListener('change', resetAttack);
 
 // Generate button
 $('#generate-adv').addEventListener('click', generateAdv);
+$('#generate-adv').addEventListener('click', removeBottomRightOverlay);
 
 // Predict button (adversarial image)
 $('#predict-adv').addEventListener('click', predictAdv);
@@ -262,7 +265,7 @@ async function predict() {
 
     // Display prediction
     let status = {msg: '✅ Prediction is correct.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
-    showPrediction(`Prediction: '${CLASS_NAMES[predLblIdx]}'<br/>Probability: ${predProb.toFixed(4)}`, status);
+    showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`, status);
   }
  }
 
@@ -304,6 +307,8 @@ async function generateAdv() {
   }
 
   $('#generate-adv').innerText = 'Generate';
+  $('#predict-adv').innerText = 'Run Neural Network';
+  $('#predict-adv').disabled = false;
 
   async function _generateAdv(model, img, lbl, CLASS_NAMES, CONFIG) {
     // Generate adversarial example
@@ -318,7 +323,7 @@ async function generateAdv() {
     let pred = model.predict(aimg);
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
-    advPrediction = `Prediction: '${CLASS_NAMES[predLblIdx]}'<br/>Probability: ${predProb.toFixed(4)}`;
+    advPrediction = `Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`;
 
     // Compute & store attack success/failure message
     let lblIdx = lbl.argMax(1).dataSync()[0];
@@ -384,7 +389,8 @@ function resetOnNewImage() {
  */
 async function resetAttack() {
   $('#generate-adv').disabled = false;
-  $('#predict-adv').disabled = false;
+  $('#predict-adv').disabled = true;
+  $('#predict-adv').innerText = 'Click "Generate" First';
   $('#difference').style.display = 'none';
   $('#difference-noise').style.display = 'none';
   $('#prediction-adv').style.display = 'none';
@@ -461,6 +467,21 @@ function resetAvailableAttacks() {
       selectTarget.setAttribute('data-model', modelName);
     }
   }
+}
+
+function removeLeftOverlay() {
+  $('#original-image-overlay').style.display = 'none';
+  $('#original-canvas-overlay').style.display = 'none';
+  $('#original-prediction-overlay').style.display = 'none';
+}
+
+function removeTopRightOverlay() {
+  $('#adversarial-image-overlay').style.display = 'none';
+  $('#adversarial-canvas-overlay').style.display = 'none';
+}
+
+function removeBottomRightOverlay() {
+  $('#adversarial-prediction-overlay').style.display = 'none';
 }
 
 /************************************************************************
