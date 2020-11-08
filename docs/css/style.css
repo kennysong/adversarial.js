@@ -244,10 +244,13 @@ select:focus {
   text-decoration: underline;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 750px) {
   #header,
   #nav {
     text-align: center;
+  }
+  #header .column {
+    width: 100%;
   }
 }
 
