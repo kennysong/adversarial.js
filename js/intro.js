@@ -167,6 +167,7 @@ async function loadImagenetModel() {
 // On page load
 window.addEventListener('load', showImage);
 window.addEventListener('load', resetAvailableAttacks);
+window.addEventListener('load', showBanners);
 
 // Model selection dropdown
 $('#select-model').addEventListener('change', showImage);
@@ -469,19 +470,71 @@ function resetAvailableAttacks() {
   }
 }
 
+/**
+ * Removes the overlay on the left half of the dashboard when the user selects a model
+ */
 function removeLeftOverlay() {
   $('#original-image-overlay').style.display = 'none';
   $('#original-canvas-overlay').style.display = 'none';
   $('#original-prediction-overlay').style.display = 'none';
 }
 
+/**
+ * Removes the overlay on the top right of the dashboard when the user makes their first prediction
+ */
 function removeTopRightOverlay() {
   $('#adversarial-image-overlay').style.display = 'none';
   $('#adversarial-canvas-overlay').style.display = 'none';
 }
 
+/**
+ * Removes the overlay on the bottom right of the dashboard when the user generates an adversarial example
+ */
 function removeBottomRightOverlay() {
   $('#adversarial-prediction-overlay').style.display = 'none';
+}
+
+/**
+ * Check the user's device and display appropriate warning messages
+ */
+function showBanners() {
+  if (!supports32BitWebGL()) { $('#mobile-banner').style.display = 'block'; }
+  else if (!isDesktopChrome()) { $('#chrome-banner').style.display = 'block'; }
+}
+
+/**
+ * Returns if it looks like the user is on desktop Google Chrome
+ * https://stackoverflow.com/a/13348618/908744
+ */
+function isDesktopChrome() {
+  var isChromium = window.chrome;
+  var winNav = window.navigator;
+  var vendorName = winNav.vendor;
+  var isOpera = typeof window.opr !== "undefined";
+  var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
+  var isIOSChrome = winNav.userAgent.match("CriOS");
+
+  if (isIOSChrome) {
+    return false;
+  } else if (
+    isChromium !== null &&
+    typeof isChromium !== "undefined" &&
+    vendorName === "Google Inc." &&
+    isOpera === false &&
+    isIEedge === false
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Returns if the current device supports WebGL 32-bit
+ * https://www.tensorflow.org/js/guide/platform_environment#precision
+ */
+function supports32BitWebGL() {
+  return tf.ENV.getBool('WEBGL_RENDER_FLOAT32_CAPABLE') && tf.ENV.getBool('WEBGL_RENDER_FLOAT32_ENABLED');
 }
 
 /************************************************************************

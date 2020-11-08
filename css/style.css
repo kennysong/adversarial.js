@@ -133,19 +133,16 @@ a {
 }
 
 .status-green {
-  /* border: 3px solid #38761d; */
   color: #38761d;
   background: #deffd6ff;
 }
 
 .status-orange {
-  /* border: 3px solid #ff9900; */
   color: #ff9900;
   background: #fff0d5ff;
 }
 
 .status-red {
-  /* border: 3px solid red; */
   color: red;
   background: #ffcece;
 }
@@ -161,6 +158,30 @@ a {
   right: 0;
   top: 0;
   bottom: 0;
+}
+
+.warning-banner {
+  background: #fff0d5ff;
+  width: fit-content;
+  width: -moz-fit-content;
+  color: #ff9900;
+  border: 1px solid #ff9900;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin: 0 auto 15px;
+  display: none;
+}
+
+.error-banner {
+  background: #ffcece;
+  width: fit-content;
+  width: -moz-fit-content;
+  color: red;
+  border: 1px solid red;
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin: 0 auto 15px;
+  display: none;
 }
 
 #dashboard {
@@ -224,6 +245,7 @@ a {
 #prediction-adv-status {
   margin: auto;
   width: fit-content;
+  width: -moz-fit-content;
   padding: 2px 10px;
   margin-bottom: 9px;
 }
