@@ -169,29 +169,33 @@ window.addEventListener('load', showImage);
 window.addEventListener('load', resetAvailableAttacks);
 
 // Model selection dropdown
-$('#select-model').addEventListener("change", showImage);
-$('#select-model').addEventListener("change", resetOnNewImage);
-$('#select-model').addEventListener("change", resetAttack);
+$('#select-model').addEventListener('change', showImage);
+$('#select-model').addEventListener('change', resetOnNewImage);
+$('#select-model').addEventListener('change', resetAttack);
 
 // Next image button
-$('#next-image').addEventListener("click", showNextImage);
-$('#next-image').addEventListener("click", resetOnNewImage);
-$('#next-image').addEventListener("click", resetAttack);
+$('#next-image').addEventListener('click', showNextImage);
+$('#next-image').addEventListener('click', resetOnNewImage);
+$('#next-image').addEventListener('click', resetAttack);
 
 // Predict button (original image)
-$('#predict-original').addEventListener("click", predict);
+$('#predict-original').addEventListener('click', predict);
 
 // Target label dropdown
-$('#select-target').addEventListener("change", resetAttack);
+$('#select-target').addEventListener('change', resetAttack);
 
 // Attack algorithm dropdown
-$('#select-attack').addEventListener("change", resetAttack);
+$('#select-attack').addEventListener('change', resetAttack);
 
 // Generate button
-$('#generate-adv').addEventListener("click", generateAdv);
+$('#generate-adv').addEventListener('click', generateAdv);
 
 // Predict button (adversarial image)
-$('#predict-adv').addEventListener("click", predictAdv);
+$('#predict-adv').addEventListener('click', predictAdv);
+
+// View noise / view image link
+$('#view-noise').addEventListener('click', viewNoise);
+$('#view-image').addEventListener('click', viewImage);
 
 /************************************************************************
 * Define Event Handlers
@@ -258,7 +262,7 @@ async function predict() {
 
     // Display prediction
     let status = {msg: '✅ Prediction is correct.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
-    showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`, status);
+    showPrediction(`Prediction: '${CLASS_NAMES[predLblIdx]}'<br/>Probability: ${predProb.toFixed(4)}`, status);
   }
  }
 
@@ -314,7 +318,7 @@ async function generateAdv() {
     let pred = model.predict(aimg);
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
-    advPrediction = `Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`;
+    advPrediction = `Prediction: '${CLASS_NAMES[predLblIdx]}'<br/>Probability: ${predProb.toFixed(4)}`;
 
     // Compute & store attack success/failure message
     let lblIdx = lbl.argMax(1).dataSync()[0];
@@ -325,16 +329,40 @@ async function generateAdv() {
     } else {
       advStatus = {msg: '✅ Prediction is still correct. Attack failed.', statusClass: 'status-green'};
     }
+
+    // Also compute and draw the adversarial noise (hidden until the user clicks on it)
+    let noise = tf.sub(aimg, img).add(0.5).clipByValue(0, 1);  // [Szegedy 14] Intriguing properties of neural networks
+    drawImg(noise, 'adversarial-noise');
   }
 }
 
 /**
- * Displays prediction of the current adversarial image
+ * Displays prediction for the current adversarial image
  * (This function just renders the status we've already computed in generateAdv())
  */
 function predictAdv() {
   $('#predict-adv').disabled = true;
   showAdvPrediction(advPrediction, advStatus);
+}
+
+/**
+ * Show adversarial noise when the user clicks on the "view noise" link
+ */
+async function viewNoise() {
+  $('#difference').style.display = 'none';
+  $('#difference-noise').style.display = 'block';
+  $('#adversarial').style.display = 'none';
+  $('#adversarial-noise').style.display = 'block';
+}
+
+/**
+ * Show adversarial image when the user clicks on the "view image" link
+ */
+async function viewImage() {
+  $('#difference').style.display = 'block';
+  $('#difference-noise').style.display = 'none';
+  $('#adversarial').style.display = 'block';
+  $('#adversarial-noise').style.display = 'none';
 }
 
 /**
@@ -354,15 +382,19 @@ function resetOnNewImage() {
 /**
  * Reset attack UI when a new target label, attack, or image is selected
  */
-function resetAttack() {
+async function resetAttack() {
   $('#generate-adv').disabled = false;
   $('#predict-adv').disabled = false;
   $('#difference').style.display = 'none';
+  $('#difference-noise').style.display = 'none';
   $('#prediction-adv').style.display = 'none';
   $('#prediction-adv-status').innerHTML = '';
   $('#prediction-adv-status').className = '';
   $('#prediction-adv-status').style.marginBottom = '9px';
-  drawImg(tf.ones([1, 224, 224, 1]), 'adversarial');
+  await drawImg(tf.ones([1, 224, 224, 1]), 'adversarial');
+  await drawImg(tf.ones([1, 224, 224, 1]), 'adversarial-noise');
+  $('#adversarial').style.display = 'block';
+  $('#adversarial-noise').style.display = 'none';
 }
 
 /**
@@ -432,7 +464,7 @@ function resetAvailableAttacks() {
 }
 
 /************************************************************************
-* Visualize Attacks
+* Visualize Images
 ************************************************************************/
 
 function showPrediction(msg, status) {
@@ -491,30 +523,15 @@ async function showNextImagenet() {
   await showImagenet();
 }
 
-async function drawImg(img, element, msg, border) {
+async function drawImg(img, element) {
   // Draw image
   let canvas = document.getElementById(element);
-  if (img.shape[1] === 784) {
+  if (img.shape[0] === 1) { img = img.squeeze(0); }
+  if (img.shape[0] === 784) {
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([28, 28, 1]), [224, 224]);
     await tf.browser.toPixels(resizedImg, canvas);
   } else {
-    let resizedImg = tf.image.resizeNearestNeighbor(img.squeeze(0), [224, 224]);
+    let resizedImg = tf.image.resizeNearestNeighbor(img, [224, 224]);
     await tf.browser.toPixels(resizedImg, canvas);
-  }
-
-  // Draw caption
-  if (msg !== undefined) {
-    canvas.nextSibling.innerHTML = msg;
-  } else {
-    canvas.nextSibling.innerHTML = '<br/>';
-  }
-
-  // Draw border
-  if (border !== undefined) {
-    canvas.style.borderColor = border;
-    canvas.style.borderWidth = '5px';
-  } else {
-    canvas.style.borderColor = 'black';
-    canvas.style.borderWidth = '1px';
   }
 }

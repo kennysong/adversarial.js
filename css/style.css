@@ -63,6 +63,10 @@ button[disabled]:hover {
     text-shadow:none;
 }
 
+a {
+  cursor: pointer;
+}
+
 .tableimg {
   border: 1px solid #000000;
 }
@@ -146,11 +150,16 @@ button[disabled]:hover {
 }
 
 #original,
-#adversarial {
+#adversarial,
+#adversarial-noise {
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 20px;
   display: block;
+}
+
+#adversarial-noise {
+  display: none;
 }
 
 #next-image {
@@ -188,7 +197,8 @@ button[disabled]:hover {
   background: #ffcece;
 }
 
-#difference {
+#difference,
+#difference-noise {
   font-size: 9px;
   display: none;
 }

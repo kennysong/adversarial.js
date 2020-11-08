@@ -47,6 +47,7 @@
           <div class="one-half column split">
             <div class="splitleft55">
               <canvas id="adversarial" class="tableimg" width="224" height="224"></canvas>
+              <canvas id="adversarial-noise" class="tableimg" width="224" height="224"></canvas>
             </div>
             <div class="splitright45" style="padding-right:15px;">
               <label for="select-target">Misclassify this image as a:</label>
@@ -74,7 +75,8 @@
 
               <div class="center">
                 <button id="generate-adv" class="button-primary">Generate</button>
-                <div id="difference">Can you see the difference?</div>
+                <div id="difference">Can you see the difference? <a id="view-noise">View noise.</a></div>
+                <div id="difference-noise">Noise is magnified. <a id="view-image">View image.</a></div>
               </div>
             </div>
           </div>
