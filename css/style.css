@@ -67,6 +67,34 @@ a {
   cursor: pointer;
 }
 
+
+/* Select styling adapted from https://milligram.io/ */
+select {
+  -webkit-appearance: none;
+  background-color: transparent;
+  /* border: 0.1rem solid #d1d1d1; */
+  /* border-radius: .4rem; */
+  /* box-shadow: none; */
+  /* box-sizing: inherit; */
+  /* height: 3.8rem; */
+  padding: .6rem 1.0rem .7rem;
+  /* width: 100%; */
+}
+
+select:focus {
+  border-color: #33C3F0;
+  outline: 0;
+}
+
+select {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 8" width="30"><path fill="%23d1d1d1" d="M0,0l6,8l6-8"/></svg>') center right -8px no-repeat;
+  padding-right: 2.6rem;
+}
+
+select:focus {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 8" width="30"><path fill="%2333C3F0" d="M0,0l6,8l6-8"/></svg>');
+}
+
 .tableimg {
   border: 1px solid #000000;
 }
