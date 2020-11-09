@@ -244,7 +244,7 @@ select:focus {
   text-decoration: underline;
 }
 
-@media (max-width: 750px) {
+@media (max-width: 800px) {
   #header,
   #nav {
     text-align: center;
