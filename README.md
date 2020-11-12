@@ -2,7 +2,7 @@
 
 Break neural networks in your browser.
 
-An interactive, in-browser demonstration of adversarial attacks on neural networks, implemented entirely in JavaScript.
+An interactive, in-browser demonstration of adversarial attacks on neural networks – entirely in JavaScript.
 
 ## Get Started
 
