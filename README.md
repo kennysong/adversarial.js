@@ -6,7 +6,7 @@ An interactive, in-browser demonstration of adversarial attacks on neural networ
 
 ## Get Started
 
-Try the demo: [kennysong.github.io/adversarial.js](https://kennysong.github.io/adversarial.js)
+[Try the demo!](https://kennysong.github.io/adversarial.js)
 
 ![Demo Screenshot](https://raw.githubusercontent.com/kennysong/adversarial.js/main/docs/data/screenshot.png)
 
