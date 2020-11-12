@@ -2,11 +2,11 @@
 
 Break neural networks in your browser.
 
-An interactive, in-browser demonstration of adversarial attacks on neural networks, implemented entirely in JavaScript.
+An interactive, in-browser demonstration of adversarial attacks on neural networks – entirely in JavaScript.
 
 ## Get Started
 
-Try the demo: [kennysong.github.io/adversarial.js](https://kennysong.github.io/adversarial.js)
+[Try the demo!](https://kennysong.github.io/adversarial.js)
 
 ![Demo Screenshot](https://raw.githubusercontent.com/kennysong/adversarial.js/main/docs/data/screenshot.png)
 
@@ -35,7 +35,7 @@ The demo can break the following pre-loaded systems:
 
 ## Repo Structure
 
-1. `src/adversarial.js`: The core adversarial.js library with all attacks
-2. `docs/`: The interactive demo files. Explore the [live website](https://kennysong.github.io/adversarial.js).
-3. `docs/js`:  Contains a copy of `adversarial.js`, in addition to many other JavaScript files for loading data and powering the demo
-4. `docs/data`:  Contains (subsets) of datasets used in the demo.
+1. [`src/adversarial.js`](src/adversarial.js): The core adversarial.js library that implements all attacks.
+2. [`docs/`](docs/): The interactive demo directory. Explore the [live website](https://kennysong.github.io/adversarial.js).
+3. [`docs/js/`](docs/js/):  Contains a ton of scripts that process data and power the demo, and a copy of `adversarial.js`.
+4. [`docs/data/`](docs/data/):  Contains (subsets) of datasets used in the demo.
