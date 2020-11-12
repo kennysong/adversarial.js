@@ -215,7 +215,7 @@ select:focus {
 }
 
 .faq {
-  width: 650px;
+  max-width: 650px;
   margin: auto;
 }
 
