@@ -1,22 +1,3 @@
-/* *
- * @license
- * Copyright 2018 Google LLC. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =============================================================================
- */
-
-/* CSS files add styling rules to your content */
-
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 body {
@@ -43,6 +24,16 @@ h3 {
   font-weight: 500;
   font-size: 2.5rem;
   margin-top: 3.0rem;
+}
+
+h4 {
+  font-weight: 500;
+  font-size: 22px;
+  margin-top: 35px;
+}
+
+h5 {
+  font-weight: 400;
 }
 
 thead {
@@ -77,6 +68,14 @@ a {
 
 pre {
   margin-top: -17px;
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+li {
+  margin-left: 15px;
 }
 
 /* Select styling adapted from https://milligram.io/ */
@@ -215,6 +214,51 @@ select:focus {
   text-decoration: none;
 }
 
+.faq {
+  width: 650px;
+  margin: auto;
+}
+
+.faq-header {
+  background: #fff2ec;
+  margin-top: 30px;
+  border-radius: 0px;
+  padding: 10px 0;
+  font-size: 23px;
+  color: #fe6c2b;
+  text-align: center;
+}
+
+.badge {
+  font-family: monospace;
+}
+
+#banner {
+  background: #fff2ec;
+  margin-bottom: 20px;
+  border-radius: 0px;
+  padding: 10px 0;
+  font-size: 23px;
+  color: #fe6c2b;
+  text-align: center;
+}
+
+#banner-faq-link {
+  background: #def7ff;
+  margin-top: 30px;
+  border-radius: 0px;
+  padding: 10px 0;
+  font-size: 23px;
+  color: #20aeda;
+  text-align: center;
+}
+
+#math-link {
+  font-size:10px;
+  margin-top: 5px;
+  text-align: center;
+}
+
 #header {
   border-bottom: 1px solid #b9b9b9;
   padding-bottom: 15px;
@@ -258,7 +302,7 @@ select:focus {
   border: 1px solid #b9b9b9;
   border-radius: 8px;
   min-width: 960px;
-  box-shadow: 0px 0px 3px #d4d4d4;
+  box-shadow: 0px 0px 2px #d4d4d4;
 }
 
 #dashboard .column,
@@ -276,8 +320,7 @@ select:focus {
   padding: 7px;
   border-radius: 8px 8px 0 0;
   font-size: 12px;
-  background: #fe6c2b;
-  color: white;
+  background: #f5f5f5;
 }
 
 #select-model-label {

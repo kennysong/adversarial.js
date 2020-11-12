@@ -21,9 +21,11 @@
       <div id="chrome-banner" class="warning-banner">⚠️ It looks like you're not using Google Chrome. This demo is <strong>not guaranteed to work</strong>. If it breaks, please try in Google Chrome.</div>
       <div id="mobile-banner" class="error-banner">⚠️ It looks like you're on a mobile device without 32-bit WebGL. The demo <strong>will not work</strong>. Please try on desktop Google Chrome.</div>
 
+      <div id="banner">Break neural networks in your browser.</div>
+
       <div id="dashboard">
         <div id="top-row" class="row border-bottom">
-          <div class="center">All computations run in your browser! There is no server.</div>
+          <div class="center">Everything runs client-side – there is no server! Try the demo:</div>
         </div>
 
         <div class="row border-bottom">
@@ -116,6 +118,53 @@
         </div>
       </div>
 
+      <hr>
+
+      <div class="faq">
+        <h4>What is the demo doing?</h4>
+        <p>Neural networks achieve superhuman performance in many areas, but they are easily fooled.</p>
+        <p>In the demo above, we can force neural networks to predict anything we want. By adding nearly-invisible noise to an image, we turn "1"s into "9"s, "Stop" signs into "120 km/hr" signs, and dogs into hot dogs.</p>
+        <p>These noisy images are called <a href="https://en.wikipedia.org/wiki/Adversarial_machine_learning#Specific_Attacks_Types">adversarial examples</a>. They break the integrity of machine learning systems, and the illusion of their superhuman performance.</p>
+
+        <h4>Why does this matter?</h4>
+        <p>Our world is becoming increasingly automated, yet these systems are quite easy to break.</p>
+        <p>If machine learning systems are not properly defended, attackers could:</p>
+        <ul>
+          <li>Impersonate others in facial recognition systems</li>
+          <li>Force autonomous vehicles to misrecognize street signs &amp; obstacles</li>
+          <li>Bypass content moderation and spam filters in social networks</li>
+          <li>Inject adversarial bytes into malware to bypass antivirus systems</li>
+          <li>Digitally alter numbers on a check in a mobile banking app</li>
+          <li>(and more)</li>
+        </ul>
+
+        <h4>Is this limited to image classification with neural networks?</h4>
+        <p>No. Adversarial examples exist for almost every machine learning task: <a href="https://nicholas.carlini.com/code/audio_adversarial_examples">speech recognition</a>, <a href="https://arxiv.org/pdf/1804.07998.pdf">text classification</a>, <a href="https://dl.acm.org/doi/10.1145/3308558.3313533">fraud detection</a>, <a href="https://www.ericswallace.com/imitation">machine translation</a>, <a href="https://adversarialpolicies.github.io/">reinforcement learning</a>, ....</p>
+        <p>Moreover, all machine learning models (not just neural networks) are vulnerable. In fact, simpler models such as logistic regression are <a href="https://arxiv.org/pdf/1412.6572.pdf">even more easily attacked</a>.</p>
+        <p>Finally – beyond adversarial examples – there are many more adversarial attack vectors, including data poisoning, model backdooring, data extraction, and model stealing.</p>
+
+        <h4>How do I defend against adversarial examples?</h4>
+        <p>There are several proposed defenses, including adversarial training and admission control.</p>
+        <p>However, no defense is universal and many have proven ineffective, so work with an expert to quantify your risks and invest in defenses appropriately.</p>
+        <p>(What would happen if someone can make your system predict anything they want?).</p>
+
+        <h4>Where can I learn more?</h4>
+        <p>Here's a list of good resources, in rough order of approachability:</p>
+        <ul>
+          <li><a href="faq.html">The full FAQ</a></li>
+          <li><a href="examples.html">The directory of attacks</a> (try running locally and playing with various settings)</li>
+          <li><span class="badge">[Blog]</span> CleverHans – <a href="http://www.cleverhans.io/security/privacy/ml/2016/12/16/breaking-things-is-easy.html">start here</a></li>
+          <li><span class="badge">[Blog]</span> Gradient Science – <a href="https://gradientscience.org/intro_adversarial/">start here</a></li>
+          <li><span class="badge">[Tutorial]</span> <a href="https://adversarial-ml-tutorial.org/">Adversarial Robustness - Theory and Practice</a></li>
+          <li><span class="badge">[Paper]</span> <a href="https://arxiv.org/pdf/1611.03814.pdf">SoK: Towards the Science of Security and Privacy in Machine Learning</a></li>
+          <li><span class="badge">[Paper]</span> <a href="https://arxiv.org/pdf/1712.03141.pdf">Wild Patterns: Ten Years After the Rise of Adversarial Machine Learning</a></li>
+        </ul>
+        <p>Last – feel free to <a href="mailto:hello@kennysong.com">email me questions</a>.</p>
+
+        <div id="banner-faq-link"><a href="faq.html">See the full FAQ.</a></div>
+      </div>
+    </div>
+
     <!-- Hack to load a sample of ImageNet images that we can access in canvas -->
     <img class="0" style="display:none;">
     <img class="1" style="display:none;">
@@ -125,7 +174,7 @@
     <img class="5" style="display:none;">
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.0.4"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.0.4"></script>
     <script src="js/intro.js" type="module"></script>
   </body>
 </html>
