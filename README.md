@@ -35,7 +35,7 @@ The demo can break the following pre-loaded systems:
 
 ## Repo Structure
 
-1. `src/attacks.js`: The core adversarial.js library with all attacks
+1. `src/adversarial.js`: The core adversarial.js library with all attacks
 2. `docs/`: The interactive demo files. Explore the [live website](https://kennysong.github.io/adversarial.js).
-3. `docs/js`:  Contains a copy of `attacks.js`, in addition to many other JavaScript files for loading data and powering the demo
+3. `docs/js`:  Contains a copy of `adversarial.js`, in addition to many other JavaScript files for loading data and powering the demo
 4. `docs/data`:  Contains (subsets) of datasets used in the demo.

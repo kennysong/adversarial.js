@@ -1,4 +1,4 @@
-import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './attacks.js';
+import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './adversarial.js';
 import {MNIST_CLASSES, GTSRB_CLASSES, CIFAR_CLASSES, IMAGENET_CLASSES} from './class_names.js';
 
 /************************************************************************
