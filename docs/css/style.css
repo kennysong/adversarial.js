@@ -259,6 +259,11 @@ select:focus {
   text-align: center;
 }
 
+#attack-subtitle {
+  font-size: 13px;
+  margin-top: -7px;
+}
+
 #header {
   border-bottom: 1px solid #b9b9b9;
   padding-bottom: 15px;
