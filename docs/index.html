@@ -28,8 +28,8 @@
         </div>
       </div>
 
-      <div id="chrome-banner" class="warning-banner">⚠️ It looks like you're not using Google Chrome. This demo is <strong>not guaranteed to work</strong>. If it breaks, please try in Google Chrome.</div>
-      <div id="mobile-banner" class="error-banner">⚠️ It looks like you're on a mobile device without 32-bit WebGL. The demo <strong>will not work</strong>. Please try on desktop Google Chrome.</div>
+      <div id="chrome-banner" class="warning-banner">⚠️ It looks like you're not using Google Chrome. This demo <strong>may not work properly</strong>. If it breaks, please try in Google Chrome.</div>
+      <div id="mobile-banner" class="error-banner">⚠️ It looks like you're on a mobile device without 32-bit WebGL. The demo <strong>will not work properly</strong>. Please try on desktop Google Chrome.</div>
 
       <div id="banner">Break neural networks in your browser.</div>
 
@@ -103,6 +103,7 @@
 
               <div class="center">
                 <button id="generate-adv" class="button-primary">Generate</button>
+                <div id="latency-msg">This will take a few seconds.</div>
                 <div id="difference">Can you see the difference? <a id="view-noise">View noise.</a></div>
                 <div id="difference-noise">Noise is magnified. <a id="view-image">View image.</a></div>
               </div>
@@ -156,7 +157,7 @@
         <h4>How do I defend against adversarial examples?</h4>
         <p>There are several proposed defenses, including adversarial training and admission control.</p>
         <p>However, no defense is universal and many have proven ineffective, so work with an expert to quantify your risks and invest in defenses appropriately.</p>
-        <p>(What would happen if someone can make your system predict anything they want?).</p>
+        <p>(What happens if someone can make your system predict anything they want?).</p>
 
         <h4>Where can I learn more?</h4>
         <p>Here's a list of good resources, in rough order of approachability:</p>

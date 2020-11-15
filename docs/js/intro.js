@@ -307,6 +307,7 @@ async function generateAdv() {
     await _generateAdv(imagenetModel, imagenetX[imagenetIdx], imagenetY[imagenetIdx], IMAGENET_CLASSES, IMAGENET_CONFIGS[attack.name]);
   }
 
+  $('#latency-msg').style.display = 'none';
   $('#generate-adv').innerText = 'Generate';
   $('#predict-adv').innerText = 'Run Neural Network';
   $('#predict-adv').disabled = false;
@@ -402,6 +403,12 @@ async function resetAttack() {
   await drawImg(tf.ones([1, 224, 224, 1]), 'adversarial-noise');
   $('#adversarial').style.display = 'block';
   $('#adversarial-noise').style.display = 'none';
+
+  if ($('#select-model').value === 'gtsrb' || $('#select-model').value === 'imagenet') {
+    $('#latency-msg').style.display = 'block';
+  } else {
+    $('#latency-msg').style.display = 'none';
+  }
 }
 
 /**

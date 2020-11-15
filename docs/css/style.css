@@ -375,7 +375,8 @@ select:focus {
 }
 
 #difference,
-#difference-noise {
+#difference-noise,
+#latency-msg {
   font-size: 9px;
   display: none;
 }
