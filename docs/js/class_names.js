@@ -8,7 +8,7 @@ export const MNIST_CLASSES = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 * CIFAR-10 Classes
 ************************************************************************/
 
-export const CIFAR_CLASSES = ['Plane', 'Cat', 'Bird', 'Car', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
+export const CIFAR_CLASSES = ['Plane', 'Car', 'Bird', 'Cat', 'Deer', 'Dog', 'Frog', 'Horse', 'Ship', 'Truck'];
 
 /************************************************************************
 * GTSRB Classes

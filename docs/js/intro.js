@@ -266,7 +266,7 @@ async function predict() {
 
     // Display prediction
     let status = {msg: '✅ Prediction is correct.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
-    showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`, status);
+    showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${(predProb * 100).toFixed(2)}%`, status);
   }
  }
 
@@ -325,7 +325,7 @@ async function generateAdv() {
     let pred = model.predict(aimg);
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
-    advPrediction = `Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${predProb.toFixed(4)}`;
+    advPrediction = `Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${(predProb * 100).toFixed(2)}%`;
 
     // Compute & store attack success/failure message
     let lblIdx = lbl.argMax(1).dataSync()[0];
