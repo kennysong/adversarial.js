@@ -28,7 +28,6 @@ export default {
   width: 100%;
   height: 100px;
   background-color: #D3DAE4;
-  padding-left: 35px;
 }
 
 .headers {
@@ -49,6 +48,10 @@ export default {
   margin-top: 25px;
 }
 
+.title {
+  margin-left: 35px;
+}
+
 .page-title {
   margin-left: 10px;
 }
@@ -57,7 +60,6 @@ export default {
   display: inline-block;
   margin-top: 40px;
   margin-left: auto;
-  margin-right: 35px;
 }
 
 a {
