@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <div class="headers title">Adversarial Learning</div>
+    <div class="headers title">Adversarial Education</div>
     <div class="headers page-title">-</div>
     <div class="headers page-title">{{ pageTitle }}</div>
     <div class="links">
@@ -26,8 +26,9 @@ export default {
 .banner {
   display: flex;
   width: 100%;
-  height: 5em;
+  height: 100px;
   background-color: #D3DAE4;
+  padding-left: 35px;
 }
 
 .headers {
@@ -45,12 +46,18 @@ export default {
 
 .page-title {
   margin-left: .5em;
+  margin-top: 25px;
+}
+
+.page-title {
+  margin-left: 10px;
 }
 
 .links {
   display: inline-block;
-  margin-top: 2em;
+  margin-top: 40px;
   margin-left: auto;
+  margin-right: 35px;
 }
 
 a {
