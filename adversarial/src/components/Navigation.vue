@@ -26,7 +26,8 @@ export default {
 .banner {
   display: flex;
   width: 100%;
-  height: 100px;
+  /* height: 100px; */
+  height: 5em;
   background-color: #D3DAE4;
 }
 
@@ -49,7 +50,7 @@ export default {
 }
 
 .title {
-  margin-left: 35px;
+  margin-left: 1em;
 }
 
 .page-title {
@@ -58,7 +59,7 @@ export default {
 
 .links {
   display: inline-block;
-  margin-top: 40px;
+  margin-top: 2em;
   margin-left: auto;
 }
 
