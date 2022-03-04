@@ -26,7 +26,6 @@ export default {
 .banner {
   display: flex;
   width: 100%;
-  /* height: 100px; */
   height: 5em;
   background-color: #D3DAE4;
 }
@@ -45,7 +44,7 @@ export default {
 }
 
 .page-title {
-  margin-left: 10px;
+  margin-left: .5em;
 }
 
 .links {
@@ -67,6 +66,20 @@ a:hover {
 
 a:active {
   font-weight: bold;
+}
+
+@media (max-width: 940px) {
+  .headers {
+    font-size: 12pt;
+  }
+
+  /* .links {
+
+  } */
+
+  /* a {
+
+  } */
 }
 </style>
 

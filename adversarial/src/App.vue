@@ -1,16 +1,31 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
+      <Button description="description" />
+      <DropDown description="description" />
+      <Footer description="description" />
+      <Image description="description" />
+      <FAQ description="description" />
     </div>
 </template>
 
 <script>
 import Navigation from './components/Navigation.vue'
+import Button from './components/Button.vue'
+import DropDown from './components/DropDown.vue'
+import Footer from './components/Footer.vue'
+import Image from './components/Image.vue'
+import FAQ from './components/FAQ.vue'
 
 export default {
   name: 'App',
   components: {
-    Navigation
+    Navigation,
+    Button,
+    DropDown,
+    Footer,
+    Image,
+    FAQ
   }
 }
 </script>
