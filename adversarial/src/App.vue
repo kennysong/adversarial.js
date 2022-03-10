@@ -16,6 +16,8 @@ import DropDown from './components/DropDown.vue'
 import Footer from './components/Footer.vue'
 import Image from './components/Image.vue'
 import FAQ from './components/FAQ.vue'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 
 export default {
   name: 'App',
