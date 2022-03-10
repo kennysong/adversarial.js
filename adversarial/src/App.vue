@@ -2,6 +2,13 @@
     <div class="main-container">
       <Navigation pageTitle="Home"/>
       <Container />
+      <Button value = "Generate"/>
+      <Button value = "Prediction"/>
+      <Button value = "Upload Image"/>
+      <ModelDropDown/>
+      <AttackDropDown/>
+      <ImageDropDown/>
+      <Button value = "Prediction"/>
       <Footer/>
       <!-- <FAQ/> -->
       <Image/>
@@ -11,6 +18,10 @@
 <script>
 import Navigation from './components/Navigation.vue'
 import Container from './components/Container.vue'
+import Button from './components/Button.vue'
+import ModelDropDown from './components/ModelDropDown.vue'
+import AttackDropDown from './components/AttackDropDown.vue'
+import ImageDropDown from './components/ImageDropDown.vue'
 import Footer from './components/Footer.vue'
 // import FAQ from './components/FAQ.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -21,8 +32,12 @@ export default {
   components: {
     Navigation,
     Container,
-    Footer
+    Footer,
     // FAQ
+    Button,
+    ModelDropDown,
+    AttackDropDown,
+    ImageDropDown
   }
 }
 </script>
