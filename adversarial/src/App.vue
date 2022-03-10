@@ -1,11 +1,53 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
-      <Button description="description" />
-      <DropDown description="description" />
-      <Footer description="description" />
-      <Image description="description" />
-      <FAQ description="description" />
+      <Button value = "Generate"/>
+      <Button value = "Prediction"/>
+      <Button value = "Upload Image"/>
+      <DropDown Select Model/>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="#">MNIST (digit recognition)</a></li>
+        <li><a class="dropdown-item" href="#">GTSRB (street sign recognition)</a></li>
+        <li><a class="dropdown-item" href="#">CIFAR-10 (object recognition, small)</a></li>
+        <li><a class="dropdown-item" href="#">ImageNet (object recognition, large)</a></li>
+        </ul>
+      <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Model
+      </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="#">MNIST (digit recognition)</a></li>
+        <li><a class="dropdown-item" href="#">GTSRB (street sign recognition)</a></li>
+        <li><a class="dropdown-item" href="#">CIFAR-10 (object recognition, small)</a></li>
+        <li><a class="dropdown-item" href="#">ImageNet (object recognition, large)</a></li>
+        </ul>
+      </div>
+      <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Attack
+      </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="#">Carlini & Wagner (strongest) (digit recognition)</a></li>
+        <li><a class="dropdown-item" href="#">Jacobian-based Saliency Map Attack</a></li>
+        <li><a class="dropdown-item" href="#">Basic Iterative Method (stronger)</a></li>
+        <li><a class="dropdown-item" href="#">Fast Gradient Sign Method (weak)</a></li>
+        </ul>
+      </div>
+      <div class="dropdown">
+      <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Image
+      </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="#">Potato</a></li>
+        <li><a class="dropdown-item" href="#">Street Lamp</a></li>
+        <li><a class="dropdown-item" href="#">Sushi</a></li>
+        <li><a class="dropdown-item" href="#">Donkey </a></li>
+        </ul>
+      </div>
+      
+      <Footer/>
+      <Image/>
+      <FAQ/>
     </div>
 </template>
 
