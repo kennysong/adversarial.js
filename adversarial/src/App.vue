@@ -4,6 +4,7 @@
       <Container />
       <Footer/>
       <!-- <FAQ/> -->
+      <Image/>
     </div>
 </template>
 
