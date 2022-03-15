@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>adversarial.js – API</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Break neural networks in your browser.">
+    <link rel="shortcut icon" href="data/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.3.2/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.3.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C02BRW1FMK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C02BRW1FMK');
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="row">
+        <div id="logo" class="one-half column"><a href="."><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="one-half column">
+          <a href=".">Intro</a>&ensp;·&ensp;<a href="examples.html">Examples</a>&ensp;·&ensp;<a href="faq.html">FAQ</a>&ensp;·&ensp;<a href="api.html" class="active">API</a>&ensp;·&ensp;<a href="https://github.com/kennysong/adversarial.js" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <h3>API</h3>
+      <p>In adversarial.js, all attacks have essentially the same API.</p>
+      <ol>
+        <li>Untargeted attacks take the (1) model, (2) example, and (3) original label as arguments.</li>
+        <li>Targeted attacks take the (1) model, (2) example, (3) original label, and (4) <strong>target label</strong> as arguments.</li>
+      </ol>
+      <p>Useful notes:</p>
+      <ul>
+        <li>The model should be a <code>tf.LayersModel</code>. The last layer must be a <strong>separate</strong> <code>tf.layers.softmax</code> layer – the softmax cannot be in a <code>{activation: 'softmax'}</code> parameter!).</li>
+        <li>The example and labels must be placed in a batch of size 1.</li>
+        <li>The code is minimal and well-documented, but I highly recommend referencing the papers to understand the attacks.</li>
+      </ul>
+
+      <p>Here are the JSDoc signatures (or, just read the <a href="https://github.com/kennysong/adversarial.js/blob/main/src/adversarial.js">source</a>):</p>
+      <br>
+
+      <pre><code>/**
+* Fast Gradient Sign Method (FGSM)
+*
+* This is an L_infinity attack (every pixel can change up to a maximum amount).
+*
+* Sources:
+* - [Goodfellow 15] Explaining and harnessing adversarial examples
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function fgsm(model, img, lbl, {ε = 0.1} = {}) { ... }
+
+/**
+* Targeted Variant of the Fast Gradient Sign Method (FGSM)
+*
+* This is an L_infinity attack (every pixel can change up to a maximum amount).
+*
+* Sources:
+*  - [Kurakin 16] Adversarial examples in the physical world (original paper)
+*  - [Kurakin 16] Adversarial Machine Learning at Scale (best description)
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+* @param {number} config.loss - The loss function to use (must be 0, 1, or 2).
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function fgsmTargeted(model, img, lbl, targetLbl, {ε = 0.1, loss = 2} = {}) { ... }
+
+/**
+* Basic Iterative Method (BIM / I-FGSM / PGD)
+*
+* This is an L_infinity attack (every pixel can change up to a maximum amount).
+*
+* Sources:
+*  - BIM: [Kurakin 16] Adversarial examples in the physical world
+*  - I-FGSM: [Tramer 17] Ensemble Adversarial Training: Attacks and Defenses
+*  - PGD: [Madry 19] Towards Deep Learning Models Resistant to Adversarial Attacks
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+* @param {number} config.α - Learning rate for gradient descent.
+* @param {number} config.iters - Number of iterations of gradient descent.
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function bim(model, img, lbl, {ε = 0.1, α = 0.01, iters = 10} = {}) { ... }
+
+/**
+* Targeted Variant of the Basic Iterative Method (BIM / I-FGSM / PGD)
+*
+* This is an L_infinity attack (every pixel can change up to a maximum amount).
+*
+* Sources:
+*  - [Kurakin 16] Adversarial examples in the physical world (original paper)
+*  - [Kurakin 16] Adversarial Machine Learning at Scale (best description)
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.ε - Max L_inf distance (each pixel can change up to this amount).
+* @param {number} config.iters - Number of iterations of gradient descent.
+* @param {number} config.loss - The loss function to use (must be 0 or 1). Note: loss2 from fgsmTargeted theoretically works, but it's too slow in practice.
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function bimTargeted(model, img, lbl, targetLbl, {ε = 0.1, α = 0.01, iters = 10, loss = 1} = {}) { ... }
+
+/**
+* One-Pixel Variant of the Jacobian-based Saliency Map Attack (JSMA / JSMA-F)
+*
+* This is an L0 attack (we can change a limited number of pixels as much as we want).
+*
+* This is a much simplified version of the normal JSMA attack, where we only
+* consider single pixels at a time, rather than pairs of pixels. Additionally,
+* instead of computing the full saliency, we rely only on the gradient of the
+* target class wrt the image. This is much faster and scalable than JSMA, and
+* has similar performance on MNIST and CIFAR-10.
+*
+* Sources:
+*  - JSMA: [Papernot 15] The Limitations of Deep Learning in Adversarial Settings
+*  - JSMA-F: [Carlini 17] Towards Evaluating the Robustness of Neural Networks
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.ε - Max L0 distance (we can change up to this many pixels).
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function jsmaOnePixel(model, img, lbl, targetLbl, {ε = 28} = {}) { ... }
+
+/**
+* Jacobian-based Saliency Map Attack (JSMA / JSMA-F)
+*
+* This is an L0 attack (we can change a limited number of pixels as much as we want).
+*
+* (Note: I tried JSMA-Z as well, which uses logits instead of softmax probabilities.
+*  This results in much worse performance for this attack, even though JSMA-Z was
+*  the original variant of this attack (see Carlini 17). I'm not sure why there's
+*  a huge discrepancy.)
+*
+* Sources:
+*  - JSMA: [Papernot 15] The Limitations of Deep Learning in Adversarial Settings
+*  - JSMA-F: [Carlini 17] Towards Evaluating the Robustness of Neural Networks
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.ε - Max L0 distance (we can change up to this many pixels).
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function jsma(model, img, lbl, targetLbl, {ε = 28} = {}) { ... }
+
+/**
+* Carlini & Wagner (C&W)
+*
+* This is an L2 attack (we are incentivized to change many pixels by very small amounts).
+*
+* Note that this attack does NOT allow us to set a maximum L2 perturbation.
+*
+* Sources:
+*  - [Carlini 17] Towards Evaluating the Robustness of Neural Networks
+*  - [Carlini 17] Adversarial Examples Are Not Easily Detected - Bypassing Ten Detection Methods
+*
+* @param {tf.LayersModel} model - The model to construct an adversarial example for.
+* @param {tf.Tensor} img - The input image to construct an adversarial example for.
+* @param {tf.Tensor} lbl - The correct label of the image (must have shape [1, NUM_CLASSES]).
+* @param {tf.Tensor} targetLbl - The desired adversarial label of the image (must have shape [1, NUM_CLASSES]).
+* @param {Object} config - Optional configuration for this attack.
+* @param {number} config.c - Higher = higher success rate, but higher distortion.
+* @param {number} config.κ - Higher = more confident adv example.
+* @param {number} config.λ - Higher learning rate = faster convergence, but higher distortion.
+* @param {number} config.iters - Number of iterations of gradient descent (Adam).
+*
+* @returns {tf.Tensor} The adversarial image.
+*/
+export function cw(model, img, lbl, targetLbl, {c = 5, κ = 1, λ = 0.1, iters = 100} = {}) { ... }</code></pre>
+    </div>
+  </body>
+</html>
