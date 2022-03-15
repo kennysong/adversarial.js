@@ -2,6 +2,7 @@
     <div class="main-container">
       <Navigation pageTitle="Home"/>
       <Button value = "Generate" id = "GenerateButton" />
+
       <Button value = "Prediction"/>
       <Button value = "Upload Image"/>
       <ModelDropDown/>
@@ -18,6 +19,7 @@
             </div>
           </div>
         </div>
+
       <Footer/>
       <Image/>
       <FAQ/>
