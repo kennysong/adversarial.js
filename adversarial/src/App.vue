@@ -20,7 +20,7 @@
         </div>
       <Button value = "Prediction"/>
       <Footer/>
-      <Image/>
+      <ImageContainer/>
       <FAQ/>
     </div>
 </template>
