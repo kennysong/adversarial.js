@@ -1,7 +1,5 @@
 <template>
-  <div>
-    {{ description }}
-  </div>
+  <input class="btn btn-primary" type="button">
 </template>
 
 <script>
