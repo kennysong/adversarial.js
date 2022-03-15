@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MNIST: Train a DNN</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="data/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="row">
+        <div id="logo" class="one-half column"><a href="."><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="one-half column">
+          <a href=".">Intro</a>&ensp;·&ensp;<a href="examples.html" class="active">Examples</a>&ensp;·&ensp;<a href="faq.html">FAQ</a>&ensp;·&ensp;<a href="api.html">API</a>&ensp;·&ensp;<a href="https://github.com/kennysong/adversarial.js" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <a href="examples.html" class="back">‹ Back to all examples</a>
+
+      <h2>MNIST: Train a DNN</h2>
+
+      <pre><code id="status">(Training will download a ~100MB file.)
+(This only uses the first 50,000 images in MNIST, due to the GitHub file size limit.)
+(To train on all 60,000 images, run this locally and unzip mnist_train.zip which contains the full dataset.)</code></pre>
+      <button id="start-training" class="button-primary">Start Training</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js" type="text/javascript"></script>
+    <script src="js/mnist_train.js" defer></script>
+  </body>
+</html>
