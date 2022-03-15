@@ -1,8 +1,5 @@
 <template>
   <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false">
-    Select Model
-  </button>
   <select id="select-model">
             <option value="" selected disabled>Select model</option>
             <option value="mnist">MNIST (digit recognition)</option>

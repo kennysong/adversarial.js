@@ -19,7 +19,7 @@
           </div>
         </div>
       <Footer/>
-      <Image/>
+      <ImageContainer/>
       <FAQ/>
     </div>
 </template>
@@ -31,7 +31,7 @@ import ModelDropDown from './components/ModelDropDown.vue'
 import AttackDropDown from './components/AttackDropDown.vue'
 import ImageDropDown from './components/ImageDropDown.vue'
 import Footer from './components/Footer.vue'
-import Image from './components/Image.vue'
+import ImageContainer from './components/Image.vue'
 import FAQ from './components/FAQ.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
@@ -45,7 +45,7 @@ export default {
     AttackDropDown,
     ImageDropDown,
     Footer,
-    Image,
+    ImageContainer,
     FAQ
   }
 }
