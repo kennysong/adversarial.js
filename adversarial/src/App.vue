@@ -1,12 +1,17 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
+<<<<<<< HEAD
       <Button value = "Generate" id = "GenerateButton" />
+=======
+      <Button value = "Generate"/>
+>>>>>>> 20105927ea96456ae4515245201a2c1817266166
       <Button value = "Prediction"/>
       <Button value = "Upload Image"/>
       <ModelDropDown/>
       <AttackDropDown/>
       <ImageDropDown/>
+<<<<<<< HEAD
       <div class="row border-bottom">
           <div class="one-half column split border-right">
             <div id="original-canvas-overlay" class="overlay"></div>
@@ -20,6 +25,11 @@
         </div>
       <Footer/>
       <ImageContainer/>
+=======
+      <Button value = "Prediction"/>
+      <Footer/>
+      <Image/>
+>>>>>>> 20105927ea96456ae4515245201a2c1817266166
       <FAQ/>
     </div>
 </template>
