@@ -1,28 +1,39 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
-      <Button description="description" />
-      <DropDown description="description" />
-      <Footer description="description" />
-      <Image description="description" />
-      <FAQ description="description" />
+      <Button value = "Generate"/>
+      <Button value = "Prediction"/>
+      <Button value = "Upload Image"/>
+      <ModelDropDown/>
+      <AttackDropDown/>
+      <ImageDropDown/>
+      <Button value = "Prediction"/>
+      <Footer/>
+      <Image/>
+      <FAQ/>
     </div>
 </template>
 
 <script>
 import Navigation from './components/Navigation.vue'
 import Button from './components/Button.vue'
-import DropDown from './components/DropDown.vue'
+import ModelDropDown from './components/ModelDropDown.vue'
+import AttackDropDown from './components/AttackDropDown.vue'
+import ImageDropDown from './components/ImageDropDown.vue'
 import Footer from './components/Footer.vue'
 import Image from './components/Image.vue'
 import FAQ from './components/FAQ.vue'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 
 export default {
   name: 'App',
   components: {
     Navigation,
     Button,
-    DropDown,
+    ModelDropDown,
+    AttackDropDown,
+    ImageDropDown,
     Footer,
     Image,
     FAQ
