@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'ImageHolder',
+  name: 'ImageContainer',
   props: {
     description: String
   }
