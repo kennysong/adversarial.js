@@ -2,12 +2,10 @@
     <div class="main-container">
       <Navigation pageTitle="Home"/>
       <Button value = "Generate"/>
-      <Button value = "Prediction"/>
       <Button value = "Upload Image"/>
       <ModelDropDown/>
       <AttackDropDown/>
       <ImageDropDown/>
-      <Button value = "Prediction"/>
       <Footer/>
       <Image/>
       <FAQ/>
@@ -57,6 +55,7 @@ export default {
 
   body {
     margin: 0;
+    background-color: #E0E8F3;
   }
 
   .main-container {
