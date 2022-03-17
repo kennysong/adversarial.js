@@ -2,7 +2,7 @@
   <div class="footer">
     <table class="footerTable">
       <tr>
-        <td rowspan="5" class="button"><Button value = "Prediction"/></td>
+        <td rowspan="4" class="button"><Button value = "Prediction"/></td>
       </tr>
       <tr>
         <th>Original</th>
