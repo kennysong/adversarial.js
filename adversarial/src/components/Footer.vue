@@ -41,24 +41,25 @@ export default {
 
 table.footerTable {
   border: none;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 75%;
   font-size: 20px;
   font-weight: bold;
   text-align: center;
 }
 
 table.footerTable td.button {
-  width: 50%;
+  width: 60%;
 }
 
 table.footerTable th {  
-  width: 25%;
+  width: 20%;
   font-family: "Raleway-italic";
 }
 
 table.footerTable td.info {
   text-align: left;
   font-family: "Raleway";
+  vertical-align: top;
 }
 </style>
