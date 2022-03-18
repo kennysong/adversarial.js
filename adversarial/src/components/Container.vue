@@ -10,7 +10,7 @@
     </div>
     <div class="imageHolder">
       <ImageHolder />
-      Text here
+      <img src="../../public/vuelogo.png">
     </div>
     <div class="generate">
       <Button value = "Generate"/>
