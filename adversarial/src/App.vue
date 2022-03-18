@@ -1,27 +1,16 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
-      <Button value = "Generate"/>
-      <Button value = "Prediction"/>
-      <Button value = "Upload Image"/>
-      <ModelDropDown/>
-      <AttackDropDown/>
-      <ImageDropDown/>
-      <Button value = "Prediction"/>
+      <Container />
       <Footer/>
-      <Image/>
       <FAQ/>
     </div>
 </template>
 
 <script>
 import Navigation from './components/Navigation.vue'
-import Button from './components/Button.vue'
-import ModelDropDown from './components/ModelDropDown.vue'
-import AttackDropDown from './components/AttackDropDown.vue'
-import ImageDropDown from './components/ImageDropDown.vue'
+import Container from './components/Container.vue'
 import Footer from './components/Footer.vue'
-import Image from './components/Image.vue'
 import FAQ from './components/FAQ.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
@@ -30,12 +19,8 @@ export default {
   name: 'App',
   components: {
     Navigation,
-    Button,
-    ModelDropDown,
-    AttackDropDown,
-    ImageDropDown,
+    Container,
     Footer,
-    Image,
     FAQ
   }
 }
@@ -57,6 +42,7 @@ export default {
 
   body {
     margin: 0;
+    background-color: #E0E8F3;
   }
 
   .main-container {
