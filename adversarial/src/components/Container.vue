@@ -10,7 +10,7 @@
     </div>
     <div class="imageHolder">
       <ImageHolder />
-      <img src="../../public/vuelogo.png">
+      <img src="../../public/vuelogo.png" class="mainImage">
     </div>
     <div class="generate">
       <Button value = "Generate"/>
@@ -40,6 +40,11 @@ export default {
 </script>
 
 <style>
+.mainImage {
+  max-width: 100%;
+  height: auto;
+}
+
 .wrapper {
   background-color: #FFFFFF;
   width: 85%;

@@ -33,10 +33,11 @@ export default {
 <style>
 .footer {
   background-color: #F4F6F9;
-  position: absolute;
+  position: relative;
   bottom: 0px;
   width: 100%;
   height: 7em;
+  margin-top: 5em;
 }
 
 table.footerTable {
