@@ -121,7 +121,8 @@ loadedImagenetData.then(() => {
 let mnistModel;
 async function loadMnistModel() {
   if (mnistModel !== undefined) { return; }
-  mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
+  mnistModel = await tf.loadLayersModel('data/mnist/resnet/model.json');
+  //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
 /****************************** Load CIFAR-10 ******************************/
@@ -240,7 +241,13 @@ async function predict() {
     await loadMnistModel();
     await loadingMnist;
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
-    _predict(mnistModel, mnistDataset[mnistIdx].xs, lblIdx, MNIST_CLASSES);
+    console.log(lblIdx);
+    let img = mnistDataset[mnistIdx].xs;
+    let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
+    let RGB = tf.image.grayscaleToRGB(resizedImg);
+    
+    //_predict(mnistModel, mnistDataset[mnistIdx].xs, lblIdx, MNIST_CLASSES);
+    _predict(mnistModel, RGB, lblIdx, MNIST_CLASSES);
   } else if (modelName === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
