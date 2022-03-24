@@ -121,7 +121,7 @@ loadedImagenetData.then(() => {
 let mnistModel;
 async function loadMnistModel() {
   if (mnistModel !== undefined) { return; }
-  mnistModel = await tf.loadLayersModel('data/mnist/resnet/model.json');
+  mnistModel = await tf.loadLayersModel('data/mnist/vgg16/model.json');
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -242,10 +242,11 @@ async function predict() {
     await loadingMnist;
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
     console.log(lblIdx);
+    console.log(mnistIdx);
     let img = mnistDataset[mnistIdx].xs;
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
     let RGB = tf.image.grayscaleToRGB(resizedImg);
-    
+    console.log(RGB)
     //_predict(mnistModel, mnistDataset[mnistIdx].xs, lblIdx, MNIST_CLASSES);
     _predict(mnistModel, RGB, lblIdx, MNIST_CLASSES);
   } else if (modelName === 'cifar') {
@@ -269,11 +270,13 @@ async function predict() {
   function _predict(model, img, lblIdx, CLASS_NAMES) {
     // Generate prediction
     let pred = model.predict(img);
+    console.log(pred.dataSync())
+    console.log(pred.max().dataSync())
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
 
     // Display prediction
-    let status = {msg: '✅ Prediction is correct.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
+    let status = {msg: '✅ Prediction is Zero.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
     showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${(predProb * 100).toFixed(2)}%`, status);
   }
  }

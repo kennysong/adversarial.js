@@ -28,12 +28,12 @@ model = applications.VGG16(weights='imagenet', include_top = False, input_tensor
 global_pool = layers.GlobalMaxPooling2D()(model.output)
 out = layers.Dense(10, activation='softmax', use_bias=True)(global_pool)
 
-resnet = keras.Model(model.input, out)
+v16 = keras.Model(model.input, out)
 
 
-resnet.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.metrics.CategoricalAccuracy(), optimizer = keras.optimizers.Adam())
+v16.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.metrics.CategoricalAccuracy(), optimizer = keras.optimizers.Adam())
 
-resnet.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
+v16.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
 
-tfjs.converters.save_keras_model(model, './js/vgg16')
-model.save('./js/vgg16/vgg16.h5')
+tfjs.converters.save_keras_model(v16, '../mnist/vgg16')
+#model.save('./js/vgg16/vgg16.h5')
