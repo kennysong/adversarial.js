@@ -3,7 +3,7 @@
       <Navigation pageTitle="Home"/>
       <Container />
       <Footer/>
-      <FAQ/>
+      <!-- <FAQ/> -->
     </div>
 </template>
 
@@ -11,7 +11,7 @@
 import Navigation from './components/Navigation.vue'
 import Container from './components/Container.vue'
 import Footer from './components/Footer.vue'
-import FAQ from './components/FAQ.vue'
+// import FAQ from './components/FAQ.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
@@ -20,8 +20,8 @@ export default {
   components: {
     Navigation,
     Container,
-    Footer,
-    FAQ
+    Footer
+    // FAQ
   }
 }
 </script>

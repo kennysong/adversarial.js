@@ -71,7 +71,6 @@ export default {
 
 .imageHolder {
   width: 55%;
-  background-color: black;
   height: fit-content;
 }
 
