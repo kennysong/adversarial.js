@@ -34,7 +34,7 @@ import AttackDropDown from './components/AttackDropDown.vue'
 import ImageDropDown from './components/ImageDropDown.vue'
 import Footer from './components/Footer.vue'
 // import FAQ from './components/FAQ.vue'
-import ImageContainer from './components/Image.vue'
+import ImageContainer from './components/ImageContainer.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 

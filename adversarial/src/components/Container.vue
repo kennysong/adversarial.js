@@ -8,8 +8,8 @@
       <div class="label">Turn This Image Into a/an:</div>
       <ImageDropDown/>
     </div>
-    <div class="imageHolder">
-      <ImageHolder />
+    <div class="ImageContainer">
+      <ImageContainer />
       <img src="../../public/vuelogo.png" class="mainImage">
     </div>
     <div class="generate">
@@ -26,7 +26,7 @@ import Button from './Button.vue'
 import ModelDropDown from './ModelDropDown.vue'
 import AttackDropDown from './AttackDropDown.vue'
 import ImageDropDown from './ImageDropDown.vue'
-import ImageHolder from './ImageHolder.vue'
+import ImageContainer from './ImageContainer.vue'
 export default {
   name: 'Container',
   components: {
@@ -34,7 +34,7 @@ export default {
     ModelDropDown,
     AttackDropDown,
     ImageDropDown,
-    ImageHolder
+    ImageContainer
   }
 }
 </script>
@@ -70,7 +70,7 @@ export default {
   padding: 1em;
 }
 
-.imageHolder {
+.ImageContainer {
   width: 55%;
   height: fit-content;
 }
