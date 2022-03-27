@@ -4,19 +4,22 @@
       <div class="label">Select a Model</div>
       <ModelDropDown/>
       <div class="label">Select an Attack</div>
+      <ModelDropDown/>
+      <div class="label">Select an Attack</div>
       <AttackDropDown/>
       <div class="label">Turn This Image Into a/an:</div>
       <ImageDropDown/>
     </div>
     <div class="ImageContainer">
       <ImageContainer />
-      <img src="../../public/vuelogo.png" class="mainImage">
+      <!-- <img src="../../public/vuelogo.png" class="mainImage"> -->
     </div>
     <div class="generate">
       <Button value = "Generate"/>
     </div>
     <div class="upload">
       <Button value = "Upload Image"/>
+      <Button value = "Next Image" id = "next-image"/>
     </div>
   </div>
 </template>
