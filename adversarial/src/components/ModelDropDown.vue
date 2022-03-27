@@ -1,11 +1,11 @@
 <template>
   <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false">
-      {{id}}
+      <button class="btn btn-primary dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false" value = "">
+      {{key}}
       </button>
         <ul class="dropdown-menu" aria-labelledby="select-model">
-        <li v-for="option in options" :key="option">
-          <a class="dropdown-item" @click="id = option.id; value = option.value" href="javascript: void(0)">{{option.id}}</a>
+        <li v-for="option in options" :key="option.key">
+          <a class="dropdown-item" @click="key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
         </li>
         </ul>
       </div>
@@ -15,18 +15,19 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 export default {
   name: 'ModelDropDown',
+  id: 'select-model',
   props: {
     description: String
   },
   data: () => ({
     options: [
-      { id: 'MNIST (digit recognition)', value: 'mnist' },
-      { id: 'GTSRB (street sign recognition)', value: 'gtsrb' }, 
-      { id: 'CIFAR-10 (object recognition, small)', value: 'cifar10' }, 
-      { id: 'ImageNet (object recognition, large)', value: 'imagenet'}
+      { key: "MNIST (digit recognition)", value: 'mnist' },
+      { key: "GTSRB (street sign recognition)", value: 'gtsrb' }, 
+      { key: "CIFAR-10 (object recognition, small)", value: 'cifar10' }, 
+      { key: "ImageNet (object recognition, large)", value: 'imagenet'}
       ],
-    id: 'Select Model',
-    value: ''
+    key: "Select Model",
+    value: ""
   }),
 }
 </script>
