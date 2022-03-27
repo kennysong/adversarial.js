@@ -3,27 +3,35 @@
     <table class="footerTable">
       <tr>
         <td rowspan="4" class="button"><Button value = "Prediction"/></td>
+            <Button value = "Run Neural Network" id = "predict-original"/>
+            <button id="predict-adv" class="button-primary" disabled>Click "Generate" First</button>
       </tr>
       <tr>
         <th>Original</th>
         <th>New</th>
       </tr>
       <tr>
-        <td class="info"> Prediction: </td>
-        <td class="info"> Prediction: </td>
+        <td class="info"> Prediction: <div id="prediction"></div></td>
+        <td class="info"> Prediction: <div id="prediction-adv"></div></td>
       </tr>
       <tr>
-        <td class="info"> Probability: </td>
-        <td class="info"> Probability: </td>
+        <td class="info"> Probability: <div id="prediction-status"></div></td>
+        <td class="info"> Probability: <div id="prediction-adv-status"></div></td>
       </tr>
     </table>
   </div>
+            
+            
 </template>
 
 <script>
 import Button from './Button.vue'
+
 export default {
   name: 'Footer',
+  props: {
+    description: String
+  },
   components: {
     Button
   }

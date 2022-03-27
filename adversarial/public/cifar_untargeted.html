@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CIFAR-10: Untargeted Attacks</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="data/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="row">
+        <div id="logo" class="one-half column"><a href="."><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="one-half column">
+          <a href=".">Intro</a>&ensp;·&ensp;<a href="examples.html" class="active">Examples</a>&ensp;·&ensp;<a href="faq.html">FAQ</a>&ensp;·&ensp;<a href="api.html">API</a>&ensp;·&ensp;<a href="https://github.com/kennysong/adversarial.js" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <a href="examples.html" class="back">‹ Back to all examples</a>
+
+      <h2>CIFAR-10: Untargeted Attacks</h2>
+
+      <h3>Fast Gradient Sign Method (FGSM)</h3>
+      <button id="fgsm-run" class="button-primary">Run FGSM</button>
+      <div id="fgsm-success-rate"></div>
+      <table id="fgsm" style="display:none;">
+        <thead style="font-size:1.1rem;">
+          <td>Original</td>
+          <td>Adversarial</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="0a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="1a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="2a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="3a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="4a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="5a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="6a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="7a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="8a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="9a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Basic Iterative Method (BIM / PGD / I-FGSM)</h3>
+      <button id="bim-run" class="button-primary">Run BIM</button>
+      <div id="bim-success-rate"></div>
+      <table id="bim" style="display:none;">
+        <thead style="font-size:1.1rem;">
+          <td>Original</td>
+          <td>Adversarial</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="0a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="1a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="2a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="3a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="4a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="5a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="6a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="7a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="8a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="9a tableimg" width="64" height="64"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js" type="text/javascript"></script>
+    <script type="module">
+      import {fgsm, bim} from './js/adversarial.js';
+      import {runUntargeted} from './js/cifar.js';
+
+      [fgsm, bim].forEach((attack) => {
+        let name = attack.name;
+        document.getElementById(`${name}-run`).addEventListener("click", async () => {
+          document.getElementById(name).style.display = 'table';
+          document.getElementById(`${name}-run`).disabled = true;
+          document.getElementById(`${name}-run`).innerText = 'Running...';
+          await runUntargeted(attack);
+          document.getElementById(`${name}-run`).innerText = 'Done!';
+        });
+      });
+    </script>
+  </body>
+</html>
