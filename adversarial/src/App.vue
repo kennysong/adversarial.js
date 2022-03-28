@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
-      <Container />
+      <Container/>
       <div class="row border-bottom">
           <div class="one-half column split border-right">
             <div id="original-canvas-overlay" class="overlay"></div>
@@ -17,10 +17,6 @@
       <ImageContainer/>
     </div>
 </template>
-
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0/dist/tf.min.js" type="text/javascript"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.0.4"></script>
-<script src="js/intro.js" type="module"></script>
 
 <script>
 import Navigation from './components/Navigation.vue'

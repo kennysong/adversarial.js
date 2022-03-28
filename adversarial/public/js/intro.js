@@ -2,8 +2,8 @@ import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './adversarial.j
 import {MNIST_CLASSES, GTSRB_CLASSES, CIFAR_CLASSES, IMAGENET_CLASSES} from './class_names.js';
 
 
-import * as tf from '@tensorflow/tfjs';
-import * as mobilenet from '@tensorflow-models/mobilenet';
+import * as tf from '../../node_modules/@tensorflow/tfjs';
+import * as mobilenet from '../../node_modules/@tensorflow-models/mobilenet';
 /************************************************************************
 * Global constants
 ************************************************************************/
@@ -77,12 +77,12 @@ let loadingGtsrb = Promise.all([loadingGtsrbX, loadingGtsrbY]).then(() => tf.dat
 /****************************** Load ImageNet ******************************/
 
 let imagenetXUrls = [
-  'data/imagenet/574_golf_ball.jpg',
-  'data/imagenet/217_english_springer.jpg',
-  'data/imagenet/701_parachute.jpg',
-  'data/imagenet/0_tench.jpg',
-  'data/imagenet/497_church.jpg',
-  'data/imagenet/566_french_horn.jpg'
+  '../data/imagenet/574_golf_ball.jpg',
+  '../data/imagenet/217_english_springer.jpg',
+  '../data/imagenet/701_parachute.jpg',
+  '../data/imagenet/0_tench.jpg',
+  '../data/imagenet/497_church.jpg',
+  '../data/imagenet/566_french_horn.jpg'
 ]
 let imagenetYLbls = [574, 217, 701, 0, 497, 566]
 let imagenetY = imagenetYLbls.map(lbl => tf.oneHot(lbl, 1000).reshape([1, 1000]));
@@ -182,10 +182,22 @@ window.addEventListener('load', showImage);
 //$('#select-model').addEventListener('change', removeLeftOverlay);
 
 // Next image button
+export function nextImage(){
+	showNextImage();
+	resetOnNewImage();
+	//resetAttack();
+}
 //$('#next-image').addEventListener('click', showNextImage);
 //$('#next-image').addEventListener('click', resetOnNewImage);
 //$('#next-image').addEventListener('click', resetAttack);
 
+// Upload image button
+export function uploadImage(){
+	console.log("Stealing all your provate data.");
+	//showNextImage();
+	//resetOnNewImage();
+	//resetAttack();
+}
 // Predict button (original image)
 //$('#predict-original').addEventListener('click', predict);
 //$('#predict-original').addEventListener('click', removeTopRightOverlay);

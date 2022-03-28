@@ -1,12 +1,19 @@
 <template>
-  <input class="btn btn-primary" type="button">
+  <input class="btn btn-primary" type="button" @click = "onClick()">
 </template>
 
 <script>
+import {nextImage, uploadImage} from "../../public/js/intro.js"
 export default {
   name: 'Button',
   props: {
     description: String
+  },
+  methods: {
+    onClick(){
+		if(this.description == "next-image"){ nextImage()}
+		else if(this.description =="upload-image") {uploadImage()}
+	}
   }
 }
 </script>

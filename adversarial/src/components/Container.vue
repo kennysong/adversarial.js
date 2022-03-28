@@ -18,13 +18,14 @@
       <Button value = "Generate"/>
     </div>
     <div class="upload">
-      <Button value = "Upload Image"/>
-      <Button value = "Next Image" id = "next-image"/>
+      <Button value = "Upload Image" description="upload-image"/>
+      <Button value = "Next Image" description="next-image"/>
     </div>
   </div>
 </template>
 
 <script>
+
 import Button from './Button.vue'
 import ModelDropDown from './ModelDropDown.vue'
 import AttackDropDown from './AttackDropDown.vue'
