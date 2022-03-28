@@ -121,10 +121,13 @@ loadedImagenetData.then(() => {
 
 /****************************** Load MNIST ******************************/
 
+let mnistLenet;
+let mnistResnet;
+let mnistVgg16;
 let mnistModel;
 async function loadMnistModel() {
-  if (mnistModel !== undefined) { return; }
-  mnistModel = await tf.loadLayersModel('data/mnist/vgg16/model.json');
+  if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/vgg16/model.json'); }
+  if (mnistResnet == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -175,8 +178,22 @@ window.addEventListener('load', showImage);
 //window.addEventListener('load', showBanners);
 
 // Model selection dropdown
+let architecture = "resnet"
+export function changeArchitecture(arch){
+	architecture = arch;
+	showImage();
+	resetOnNewImage();
+	//resetAttack();
+}
+
+let dataset = "mnist"
+export function changeDataset(ds){
+	dataset = ds
+	showImage();
+	resetOnNewImage();
+	//resetAttack();
+}
 //$('#select-model').addEventListener('change', showImage);
-//$('#select-model').addEventListener('change', testResponse);
 //$('#select-model').addEventListener('change', resetOnNewImage);
 //$('#select-model').addEventListener('change', resetAttack);
 //$('#select-model').addEventListener('change', removeLeftOverlay);
@@ -227,7 +244,7 @@ export function uploadImage(){
  * Renders the next image from the sample dataset in the original canvas
  */
 function showNextImage() {
-  let modelName = 'mnist';
+  let modelName = dataset;
   //let modelName = $('#select-model').value;
   if (modelName === 'mnist') { showNextMnist(); }
   else if (modelName === 'cifar') { showNextCifar(); }
@@ -239,7 +256,7 @@ function showNextImage() {
  * Renders the current image from the sample dataset in the original canvas
  */
 function showImage() {
-  let modelName = 'mnist';
+  let modelName = dataset;
   //let modelName = $('#select-model').value;
   if (modelName === 'mnist') { showMnist(); }
   else if (modelName === 'cifar') { showCifar(); }

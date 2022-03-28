@@ -12,7 +12,7 @@
   </template>
   
 <script>
-import {changeArchitecture} from "../../public/js/intro.js"
+import {changeDataset} from "../../public/js/intro.js"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 export default {
@@ -23,17 +23,17 @@ export default {
   },
   data: () => ({
     options: [
-      { key: "LeNet", value: 'lenet' },
-      { key: "VGG-16", value: 'vgg16' }, 
-      { key: "ResNet", value: 'resnet' }, 
-      { key: "MobileNet", value: 'mobilenet'}
+      { key: "MNIST (digit recognition)", value: 'mnist' },
+      { key: "GTSRB (street sign recognition)", value: 'gtsrb' }, 
+      { key: "CIFAR-10 (object recognition, small)", value: 'cifar' }, 
+      { key: "ImageNet (object recognition, large)", value: 'imagenet'}
       ],
-    key: "Select Architecture",
+    key: "Select Dataset",
     value: ""
   }),
   methods: {
 	onClick(value){
-		changeArchitecture(value)
+		changeDataset(value)
 	}
   }
 }

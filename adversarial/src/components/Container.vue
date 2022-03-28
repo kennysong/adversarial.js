@@ -3,8 +3,8 @@
     <div class="options">
       <div class="label">Select a Model</div>
       <ModelDropDown/>
-      <div class="label">Select an Attack</div>
-      <ModelDropDown/>
+      <div class="label">Select a Dataset</div>
+      <DatasetDropDown/>
       <div class="label">Select an Attack</div>
       <AttackDropDown/>
       <div class="label">Turn This Image Into a/an:</div>
@@ -31,11 +31,13 @@ import ModelDropDown from './ModelDropDown.vue'
 import AttackDropDown from './AttackDropDown.vue'
 import ImageDropDown from './ImageDropDown.vue'
 import ImageContainer from './ImageContainer.vue'
+import DatasetDropDown from './DatasetDropDown.vue'
 export default {
   name: 'Container',
   components: {
     Button,
     ModelDropDown,
+	DatasetDropDown,
     AttackDropDown,
     ImageDropDown,
     ImageContainer
