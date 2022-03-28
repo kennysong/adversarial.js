@@ -1,10 +1,13 @@
 import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './adversarial.js';
 import {MNIST_CLASSES, GTSRB_CLASSES, CIFAR_CLASSES, IMAGENET_CLASSES} from './class_names.js';
 
+
+import * as tf from '@tensorflow/tfjs';
+import * as mobilenet from '@tensorflow-models/mobilenet';
 /************************************************************************
 * Global constants
 ************************************************************************/
-
+/* eslint-disable no-unused-vars */
 const $ = query => document.querySelector(query);
 
 const MNIST_CONFIGS = {
@@ -168,22 +171,23 @@ async function loadImagenetModel() {
 
 // On page load
 window.addEventListener('load', showImage);
-window.addEventListener('load', resetAvailableAttacks);
+//window.addEventListener('load', resetAvailableAttacks);
 //window.addEventListener('load', showBanners);
 
 // Model selection dropdown
-$('#select-model').addEventListener('change', showImage);
-$('#select-model').addEventListener('change', resetOnNewImage);
+//$('#select-model').addEventListener('change', showImage);
+//$('#select-model').addEventListener('change', testResponse);
+//$('#select-model').addEventListener('change', resetOnNewImage);
 //$('#select-model').addEventListener('change', resetAttack);
 //$('#select-model').addEventListener('change', removeLeftOverlay);
 
 // Next image button
-$('#next-image').addEventListener('click', showNextImage);
-$('#next-image').addEventListener('click', resetOnNewImage);
+//$('#next-image').addEventListener('click', showNextImage);
+//$('#next-image').addEventListener('click', resetOnNewImage);
 //$('#next-image').addEventListener('click', resetAttack);
 
 // Predict button (original image)
-$('#predict-original').addEventListener('click', predict);
+//$('#predict-original').addEventListener('click', predict);
 //$('#predict-original').addEventListener('click', removeTopRightOverlay);
 
 // Target label dropdown
@@ -211,7 +215,8 @@ $('#predict-original').addEventListener('click', predict);
  * Renders the next image from the sample dataset in the original canvas
  */
 function showNextImage() {
-  let modelName = $('#select-model').value;
+  let modelName = 'mnist';
+  //let modelName = $('#select-model').value;
   if (modelName === 'mnist') { showNextMnist(); }
   else if (modelName === 'cifar') { showNextCifar(); }
   else if (modelName === 'gtsrb') { showNextGtsrb(); }
@@ -222,13 +227,18 @@ function showNextImage() {
  * Renders the current image from the sample dataset in the original canvas
  */
 function showImage() {
-  let modelName = $('#select-model').value;
+  let modelName = 'mnist';
+  //let modelName = $('#select-model').value;
   if (modelName === 'mnist') { showMnist(); }
   else if (modelName === 'cifar') { showCifar(); }
   else if (modelName === 'gtsrb') { showGtsrb(); }
   else if (modelName === 'imagenet') { showImagenet(); }
 }
 
+export function testResponse(value){
+	let response = "Confirmation of Event from " + value;
+	console.log(response);
+}
 /**
  * Computes & displays prediction of the current original image
  */
@@ -270,8 +280,8 @@ async function predict() {
   function _predict(model, img, lblIdx, CLASS_NAMES) {
     // Generate prediction
     let pred = model.predict(img);
-    console.log(pred.dataSync())
-    console.log(pred.max().dataSync())
+    //console.log(pred.dataSync())
+    //console.log(pred.max().dataSync())
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
 
@@ -431,7 +441,8 @@ function resetAvailableAttacks() {
   const GTSRB_TARGETS = [8, 0, 14, 17];
   const IMAGENET_TARGETS = [934, 413, 151];
 
-  let modelName = $('#select-model').value;
+  let modelName = 'mnist';
+  //let modelName = $('#select-model').value;
   if (modelName === 'mnist') {
     let originalLbl = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
     _resetAvailableAttacks(true, originalLbl, MNIST_TARGETS, MNIST_CLASSES);
@@ -627,3 +638,4 @@ async function drawImg(img, element) {
     await tf.browser.toPixels(resizedImg, canvas);
   }
 }
+/* eslint-enable no-unused-vars */

@@ -18,6 +18,10 @@
     </div>
 </template>
 
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0/dist/tf.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.0.4"></script>
+<script src="js/intro.js" type="module"></script>
+
 <script>
 import Navigation from './components/Navigation.vue'
 import Container from './components/Container.vue'

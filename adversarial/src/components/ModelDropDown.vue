@@ -1,26 +1,45 @@
 <template>
   <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-      Select Model
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-      <li><a class="dropdown-item" href="#">MNIST (digit recognition)</a></li>
-      <li><a class="dropdown-item" href="#">GTSRB (street sign recognition)</a></li>
-      <li><a class="dropdown-item" href="#">CIFAR-10 (object recognition, small)</a></li>
-      <li><a class="dropdown-item" href="#">ImageNet (object recognition, large)</a></li>
-    </ul>
-  </div>
-</template>
-
+      <button class="btn btn-primary dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false" value = "">
+      {{key}}
+      </button>
+        <ul class="dropdown-menu" aria-labelledby="select-model">
+        <li v-for="option in options" :key="option.key">
+          <a class="dropdown-item" @click="onClick(option.value); key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
+        </li>
+        </ul>
+      </div>
+  </template>
+  
 <script>
+import {testResponse} from "../../public/js/intro.js"
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 export default {
   name: 'ModelDropDown',
+  id: 'select-model',
   props: {
     description: String
+  },
+  data: () => ({
+    options: [
+      { key: "MNIST (digit recognition)", value: 'mnist' },
+      { key: "GTSRB (street sign recognition)", value: 'gtsrb' }, 
+      { key: "CIFAR-10 (object recognition, small)", value: 'cifar10' }, 
+      { key: "ImageNet (object recognition, large)", value: 'imagenet'}
+      ],
+    key: "Select Model",
+    value: ""
+  }),
+  methods: {
+	onClick(value){
+		testResponse(value)
+	}
   }
 }
+
+  
 </script>
 
 <style>
-
 </style>

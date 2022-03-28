@@ -1,3 +1,4 @@
+import * as tf from '@tensorflow/tfjs';
 /**
  * Fast Gradient Sign Method (FGSM)
  *
@@ -14,6 +15,7 @@
  *
  * @returns {tf.Tensor} The adversarial image.
  */
+ /* eslint-disable no-unused-vars */
 export function fgsm(model, img, lbl, {ε = 0.1} = {}) {
   // Loss function that measures how close the image is to the original class
   function loss(input) {
@@ -394,6 +396,7 @@ function argmax2d(m) {
 /**
 * Sanity test of the argmax2d() utility function.
 */
+
 function testArgmax2d() {
   for (let i = 0; i < 10; i++) {
     let m = tf.randomUniform([784, 784]);
@@ -401,6 +404,7 @@ function testArgmax2d() {
     console.assert(m.max().dataSync()[0] === m.arraySync()[r][c]);
   }
 }
+
 
 /**
 * Returns a copy of model without the softmax layer, so it predict()'s logits.
@@ -417,3 +421,4 @@ function getModelLogits(model) {
   }
   return logitsModel;
 }
+/* eslint-enable no-unused-vars */
