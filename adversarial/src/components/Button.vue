@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {nextImage, uploadImage} from "../../public/js/intro.js"
+import {nextImage, uploadImage, predictImg, attack} from "../../public/js/intro.js"
 export default {
   name: 'Button',
   props: {
@@ -12,7 +12,9 @@ export default {
   methods: {
     onClick(){
 		if(this.description == "next-image"){ nextImage()}
-		else if(this.description =="upload-image") {uploadImage()}
+		else if(this.description == "upload-image") {uploadImage()}
+        else if(this.description == "predict") {predictImg()}
+        else if(this.description == "adv") {attack()}
 	}
   }
 }

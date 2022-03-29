@@ -3,8 +3,8 @@
     <table class="footerTable">
       <tr>
         <td rowspan="4" class="button"><Button value = "Prediction"/></td>
-            <Button value = "Run Neural Network" id = "predict-original"/>
-            <button id="predict-adv" class="button-primary" disabled>Click "Generate" First</button>
+        <Button value = "Run Neural Network" description="predict"/>
+        <Button value = "Click 'Generate' First" description="adv"/>
       </tr>
       <tr>
         <th>Original</th>

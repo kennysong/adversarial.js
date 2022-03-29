@@ -127,7 +127,7 @@ let mnistVgg16;
 let mnistModel;
 async function loadMnistModel() {
   if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/vgg16/model.json'); }
-  if (mnistResnet == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
+  if (mnistResnet == undefined) { mnistResnet = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -210,12 +210,17 @@ export function nextImage(){
 
 // Upload image button
 export function uploadImage(){
-	console.log("Stealing all your provate data.");
+	console.log("Stealing all your private data.");
 	//showNextImage();
 	//resetOnNewImage();
 	//resetAttack();
 }
-// Predict button (original image)
+// Predict button (original image
+export function predictImg(){
+    console.log("Releasing private data");
+    predict();
+    //removeTopRightOverlay();
+}
 //$('#predict-original').addEventListener('click', predict);
 //$('#predict-original').addEventListener('click', removeTopRightOverlay);
 
@@ -226,6 +231,10 @@ export function uploadImage(){
 //$('#select-attack').addEventListener('change', resetAttack);
 
 // Generate button
+export function attack(){
+    console.log("Destroying all familiarity");
+    //removeTopRightOverlay();
+}
 //$('#generate-adv').addEventListener('click', generateAdv);
 //$('#generate-adv').addEventListener('click', removeBottomRightOverlay);
 
@@ -272,39 +281,44 @@ export function testResponse(value){
  * Computes & displays prediction of the current original image
  */
 async function predict() {
-  $('#predict-original').disabled = true;
-  $('#predict-original').innerText = 'Loading...';
+  //$('#predict-original').disabled = true;
+  //$('#predict-original').innerText = 'Loading...';
 
-  let modelName = $('#select-model').value;
-  if (modelName === 'mnist') {
+  let model;
+  if (dataset === 'mnist') {
+    
     await loadMnistModel();
     await loadingMnist;
+    
+    if (architecture === 'resnet') { model = mnistResnet; }
+    else if (architecture === 'vgg16') {model = mnistVgg16; }
+    
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
+    
     console.log(lblIdx);
-    console.log(mnistIdx);
     let img = mnistDataset[mnistIdx].xs;
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
     let RGB = tf.image.grayscaleToRGB(resizedImg);
-    console.log(RGB)
+    //console.log(model)
     //_predict(mnistModel, mnistDataset[mnistIdx].xs, lblIdx, MNIST_CLASSES);
-    _predict(mnistModel, RGB, lblIdx, MNIST_CLASSES);
-  } else if (modelName === 'cifar') {
+    _predict(model, RGB, lblIdx, MNIST_CLASSES);
+  } else if (dataset === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
     let lblIdx = cifarDataset[cifarIdx].ys.argMax(1).dataSync()[0];
     _predict(cifarModel, cifarDataset[cifarIdx].xs, lblIdx, CIFAR_CLASSES);
-  } else if (modelName === 'gtsrb') {
+  } else if (dataset === 'gtsrb') {
     await loadGtsrbModel();
     await loadingGtsrb;
     let lblIdx = gtsrbDataset[gtsrbIdx].ys.argMax(1).dataSync()[0];
     _predict(gtsrbModel, gtsrbDataset[gtsrbIdx].xs, lblIdx, GTSRB_CLASSES);
-  } else if (modelName === 'imagenet') {
+  } else if (dataset === 'imagenet') {
     await loadImagenetModel();
     await loadedImagenetData;
     _predict(imagenetModel, imagenetX[imagenetIdx], imagenetYLbls[imagenetIdx], IMAGENET_CLASSES);
   }
 
-  $('#predict-original').innerText = 'Run Neural Network';
+  //$('#predict-original').innerText = 'Run Neural Network';
 
   function _predict(model, img, lblIdx, CLASS_NAMES) {
     // Generate prediction
@@ -426,8 +440,8 @@ async function viewImage() {
  * Reset entire dashboard UI when a new image is selected
  */
 function resetOnNewImage() {
-  $('#predict-original').disabled = false;
-  $('#predict-original').innerText = 'Run Neural Network';
+  //$('#predict-original').disabled = false;
+  //$('#predict-original').innerText = 'Run Neural Network';
   $('#prediction').style.display = 'none';
   $('#prediction-status').innerHTML = '';
   $('#prediction-status').className = '';
@@ -600,6 +614,7 @@ function supports32BitWebGL() {
 ************************************************************************/
 
 function showPrediction(msg, status) {
+  console.log("predicting, no writing");
   $('#prediction').innerHTML = msg;
   $('#prediction').style.display = 'block';
   $('#prediction-status').innerHTML = status.msg;
