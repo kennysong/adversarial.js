@@ -209,8 +209,18 @@ export function nextImage(){
 //$('#next-image').addEventListener('click', resetAttack);
 
 // Upload image button
+
 export function uploadImage(){
 	console.log("Stealing all your private data.");
+	const input = document.getElementById("fileid");
+	const imageCon = document.getElementById("original");
+	console.log(input.files.length);
+	
+	let img = input.files[0];
+	imageCon.src = URL.createObjectURL(img)
+	console.log(img);
+	//drawImg(img, 'original');
+	
 	//showNextImage();
 	//resetOnNewImage();
 	//resetAttack();
@@ -249,6 +259,12 @@ export function attack(){
 * Define Event Handlers
 ************************************************************************/
 
+/**
+ * Gets image uploaded by the user. 
+ */
+function getImg(){
+	
+}
 /**
  * Renders the next image from the sample dataset in the original canvas
  */
