@@ -6,12 +6,12 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras import models, layers, applications
 from tensorflow import keras
 
-(x_train,y_train),(x_test,y_test)= keras.datasets.mnist.load_data()
+(x_train,y_train),(x_test,y_test)= keras.datasets.cifar10.load_data()
 # expand new axis, channel axis 
-x_train = np.expand_dims(x_train, axis=-1)
+# x_train = np.expand_dims(x_train, axis=-1)
 
 # [optional]: we may need 3 channel (instead of 1)
-x_train = np.repeat(x_train, 3, axis=-1)
+# x_train = np.repeat(x_train, 3, axis=-1)
 
 # it's always better to normalize 
 x_train = x_train.astype('float32') / 255

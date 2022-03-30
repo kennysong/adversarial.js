@@ -1,14 +1,14 @@
 <template>
   <div class="banner">
-    <div class="headers title">Adversarial Learning</div>
+    <div class="headers title">Adversarial Education</div>
     <div class="headers page-title">-</div>
     <div class="headers page-title">{{ pageTitle }}</div>
     <div class="links">
-      <a href="#">Home</a>
-      <a href="#">FAQ</a>
-      <a href="#">Demo</a>
-      <a href="#">API</a>
-      <a href="#">GitHub</a>
+      <a href="#" class="nav">Home</a>
+      <a href="#" class="nav">FAQ</a>
+      <a href="#" class="nav">Demo</a>
+      <a href="#" class="nav">API</a>
+      <a href="#" class="nav">GitHub</a>
     </div>
   </div>
 </template>
@@ -45,26 +45,35 @@ export default {
 
 .page-title {
   margin-left: .5em;
+  margin-top: .5em;
+}
+
+.title {
+  margin-left: 1em;
+}
+
+.page-title {
+  margin-left: 10px;
 }
 
 .links {
-  display: inline-block;
-  margin-top: 2em;
   margin-left: auto;
+  margin-top: 2em;
 }
 
-a {
+a.nav {
   color: #333333;
   font-family: "Montserrat";
   text-decoration: none;
   margin-right: 35px;
+  display: inline-block; 
 }
 
-a:hover {
+a.nav:hover {
   color: #0C68BE;
 }
 
-a:active {
+a.nav:active {
   font-weight: bold;
 }
 

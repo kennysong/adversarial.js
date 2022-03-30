@@ -1,20 +1,27 @@
 <template>
-  <div class="row center" style="display:flex;"> <!-- The flex here keeps the child columns the same height -->
-          <div class="one-half column border-right">
-            <div id="original-prediction-overlay" class="overlay"></div>
-            <h5>Prediction</h5>
+  <div class="footer">
+    <table class="footerTable">
+      <tr>
+        <td rowspan="4" class="button"><Button value = "Prediction"/></td>
             <Button value = "Run Neural Network" id = "predict-original"/>
-            <div id="prediction"></div>
-            <div id="prediction-status"></div>
-          </div>
-          <div class="one-half column">
-            <div id="adversarial-prediction-overlay" class="overlay"></div>
-            <h5>Prediction</h5>
             <button id="predict-adv" class="button-primary" disabled>Click "Generate" First</button>
-            <div id="prediction-adv"></div>
-            <div id="prediction-adv-status"></div>
-          </div>
-        </div>
+      </tr>
+      <tr>
+        <th>Original</th>
+        <th>New</th>
+      </tr>
+      <tr>
+        <td class="info"> Prediction: <div id="prediction"></div></td>
+        <td class="info"> Prediction: <div id="prediction-adv"></div></td>
+      </tr>
+      <tr>
+        <td class="info"> Probability: <div id="prediction-status"></div></td>
+        <td class="info"> Probability: <div id="prediction-adv-status"></div></td>
+      </tr>
+    </table>
+  </div>
+            
+            
 </template>
 
 <script>
@@ -32,5 +39,37 @@ export default {
 </script>
 
 <style>
+.footer {
+  background-color: #F4F6F9;
+  /* position: relative; */
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 7em;
+  margin-top: 5em;
+}
 
+table.footerTable {
+  border: none;
+  width: 90%;
+  height: 75%;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+table.footerTable td.button {
+  width: 60%;
+}
+
+table.footerTable th {  
+  width: 20%;
+  font-family: "Raleway-italic";
+}
+
+table.footerTable td.info {
+  text-align: left;
+  font-family: "Raleway";
+  vertical-align: top;
+}
 </style>
