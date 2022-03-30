@@ -6,12 +6,12 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras import models, layers, applications
 from tensorflow import keras
 
-(x_train,y_train),(x_test,y_test)= keras.datasets.cifar10.load_data()
+(x_train,y_train),(x_test,y_test)= keras.datasets.mnist.load_data()
 # expand new axis, channel axis 
-# x_train = np.expand_dims(x_train, axis=-1)
+x_train = np.expand_dims(x_train, axis=-1)
 
 # [optional]: we may need 3 channel (instead of 1)
-# x_train = np.repeat(x_train, 3, axis=-1)
+x_train = np.repeat(x_train, 3, axis=-1)
 
 # it's always better to normalize 
 x_train = x_train.astype('float32') / 255
@@ -28,12 +28,12 @@ model = applications.ResNet50(weights='imagenet', include_top = False, input_ten
 global_pool = layers.GlobalMaxPooling2D()(model.output)
 out = layers.Dense(10, activation='softmax', use_bias=True)(global_pool)
 
-resnet = keras.Model(model.input, out)
+model = keras.Model(model.input, out)
 
 
-resnet.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.metrics.CategoricalAccuracy(), optimizer = keras.optimizers.Adam())
+model.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.metrics.CategoricalAccuracy(), optimizer = keras.optimizers.Adam())
 
-resnet.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
+model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
 
-tfjs.converters.save_keras_model(model, '../cifar10/resnet')
-model.save('../cifar10/resnet/resnet.h5')
+tfjs.converters.save_keras_model(model, '../mnist/resnet')
+#model.save('../mnist/resnet/resnet.h5')
