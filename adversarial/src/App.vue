@@ -2,6 +2,17 @@
     <div class="main-container">
       <Navigation pageTitle="Home"/>
       <Container/>
+      <div class="row border-bottom">
+          <div class="one-half column split border-right">
+            <div id="original-canvas-overlay" class="overlay"></div>
+            <div class="splitleft61">
+              <canvas id="original" class="tableimg" width="224" height="224"></canvas>
+            </div>
+            <div class="splitright39">
+              <Button value = "Next Image" id = "next-image"/>
+            </div>
+          </div>
+        </div>
       <Footer/>
       <!-- <FAQ/> -->
       <ImageContainer/>

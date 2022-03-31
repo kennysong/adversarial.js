@@ -212,13 +212,8 @@ export function nextImage(){
 
 export function uploadImage(){
 	console.log("Stealing all your private data.");
-	const input = document.getElementById("fileid");
-	const imageCon = document.getElementById("original");
-	console.log(input.files.length);
 	
-	let img = input.files[0];
-	imageCon.src = URL.createObjectURL(img)
-	console.log(img);
+	getImg();
 	//drawImg(img, 'original');
 	
 	//showNextImage();
@@ -262,8 +257,28 @@ export function attack(){
 /**
  * Gets image uploaded by the user. 
  */
-function getImg(){
+let canvasId = 'original';
+async function getImg(){
+	const input = document.getElementById("fileid");
+	let source = input.files[0];
+	let canvas = document.getElementById(canvasId)
+	let ctx = canvas.getContext('2d');
+	let img = new Image();
+	await ctx.drawImage(img, 0, 0);
+	console.log(img);
+	img.src = URL.createObjectURL(source);
+	let imgData = ctx.getImageData(0,0, canvas.height, canvas.width);
 	
+	console.log(imgData);
+	console.log(imgData.data.shape);
+	
+	let rgbImage= [[[]]];
+	for( var i=0; i< imgData.data.length; i +=4){
+		rgbImage.push[[i/224];
+	}
+	//URL.revokeObjectURL(img.src);
+	//let resizedImg = tf.image.resizeNearestNeighbor(img, [224, 224]);
+	//await tf.browser.toPixels(resizedImg, canvas);
 }
 /**
  * Renders the next image from the sample dataset in the original canvas
