@@ -10,7 +10,6 @@
     </div>
     <div class="imageContainer">
       <ImageContainer />
-      <img src="../../public/vuelogo.png" class="mainImage">
     </div>
     <div class="generate">
       <Button value = "Generate"/>
@@ -71,7 +70,6 @@ export default {
 
 .imageContainer {
   width: 55%;
-  background-color: black;
   height: fit-content;
 }
 
