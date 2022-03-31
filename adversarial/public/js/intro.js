@@ -257,29 +257,47 @@ export function attack(){
 /**
  * Gets image uploaded by the user. 
  */
-let canvasId = 'original';
+let canvasId = 'temp';
 async function getImg(){
 	const input = document.getElementById("fileid");
 	let source = input.files[0];
+	console.log(source);
 	let canvas = document.getElementById(canvasId)
 	let ctx = canvas.getContext('2d');
 	let img = new Image();
 	await ctx.drawImage(img, 0, 0);
-	console.log(img);
+	//console.log(img);
 	img.src = URL.createObjectURL(source);
 	let imgData = ctx.getImageData(0,0, canvas.height, canvas.width);
-	
-	console.log(imgData);
-	console.log(imgData.data.shape);
-	
-	let rgbImage= [[[]]];
-	for( var i=0; i< imgData.data.length; i +=4){
-		rgbImage.push[[i/224];
-	}
+	/*
+	//let rgbImage = tf.browser.fromPixels(imgData.data);
+	let rgbImage = convertImageDataToRGB(imgData.data);
+	rgbImage = tf.browser.fromPixels(imgData);
+	console.log(rgbImage.shape);
+	await tf.browser.toPixels(rgbImage, canvas);
 	//URL.revokeObjectURL(img.src);
 	//let resizedImg = tf.image.resizeNearestNeighbor(img, [224, 224]);
 	//await tf.browser.toPixels(resizedImg, canvas);
+
+	*/
 }
+let upload_height = 224;
+let upload_width = 224;
+function convertImageDataToRGB(data){
+	console.log(data);
+	let rgbImage= [];
+	let rgbRow = [];
+	for( var i=0; i < data.length; i+=4){
+		rgbRow.push([data[i], data[i+1], data[i+2], data[i+3]]);
+		
+		if (rgbRow.length ==224){
+			rgbImage.push(rgbRow);
+			rgbRow = [];
+		}
+	}
+	return rgbImage;
+}
+
 /**
  * Renders the next image from the sample dataset in the original canvas
  */
