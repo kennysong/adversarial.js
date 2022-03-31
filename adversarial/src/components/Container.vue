@@ -4,22 +4,19 @@
       <div class="label">Select a Model</div>
       <ModelDropDown/>
       <div class="label">Select an Attack</div>
-      <ModelDropDown/>
-      <div class="label">Select an Attack</div>
       <AttackDropDown/>
       <div class="label">Turn This Image Into a/an:</div>
       <ImageDropDown/>
     </div>
-    <div class="ImageContainer">
+    <div class="imageContainer">
       <ImageContainer />
-      <!-- <img src="../../public/vuelogo.png" class="mainImage"> -->
+      <img src="../../public/vuelogo.png" class="mainImage">
     </div>
     <div class="generate">
       <Button value = "Generate"/>
     </div>
     <div class="upload">
       <Button value = "Upload Image"/>
-      <Button value = "Next Image" id = "next-image"/>
     </div>
   </div>
 </template>
@@ -43,7 +40,6 @@ export default {
 </script>
 
 <style>
-
 .mainImage {
   max-width: 100%;
   height: auto;
@@ -73,8 +69,9 @@ export default {
   padding: 1em;
 }
 
-.ImageContainer {
+.imageContainer {
   width: 55%;
+  background-color: black;
   height: fit-content;
 }
 
@@ -90,6 +87,53 @@ export default {
   font-family: "Raleway";
   padding-top: .8em;
   padding-bottom: .3em;
+}
+
+@media (max-width: 600px) {
+.mainImage {
+  max-width: 100%;
+  height: auto;
+}
+
+.wrapper {
+  width: 85%;
+  height: fit-content;
+  margin: auto;
+  margin-top: 4em;
+  padding: 1em;
+  display: flex;
+  flex-flow: row wrap;
+  text-align: center;
+}
+
+.options {
+  width: 45%;
+  height: fit-content;
+  padding: 1em;
+}
+
+.generate {
+  width: 45%;
+  height: fit-content;
+  padding: 1em;
+}
+
+.imageContainer {
+  width: 55%;
+  height: fit-content;
+}
+
+.upload {
+  width: 55%;
+  height: fit-content;
+  padding: 1em;
+}
+
+.label {
+  text-align: left;
+  padding-top: .8em;
+  padding-bottom: .3em;
+}
 }
 </style>
 

@@ -9,6 +9,7 @@
               <canvas id="original" class="tableimg" width="224" height="224"></canvas>
             </div>
             <div class="splitright39">
+              <Button value = "Next Image" id = "next-image"/>
             </div>
           </div>
         </div>
