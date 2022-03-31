@@ -35,5 +35,5 @@ resnet.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.me
 
 resnet.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
 
-tfjs.converters.save_keras_model(model, './js/vgg16')
-model.save('./js/vgg16/vgg16.h5')
+tfjs.converters.save_keras_model(model, '../mnist/vgg16')
+model.save('../mnist/vgg16/vgg16.h5')

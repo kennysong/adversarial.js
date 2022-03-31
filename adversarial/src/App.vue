@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
       <Navigation pageTitle="Home"/>
-      <Container />
+      <Container/>
       <div class="row border-bottom">
           <div class="one-half column split border-right">
             <div id="original-canvas-overlay" class="overlay"></div>
