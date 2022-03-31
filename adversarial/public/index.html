@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <title>adversarial.js – Intro</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Break neural networks in your browser.">
+    <link rel="shortcut icon" href="../data/favicon.ico" />
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <img class="0" style="display:none;">
+    <img class="1" style="display:none;">
+    <img class="2" style="display:none;">
+    <img class="3" style="display:none;">
+    <img class="4" style="display:none;">
+    <img class="5" style="display:none;">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.12.0/dist/tf.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.0.4"></script>
+
+    <!-- Not sure what these do; may remove -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C02BRW1FMK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C02BRW1FMK');
+    </script>
+  </body>
+</html>

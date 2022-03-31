@@ -1,6 +1,6 @@
 # adversarial.js
 
-Break neural networks in your browser.
+Break neural networks in your browser. Just for the fun of it.
 
 An interactive, in-browser demonstration of adversarial attacks on neural networks – entirely in JavaScript.
 

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>adversarial.js – FAQ</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Break neural networks in your browser.">
+    <link rel="shortcut icon" href="data/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css" integrity="sha384-AfEj0r4/OFrOo5t7NnNe46zW/tFgW6x/bCJG8FqQCEo3+Aro6EYUG4+cU+KJWu/X" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js" integrity="sha384-g7c+Jr9ZivxKLnZTDUhnkOnsh30B4H0rpLUpJ4jAIKs4fnJI+sEnkvrMWph2EDg4" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/contrib/auto-render.min.js" integrity="sha384-mll67QQFJfxn0IYznZYonOWZ644AWYC+Pt2cHqMaRhXVrursRwvLnLaebdGIlYNa" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C02BRW1FMK"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-C02BRW1FMK');
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="row">
+        <div id="logo" class="one-half column"><a href="."><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="one-half column">
+          <a href=".">Intro</a>&ensp;·&ensp;<a href="examples.html">Examples</a>&ensp;·&ensp;<a href="faq.html" class="active">FAQ</a>&ensp;·&ensp;<a href="api.html">API</a>&ensp;·&ensp;<a href="https://github.com/kennysong/adversarial.js" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <div class="faq-header">Non-Technical FAQ</div>
+      <div id="math-link"><a href="#technical">Show me the math ↓</a></div>
+      <div class="faq">
+        <h4 style="margin-top: 25px;">What is the demo doing?</h4>
+        <p>Neural networks achieve superhuman performance in many areas, but they are easily fooled.</p>
+        <p>In the demo above, we can force neural networks to predict anything we want. By adding nearly-invisible noise to an image, we turn "1"s into "9"s, "Stop" signs into "120 km/hr" signs, and dogs into hot dogs.</p>
+        <p>These noisy images are called <a href="https://en.wikipedia.org/wiki/Adversarial_machine_learning#Specific_Attacks_Types">adversarial examples</a>. They break the integrity of machine learning systems, and the illusion of their superhuman performance.</p>
+
+        <h4>Why does this matter?</h4>
+        <p>Our world is becoming increasingly automated, yet these systems have strange failure modes.</p>
+        <p>If machine learning systems are not properly defended, attackers could:</p>
+        <ul>
+          <li>Impersonate others in facial recognition systems</li>
+          <li>Force autonomous vehicles to misrecognize street signs &amp; obstacles</li>
+          <li>Bypass content moderation and spam filters in social networks</li>
+          <li>Inject adversarial bytes into malware to bypass antivirus systems</li>
+          <li>Digitally alter numbers on a check in a mobile banking app</li>
+          <li>(and more)</li>
+        </ul>
+
+        <h4>Is this limited to image classification with neural networks?</h4>
+        <p>No. Adversarial examples exist for almost every machine learning task: <a href="https://nicholas.carlini.com/code/audio_adversarial_examples">speech recognition</a>, <a href="https://arxiv.org/pdf/1804.07998.pdf">text classification</a>, <a href="https://dl.acm.org/doi/10.1145/3308558.3313533">fraud detection</a>, <a href="https://www.ericswallace.com/imitation">machine translation</a>, <a href="https://adversarialpolicies.github.io/">reinforcement learning</a>, ....</p>
+        <p>Moreover, all machine learning models (not just neural networks) are vulnerable. In fact, simpler models such as logistic regression are <a href="https://arxiv.org/pdf/1412.6572.pdf">even more easily attacked</a>.</p>
+        <p>Finally – beyond adversarial examples – there are many more adversarial attack vectors, including data poisoning, model backdooring, data extraction, and model stealing.</p>
+
+        <h4>How do I defend against adversarial examples?</h4>
+        <p>There are several proposed defenses, including adversarial training and admission control.</p>
+        <p>However, no defense is universal and many have proven ineffective, so work with an expert to quantify your risks and invest in defenses appropriately.</p>
+        <p>(What happens if someone can make your system predict anything they want?).</p>
+
+        <h4>Do these attacks require access to the model?</h4>
+        <p>The attacks in this library do (i.e. they are white-box). However, in real life, there are effective <a href="https://arxiv.org/pdf/1602.02697.pdf">black-box attacks</a> as well, which do not require access to gradients.</p>
+        <p>It's also well-known that the same adversarial example <a href="https://arxiv.org/pdf/1605.07277.pdf">can affect multiple models</a>, even with different architectures and training sets.</p>
+
+        <h4>What are the differences between the attacks?</h4>
+        <p>The attacks essentially differ in (1) the type of valid noise, (2) what function we use to measure "adversarialness", and (3) how hard we try to maximize that function.</p>
+        <p>Stronger attacks spend more compute to maximize the adverarialness of the image.</p>
+        <p>See <a href="#attacks-desc">this answer</a> for the technical details.</p>
+
+        <h4>Is this library a risk?</h4>
+        <p>Open-source libraries help accelerate research in adversarial attacks. In fact, we are not the first; there are several great and heavily-used Python libraries for adversarial machine learning:</p>
+        <ul>
+          <li><a href="https://github.com/tensorflow/cleverhans">CleverHans</a></li>
+          <li><a href="https://github.com/Trusted-AI/adversarial-robustness-toolbox">Adversarial Robustness Toolbox</a></li>
+          <li><a href="https://github.com/bethgelab/foolbox">Foolbox</a></li>
+          <li><a href="https://gitlab.com/secml/secml">SecML</a></li>
+        </ul>
+        <p>The purpose of adversarial.js is to showcase an easy-to-understand demo and build awareness of this failure mode of machine learning.</p>
+
+        <h4>How did you make this?</h4>
+        <p>The attacks are implemented in <a href="https://www.tensorflow.org/js">TensorFlow.js</a>. The UI is built from scratch with <a href="http://getskeleton.com/">Skeleton</a>.</p>
+
+        <h4>Who made this?</h4>
+        <a href="https://kennysong.com/">Me</a>.
+
+        <h4>Where can I learn more?</h4>
+        <p>Here's a list of good resources, in rough order of approachability:</p>
+        <ul>
+          <li><a href="faq.html">The full FAQ</a></li>
+          <li><a href="examples.html">The directory of attacks</a> (try running locally and playing with various settings)</li>
+          <li><span class="badge">[Blog]</span> CleverHans – <a href="http://www.cleverhans.io/security/privacy/ml/2016/12/16/breaking-things-is-easy.html">start here</a></li>
+          <li><span class="badge">[Blog]</span> Gradient Science – <a href="https://gradientscience.org/intro_adversarial/">start here</a></li>
+          <li><span class="badge">[Tutorial]</span> <a href="https://adversarial-ml-tutorial.org/">Adversarial Robustness - Theory and Practice</a></li>
+          <li><span class="badge">[Paper]</span> <a href="https://arxiv.org/pdf/1611.03814.pdf">SoK: Towards the Science of Security and Privacy in Machine Learning</a></li>
+          <li><span class="badge">[Paper]</span> <a href="https://arxiv.org/pdf/1712.03141.pdf">Wild Patterns: Ten Years After the Rise of Adversarial Machine Learning</a></li>
+        </ul>
+        <p>Last – feel free to <a href="mailto:hello@kennysong.com">email me questions</a>.</p>
+      </div>
+
+      <div class="faq-header" id="technical">Technical FAQ</div>
+      <div class="faq">
+        <h4>What model architectures do you use?</h4>
+        <p>MNIST uses a tiny feedforward network with 128 hidden units.</p>
+        <p>GTSRB uses a tiny CNN with 2 convolutional layers.</p>
+        <p>CIFAR-10 uses a standard CNN with 3 VGG blocks.</p>
+        <p>ImageNet uses the largest pre-trained MobileNet V2.</p>
+
+        <h4 id="attacks-desc">Can you describe the attacks?</h4>
+        <p>The general idea of most attacks is to <strong>maximize</strong> the model's loss w.r.t. the input image. We take gradient ascent steps that modify the image towards greater mispredictions.</p>
+        <p>Note: This is quite similar to normal training, where we <strong>minimize</strong> the model's loss w.r.t. weights. Just backpropagate all the way to the input.</p>
+        <p>The \(L\) norms correspond to different perturbation sets:</p>
+        <ul>
+          <li>\(L_\infty\) – we can change all pixels up to a maximum amount</li>
+          <li>\(L_0\) – we can change a limited number of pixels by any amount</li>
+          <li>\(L_2\) – we are incentivized to make tiny changes to more pixels</li>
+        </ul>
+
+        <p><strong>Fast Gradient Sign Method (\(L_\infty\) attack)</strong></p>
+        <p><a href="https://arxiv.org/pdf/1412.6572.pdf">FGSM</a> was one of the earliest methods to generate adversarial examples. It's simple, fast, and weak. It wasn't designed to produce high-quality adversarial examples, so it is not a good benchmark for robustness.</p>
+        <p>Essentially, it takes one step in the direction of the gradient (clipped so all elements have the same magnitude):</p>
+        <p>\[ x_{adv} = x + \epsilon \, \text{sign}(\nabla_x \ell(f(x), y_{true})) \]</p>
+        <p>where \(f\) is the neural network, and \(\ell\) is cross-entropy loss.</p>
+
+        <br>
+        <p><strong>Basic Iterative Method (\(L_{\infty}\) attack)</strong></p>
+        <p><a href="https://arxiv.org/pdf/1607.02533.pdf">BIM</a> is just FGSM repeated for multiple steps, with an appropriate step size. At each step, we make sure the resulting image is still within \(\epsilon\) distance (in \(L_\infty\) world) of the original.</p>
+        <p>\[ x_{adv_{t+1}} = \text{clip}_{\epsilon, x} (x_{adv_t} + \alpha \, \text{sign}(\nabla_x \ell(f(x_{adv_t}), y_{true}))) \]</p>
+        <p>\[ \text{where } x_{adv_0} = x\]</p>
+        <p>This attack is the second strongest, and succeeds most of the time.</p>
+
+        <br>
+        <p><strong>Jacobian-based Saliency Map Attack (\(L_0\) attack)</strong></p>
+        <p><a href="https://arxiv.org/pdf/1511.07528.pdf">JSMA</a> directly uses the derivative of the neural network \(\nabla_x f(x)\).</p>
+        <p>(Recall that \(f(x)\) is a vector of softmax probabilities, so \(\nabla_x f(x)\) is a Jacobian matrix.)</p>
+        <p>From the derivative, we can determine which pixel has the most impact on a class prediction. So we strategically define a measure of "saliency" – how much a pair of pixel increases the target class probability + decreases all other class probabilities.</p>
+        <p>On each iteration, we maximally modify the two highest-saliency pixels. The actual equations are unwieldy and omitted (see the paper).</p>
+        <p>This attack works well on small images, but is too memory-inefficient for large images.</p>
+        <p>(I believe JSMA can fit into the "loss maximization" framework if we view it as coordinate ascent on a loss function whose derivative is saliency.)</p>
+
+        <br>
+        <p><strong>Jacobian-based Saliency Map Attack, One Pixel (\(L_0\) attack)</strong></p>
+        <p>JSMA doesn't scale beyond CIFAR-sized images, so this is my faster and simpler variant.</p>
+        <p>We directly use \(\nabla_x f(x)\) to identify the single pixel with the highest impact on the target class, and change only that one pixel per iteration.</p>
+        <p>That's it. And surprisingly, this performs as well as normal JSMA.</p>
+        <p>(Although this avoids the quadratic space complexity of JSMA, the number of iterations we would need to run this to be effective on ImageNet is still too slow.)</p>
+
+        <br>
+        <p><strong>Carlini &amp; Wagner (\(L_2\) attack)</strong></p>
+        <p>The <a href="https://arxiv.org/pdf/1608.04644.pdf">C&amp;W attack</a> is a bit complex. They start from the <a href="https://arxiv.org/pdf/1312.6199.pdf">original</a> constrained optimization problem:</p>
+        <p>
+          \[\begin{aligned}
+            &\min_\delta ||\delta||_2^2 \\
+            \text{s.t. } &f(x + \delta) = T \\
+            &x + \delta \in [0, 1]^n
+          \end{aligned}\]
+        </p>
+        <p>where \(T\) is the target class. This turns into the equivalent unconstrained optimization problem:</p>
+        <p>\[ \min_\delta ||\delta||_2^2 + c \cdot \max\{\max\{Z(x+\delta)_i \mid i \neq T\} - Z(x+\delta)_T, -\kappa\}\]</p>
+        <p>where \(Z\) is the logits before the softmax, and \(\kappa, c\) are hyperparameters.</p>
+        <p>However, to respect the \(x + \delta \in [0, 1]^n\) box constraint, we apply a change of variables and optimize over \(w\) instead.</>
+        <p>\[ \min_w ||\delta(w)||_2^2 + c \cdot \max\{\max\{Z(x+\delta(w))_i \mid i \neq T\} - Z(x+\delta(w))_T, -\kappa\}\]</p>
+        <p>\[\text{where } \delta(w) = \frac{1}{2}(\tanh(w) + 1) - x\]</p>
+        <p>We minimize this with Adam, and finally get \(x_{adv} = x + \delta(w_{min})\).</p>
+        <p>This is the strongest attack, and always succeeds with reasonable speed even on large images.</p>
+        <p>(There are also \(L_0\) and \(L_\infty\) variants of C&amp;W, but I believe \(L_2\) is the most popular and is the one implemented in adversarial.js.)</p>
+
+        <h4>Why do adversarial examples exist?</h4>
+        <p>I'm not sure what the generally-accepted answer is (if you know – tell me!).</p>
+        <p>One explanation is in the <a href="https://arxiv.org/pdf/1412.6572.pdf">FGSM paper</a>: "for high dimensional problems, we can make many infinitesimal changes to the input that add up to one large change to the output".</p>
+        <p>Another explanation is that machine learning methodology (e.g. ERM) assumes I.I.D. test &amp; training time samples. So obviously, ERM doesn't produce models that perform well on an adversarial sample drawn from some worst-case non-I.I.D. distribution.</p>
+        <p>(I've also heard vague comments about adversarial examples hiding in measure-zero regions.)</p>
+
+        <h4>Why do you only consider \(L_p\) perturbations?</h4>
+        <p>This is standard practice – mostly because \(L_p\) norm balls are mathematically convenient for machine learning researchers.</p>
+        <p>It's an open research question to design metrics that better match human perceptual distance, and consider robustness within that set of imperceptible perturbations.</p>
+        <p>You can argue that \(L_p\) perturbation robustness is necessary, but not sufficient, for true adversarial robustness.</p>
+
+        <h4>What are some open areas of research?</h4>
+        <p>There are tons of interesting topics, including:</p>
+        <ul>
+          <li>effective defenses (both as theoretical and engineering problems)</li>
+          <li>more realistic perturbation sets than \(L_p\) norm balls</li>
+          <li>the tradeoff between adversarial robustness and non-adversarial accuracy</li>
+          <li>the side effects of robustness (e.g. interpretability, disentanglement)</li>
+          <li>transferability of adversarial examples</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
