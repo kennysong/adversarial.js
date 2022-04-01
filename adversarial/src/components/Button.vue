@@ -21,7 +21,7 @@ export default {
 		if(this.description == "next-image"){ nextImage()}
         else if(this.description == "predict") {predictImg()}
         else if(this.description == "adv") {attack()}
-		else if(this.description == "upload-image") {document.getElementById('fileid').click();}
+		else if(this.description == "upload-image") {document.getElementById('fileid').click()}
 	},
 	upload(){
 		uploadImage()
