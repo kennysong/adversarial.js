@@ -262,9 +262,6 @@ async function getImg(){
 	const input = document.getElementById("fileid");
 	let source = input.files[0];
 	
-	console.log(source);
-	console.log(URL.createObjectURL(source));
-	
 	let loadingUpload= [];
 	document.getElementsByClassName("upload_img").forEach(e => {
 		loadingUpload.push(loadImage(e, URL.createObjectURL(source)));
@@ -278,8 +275,6 @@ async function getImg(){
 		loadedUpload = tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]);
 	});
 	
-	console.log(loadedUpload);
-	console.log(loadedUpload.shape);
 	drawImg(loadedUpload, "original");
 }
 
