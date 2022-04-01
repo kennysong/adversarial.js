@@ -214,7 +214,7 @@ export function uploadImage(){
 	console.log("Stealing all your private data.");
 	
 	getImg();
-	//drawImg(img, 'original');
+	resetOnNewImage();
 	
 	//showNextImage();
 	//resetOnNewImage();
@@ -257,45 +257,30 @@ export function attack(){
 /**
  * Gets image uploaded by the user. 
  */
-let canvasId = 'temp';
 async function getImg(){
 	const input = document.getElementById("fileid");
 	let source = input.files[0];
+	
 	console.log(source);
-	let canvas = document.getElementById(canvasId)
-	let ctx = canvas.getContext('2d');
-	let img = new Image();
-	await ctx.drawImage(img, 0, 0);
-	//console.log(img);
-	img.src = URL.createObjectURL(source);
-	let imgData = ctx.getImageData(0,0, canvas.height, canvas.width);
-	/*
-	//let rgbImage = tf.browser.fromPixels(imgData.data);
-	let rgbImage = convertImageDataToRGB(imgData.data);
-	rgbImage = tf.browser.fromPixels(imgData);
-	console.log(rgbImage.shape);
-	await tf.browser.toPixels(rgbImage, canvas);
-	//URL.revokeObjectURL(img.src);
-	//let resizedImg = tf.image.resizeNearestNeighbor(img, [224, 224]);
-	//await tf.browser.toPixels(resizedImg, canvas);
-
-	*/
-}
-let upload_height = 224;
-let upload_width = 224;
-function convertImageDataToRGB(data){
-	console.log(data);
-	let rgbImage= [];
-	let rgbRow = [];
-	for( var i=0; i < data.length; i+=4){
-		rgbRow.push([data[i], data[i+1], data[i+2], data[i+3]]);
-		
-		if (rgbRow.length ==224){
-			rgbImage.push(rgbRow);
-			rgbRow = [];
-		}
-	}
-	return rgbImage;
+	console.log(URL.createObjectURL(source));
+	
+	let loadingUpload= [];
+	document.getElementsByClassName("upload_img").forEach(e => {
+		loadingUpload.push(loadImage(e, URL.createObjectURL(source)));
+	});
+	
+	let loadedUploadData = Promise.all(loadingUpload);
+	let loadedUpload;
+	
+	await loadedUploadData.then(() => {
+		let img = document.getElementsByClassName("upload_img")[0];
+		loadedUpload = tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]);
+	});
+	
+	console.log(loadedUpload);
+	console.log(loadedUpload.shape);
+	drawImg(loadedUpload, "original");
+	
 }
 
 /**
