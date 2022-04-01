@@ -3,8 +3,8 @@
     <table class="footerTable">
       <tr>
         <td rowspan="4" class="button"><Button value = "Prediction"/></td>
-            <Button value = "Run Neural Network" id = "predict-original"/>
-            <button id="predict-adv" class="button-primary" disabled>Click "Generate" First</button>
+        <Button value = "Run Neural Network" description="predict"/>
+        <Button value = "Click 'Generate' First" description="adv"/>
       </tr>
       <tr>
         <th>Original</th>
@@ -72,4 +72,38 @@ table.footerTable td.info {
   font-family: "Raleway";
   vertical-align: top;
 }
+
+
+
+
+
+@media (max-width: 600px) {
+
+.footer {
+  position: fixed;
+  bottom: 70px;
+  width: 100%;
+  height: 6em;
+}
+  
+
+table.footerTable {
+  table-layout: fixed;
+  border: none;
+  width: 100%;
+  height: 10em;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+  /* .links {
+
+  } */
+
+  /* a {
+
+  } */
+}
+
+
 </style>

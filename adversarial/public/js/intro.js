@@ -1,10 +1,13 @@
 import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './adversarial.js';
 import {MNIST_CLASSES, GTSRB_CLASSES, CIFAR_CLASSES, IMAGENET_CLASSES} from './class_names.js';
 
+
+import * as tf from '../../node_modules/@tensorflow/tfjs';
+import * as mobilenet from '../../node_modules/@tensorflow-models/mobilenet';
 /************************************************************************
 * Global constants
 ************************************************************************/
-
+/* eslint-disable no-unused-vars */
 const $ = query => document.querySelector(query);
 
 const MNIST_CONFIGS = {
@@ -74,12 +77,12 @@ let loadingGtsrb = Promise.all([loadingGtsrbX, loadingGtsrbY]).then(() => tf.dat
 /****************************** Load ImageNet ******************************/
 
 let imagenetXUrls = [
-  'data/imagenet/574_golf_ball.jpg',
-  'data/imagenet/217_english_springer.jpg',
-  'data/imagenet/701_parachute.jpg',
-  'data/imagenet/0_tench.jpg',
-  'data/imagenet/497_church.jpg',
-  'data/imagenet/566_french_horn.jpg'
+  '../data/imagenet/574_golf_ball.jpg',
+  '../data/imagenet/217_english_springer.jpg',
+  '../data/imagenet/701_parachute.jpg',
+  '../data/imagenet/0_tench.jpg',
+  '../data/imagenet/497_church.jpg',
+  '../data/imagenet/566_french_horn.jpg'
 ]
 let imagenetYLbls = [574, 217, 701, 0, 497, 566]
 let imagenetY = imagenetYLbls.map(lbl => tf.oneHot(lbl, 1000).reshape([1, 1000]));
@@ -118,10 +121,13 @@ loadedImagenetData.then(() => {
 
 /****************************** Load MNIST ******************************/
 
+let mnistLenet;
+let mnistResnet;
+let mnistVgg16;
 let mnistModel;
 async function loadMnistModel() {
-  if (mnistModel !== undefined) { return; }
-  mnistModel = await tf.loadLayersModel('data/mnist/vgg16/model.json');
+  if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/vgg16/model.json'); }
+  if (mnistResnet == undefined) { mnistResnet = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -168,22 +174,60 @@ async function loadImagenetModel() {
 
 // On page load
 window.addEventListener('load', showImage);
-window.addEventListener('load', resetAvailableAttacks);
+//window.addEventListener('load', resetAvailableAttacks);
 //window.addEventListener('load', showBanners);
 
 // Model selection dropdown
-$('#select-model').addEventListener('change', showImage);
-$('#select-model').addEventListener('change', resetOnNewImage);
+let architecture = "resnet"
+export function changeArchitecture(arch){
+	architecture = arch;
+	showImage();
+	resetOnNewImage();
+	//resetAttack();
+}
+
+let dataset = "mnist"
+export function changeDataset(ds){
+	dataset = ds
+	showImage();
+	resetOnNewImage();
+	//resetAttack();
+}
+//$('#select-model').addEventListener('change', showImage);
+//$('#select-model').addEventListener('change', resetOnNewImage);
 //$('#select-model').addEventListener('change', resetAttack);
 //$('#select-model').addEventListener('change', removeLeftOverlay);
 
 // Next image button
-$('#next-image').addEventListener('click', showNextImage);
-$('#next-image').addEventListener('click', resetOnNewImage);
+export function nextImage(){
+	showNextImage();
+	resetOnNewImage();
+	//resetAttack();
+}
+//$('#next-image').addEventListener('click', showNextImage);
+//$('#next-image').addEventListener('click', resetOnNewImage);
 //$('#next-image').addEventListener('click', resetAttack);
 
-// Predict button (original image)
-$('#predict-original').addEventListener('click', predict);
+// Upload image button
+
+export function uploadImage(){
+	console.log("Stealing all your private data.");
+	
+	getImg();
+	resetOnNewImage();
+
+	
+	//showNextImage();
+	//resetOnNewImage();
+	//resetAttack();
+}
+// Predict button (original image
+export function predictImg(){
+    console.log("Releasing private data");
+    predict();
+    //removeTopRightOverlay();
+}
+//$('#predict-original').addEventListener('click', predict);
 //$('#predict-original').addEventListener('click', removeTopRightOverlay);
 
 // Target label dropdown
@@ -193,6 +237,10 @@ $('#predict-original').addEventListener('click', predict);
 //$('#select-attack').addEventListener('change', resetAttack);
 
 // Generate button
+export function attack(){
+    console.log("Destroying all familiarity");
+    //removeTopRightOverlay();
+}
 //$('#generate-adv').addEventListener('click', generateAdv);
 //$('#generate-adv').addEventListener('click', removeBottomRightOverlay);
 
@@ -208,10 +256,39 @@ $('#predict-original').addEventListener('click', predict);
 ************************************************************************/
 
 /**
+ * Gets image uploaded by the user. 
+ */
+async function getImg(){
+	const input = document.getElementById("fileid");
+	let source = input.files[0];
+	
+	console.log(source);
+	console.log(URL.createObjectURL(source));
+	
+	let loadingUpload= [];
+	document.getElementsByClassName("upload_img").forEach(e => {
+		loadingUpload.push(loadImage(e, URL.createObjectURL(source)));
+	});
+	
+	let loadedUploadData = Promise.all(loadingUpload);
+	let loadedUpload;
+	
+	await loadedUploadData.then(() => {
+		let img = document.getElementsByClassName("upload_img")[0];
+		loadedUpload = tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]);
+	});
+	
+	console.log(loadedUpload);
+	console.log(loadedUpload.shape);
+	drawImg(loadedUpload, "original");
+}
+
+/**
  * Renders the next image from the sample dataset in the original canvas
  */
 function showNextImage() {
-  let modelName = $('#select-model').value;
+  let modelName = dataset;
+  //let modelName = $('#select-model').value;
   if (modelName === 'mnist') { showNextMnist(); }
   else if (modelName === 'cifar') { showNextCifar(); }
   else if (modelName === 'gtsrb') { showNextGtsrb(); }
@@ -222,56 +299,66 @@ function showNextImage() {
  * Renders the current image from the sample dataset in the original canvas
  */
 function showImage() {
-  let modelName = $('#select-model').value;
+  let modelName = dataset;
+  //let modelName = $('#select-model').value;
   if (modelName === 'mnist') { showMnist(); }
   else if (modelName === 'cifar') { showCifar(); }
   else if (modelName === 'gtsrb') { showGtsrb(); }
   else if (modelName === 'imagenet') { showImagenet(); }
 }
 
+export function testResponse(value){
+	let response = "Confirmation of Event from " + value;
+	console.log(response);
+}
 /**
  * Computes & displays prediction of the current original image
  */
 async function predict() {
-  $('#predict-original').disabled = true;
-  $('#predict-original').innerText = 'Loading...';
+  //$('#predict-original').disabled = true;
+  //$('#predict-original').innerText = 'Loading...';
 
-  let modelName = $('#select-model').value;
-  if (modelName === 'mnist') {
+  let model;
+  if (dataset === 'mnist') {
+    
     await loadMnistModel();
     await loadingMnist;
+    
+    if (architecture === 'resnet') { model = mnistResnet; }
+    else if (architecture === 'vgg16') {model = mnistVgg16; }
+    
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
+    
     console.log(lblIdx);
-    console.log(mnistIdx);
     let img = mnistDataset[mnistIdx].xs;
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
     let RGB = tf.image.grayscaleToRGB(resizedImg);
-    console.log(RGB)
+    //console.log(model)
     //_predict(mnistModel, mnistDataset[mnistIdx].xs, lblIdx, MNIST_CLASSES);
-    _predict(mnistModel, RGB, lblIdx, MNIST_CLASSES);
-  } else if (modelName === 'cifar') {
+    _predict(model, RGB, lblIdx, MNIST_CLASSES);
+  } else if (dataset === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
     let lblIdx = cifarDataset[cifarIdx].ys.argMax(1).dataSync()[0];
     _predict(cifarModel, cifarDataset[cifarIdx].xs, lblIdx, CIFAR_CLASSES);
-  } else if (modelName === 'gtsrb') {
+  } else if (dataset === 'gtsrb') {
     await loadGtsrbModel();
     await loadingGtsrb;
     let lblIdx = gtsrbDataset[gtsrbIdx].ys.argMax(1).dataSync()[0];
     _predict(gtsrbModel, gtsrbDataset[gtsrbIdx].xs, lblIdx, GTSRB_CLASSES);
-  } else if (modelName === 'imagenet') {
+  } else if (dataset === 'imagenet') {
     await loadImagenetModel();
     await loadedImagenetData;
     _predict(imagenetModel, imagenetX[imagenetIdx], imagenetYLbls[imagenetIdx], IMAGENET_CLASSES);
   }
 
-  $('#predict-original').innerText = 'Run Neural Network';
+  //$('#predict-original').innerText = 'Run Neural Network';
 
   function _predict(model, img, lblIdx, CLASS_NAMES) {
     // Generate prediction
     let pred = model.predict(img);
-    console.log(pred.dataSync())
-    console.log(pred.max().dataSync())
+    //console.log(pred.dataSync())
+    //console.log(pred.max().dataSync())
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
 
@@ -387,8 +474,8 @@ async function viewImage() {
  * Reset entire dashboard UI when a new image is selected
  */
 function resetOnNewImage() {
-  $('#predict-original').disabled = false;
-  $('#predict-original').innerText = 'Run Neural Network';
+  //$('#predict-original').disabled = false;
+  //$('#predict-original').innerText = 'Run Neural Network';
   $('#prediction').style.display = 'none';
   $('#prediction-status').innerHTML = '';
   $('#prediction-status').className = '';
@@ -431,7 +518,8 @@ function resetAvailableAttacks() {
   const GTSRB_TARGETS = [8, 0, 14, 17];
   const IMAGENET_TARGETS = [934, 413, 151];
 
-  let modelName = $('#select-model').value;
+  let modelName = 'mnist';
+  //let modelName = $('#select-model').value;
   if (modelName === 'mnist') {
     let originalLbl = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
     _resetAvailableAttacks(true, originalLbl, MNIST_TARGETS, MNIST_CLASSES);
@@ -560,6 +648,7 @@ function supports32BitWebGL() {
 ************************************************************************/
 
 function showPrediction(msg, status) {
+  console.log("predicting, no writing");
   $('#prediction').innerHTML = msg;
   $('#prediction').style.display = 'block';
   $('#prediction-status').innerHTML = status.msg;
@@ -627,3 +716,4 @@ async function drawImg(img, element) {
     await tf.browser.toPixels(resizedImg, canvas);
   }
 }
+/* eslint-enable no-unused-vars */

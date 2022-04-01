@@ -35,10 +35,5 @@ resnet.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.me
 
 resnet.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
 
-<<<<<<< HEAD
-tfjs.converters.save_keras_model(model, './js/resnet')
-model.save('./js/resnet/resnet.h5')
-=======
 tfjs.converters.save_keras_model(resnet, '../mnist/resnet')
-//model.save('./js/resnet/resnet.h5')
->>>>>>> b0c63603a2c43facedfe6986aabae4b8678acee0
+#model.save('./js/resnet/resnet.h5')

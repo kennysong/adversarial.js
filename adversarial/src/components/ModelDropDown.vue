@@ -5,12 +5,14 @@
       </button>
         <ul class="dropdown-menu" aria-labelledby="select-model">
         <li v-for="option in options" :key="option.key">
-          <a class="dropdown-item" @click="key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
+          <a class="dropdown-item" @click="onClick(option.value); key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
         </li>
         </ul>
       </div>
   </template>
+  
 <script>
+import {changeArchitecture} from "../../public/js/intro.js"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 export default {
@@ -21,17 +23,23 @@ export default {
   },
   data: () => ({
     options: [
-      { key: "MNIST (digit recognition)", value: 'mnist' },
-      { key: "GTSRB (street sign recognition)", value: 'gtsrb' }, 
-      { key: "CIFAR-10 (object recognition, small)", value: 'cifar10' }, 
-      { key: "ImageNet (object recognition, large)", value: 'imagenet'}
+      { key: "LeNet", value: 'lenet' },
+      { key: "VGG-16", value: 'vgg16' }, 
+      { key: "ResNet", value: 'resnet' }, 
+      { key: "MobileNet", value: 'mobilenet'}
       ],
-    key: "Select Model",
+    key: "Select Architecture",
     value: ""
   }),
+  methods: {
+	onClick(value){
+		changeArchitecture(value)
+	}
+  }
 }
+
+  
 </script>
 
 <style>
-
 </style>
