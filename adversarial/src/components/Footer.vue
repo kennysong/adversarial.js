@@ -72,4 +72,38 @@ table.footerTable td.info {
   font-family: "Raleway";
   vertical-align: top;
 }
+
+
+
+
+
+@media (max-width: 600px) {
+
+.footer {
+  position: fixed;
+  bottom: 70px;
+  width: 100%;
+  height: 6em;
+}
+  
+
+table.footerTable {
+  table-layout: fixed;
+  border: none;
+  width: 100%;
+  height: 10em;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+  /* .links {
+
+  } */
+
+  /* a {
+
+  } */
+}
+
+
 </style>

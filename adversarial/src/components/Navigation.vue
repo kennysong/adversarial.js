@@ -77,18 +77,27 @@ a.nav:active {
   font-weight: bold;
 }
 
-@media (max-width: 940px) {
+@media (max-width: 600px) {
   .headers {
     font-size: 12pt;
   }
 
-  /* .links {
+  .links {
+    font-size: 12pt;
+    margin-top: 10px;
+  }
 
-  } */
+  a.nav {
+    margin-right: 5px;
+  }
 
-  /* a {
 
-  } */
+  .banner {
+  display: flex;
+  width: 100%;
+  height: 4em;
+  background-color: #D3DAE4;
+}
 }
 </style>
 

@@ -67,6 +67,7 @@ export default {
   width: 45%;
   height: fit-content;
   padding: 1em;
+  text-align: left;
 }
 
 .generate {
@@ -95,26 +96,37 @@ export default {
 }
 
 @media (max-width: 600px) {
+
 .mainImage {
   max-width: 100%;
   height: auto;
+}
+
+.label {
+  display: inline-block;
+  vertical-align: top;
+  padding-top: 25px;
 }
 
 .wrapper {
   width: 85%;
   height: fit-content;
   margin: auto;
-  margin-top: 4em;
-  padding: 1em;
+  margin-top: .5em;
+  padding: .1em;
   display: flex;
+  flex-direction: column;
   flex-flow: row wrap;
   text-align: center;
 }
 
 .options {
-  width: 45%;
+  width: 100%;
   height: fit-content;
-  padding: 1em;
+  padding: .5em;
+  text-align: center;
+  
+  
 }
 
 .generate {
@@ -124,8 +136,12 @@ export default {
 }
 
 .imageContainer {
-  width: 55%;
   height: fit-content;
+  width: 100%;
+  height: 100%;
+  object-fit:contain;
+  background-color: rgb(255, 255, 255);
+  margin-top: auto;
 }
 
 .upload {
@@ -139,6 +155,7 @@ export default {
   padding-top: .8em;
   padding-bottom: .3em;
 }
+
 }
 </style>
 

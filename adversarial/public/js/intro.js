@@ -215,6 +215,7 @@ export function uploadImage(){
 	
 	getImg();
 	resetOnNewImage();
+
 	
 	//showNextImage();
 	//resetOnNewImage();
@@ -280,7 +281,6 @@ async function getImg(){
 	console.log(loadedUpload);
 	console.log(loadedUpload.shape);
 	drawImg(loadedUpload, "original");
-	
 }
 
 /**
