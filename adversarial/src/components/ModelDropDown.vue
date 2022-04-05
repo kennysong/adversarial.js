@@ -23,10 +23,10 @@ export default {
   },
   data: () => ({
     options: [
-      { key: "LeNet", value: 'lenet' },
       { key: "VGG-16", value: 'vgg16' }, 
       { key: "ResNet", value: 'resnet' }, 
-      { key: "MobileNet", value: 'mobilenet'}
+      { key: "Xception", value: 'xception'},
+      { key: "MobileNet", value: 'mobilenet' }
       ],
     key: "Select Architecture",
     value: ""
