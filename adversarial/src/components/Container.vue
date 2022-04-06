@@ -12,14 +12,19 @@
     </div>
     <div class="imageContainer">
       <ImageContainer />
+      <PredictionData />
     </div>
     <div class="generate">
+      <Button value = "Run Neural Network" description="predict"/>
+      <br>
       <Button value = "Generate"/>
     </div>
     <div class="upload">
       <Button value = "Upload Image" description="upload-image"/>
       <br>
       <Button value = "Next Image" description="next-image"/>
+      <br>
+      <Button value = "Download Image"/>
     </div>
   </div>
 </template>
@@ -31,6 +36,8 @@ import AttackDropDown from './AttackDropDown.vue'
 import ImageDropDown from './ImageDropDown.vue'
 import ImageContainer from './ImageContainer.vue'
 import DatasetDropDown from './DatasetDropDown.vue'
+import PredictionData from './PredictionData.vue'
+
 export default {
   name: 'Container',
   components: {
@@ -39,7 +46,8 @@ export default {
     DatasetDropDown,
     AttackDropDown,
     ImageDropDown,
-    ImageContainer
+    ImageContainer,
+    PredictionData
   }
 }
 </script>

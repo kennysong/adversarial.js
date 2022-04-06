@@ -2,20 +2,8 @@
     <div class="main-container">
       <Navigation pageTitle="Home"/>
       <Container/>
-      <div class="row border-bottom">
-          <div class="one-half column split border-right">
-            <div id="original-canvas-overlay" class="overlay"></div>
-            <div class="splitleft61">
-              <canvas id="original" class="tableimg" width="224" height="224"></canvas>
-            </div>
-            <div class="splitright39">
-              <Button value = "Next Image" id = "next-image"/>
-            </div>
-          </div>
-        </div>
       <Footer/>
       <!-- <FAQ/> -->
-      <ImageContainer/>
     </div>
 </template>
 
@@ -24,7 +12,6 @@ import Navigation from './components/Navigation.vue'
 import Container from './components/Container.vue'
 import Footer from './components/Footer.vue'
 // import FAQ from './components/FAQ.vue'
-import ImageContainer from './components/ImageContainer.vue'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
@@ -33,9 +20,8 @@ export default {
   components: {
     Navigation,
     Container,
-    Footer,
+    Footer
     // FAQ
-    ImageContainer,
   }
 }
 </script>
