@@ -1,15 +1,15 @@
 <template>
   <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false" value = "">
+    <button class="dropdown-button dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false" value = "">
       {{key}}
-      </button>
-        <ul class="dropdown-menu" aria-labelledby="select-model">
+    </button>
+      <ul class="dropdown-menu" aria-labelledby="select-model">
         <li v-for="option in options" :key="option.key">
           <a class="dropdown-item" @click="onClick(option.value); key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
         </li>
-        </ul>
-      </div>
-  </template>
+      </ul>
+  </div>
+</template>
   
 <script>
 import {changeArchitecture} from "../../public/js/intro.js"
@@ -23,10 +23,10 @@ export default {
   },
   data: () => ({
     options: [
-      { key: "LeNet", value: 'lenet' },
       { key: "VGG-16", value: 'vgg16' }, 
       { key: "ResNet", value: 'resnet' }, 
-      { key: "MobileNet", value: 'mobilenet'}
+      { key: "Xception", value: 'xception'},
+      { key: "MobileNet", value: 'mobilenet' }
       ],
     key: "Select Architecture",
     value: ""
@@ -36,10 +36,19 @@ export default {
 		changeArchitecture(value)
 	}
   }
-}
-
-  
+} 
 </script>
 
 <style>
+.dropdown-button {
+background-color: #FFFFFF;
+color: #000000;
+font-family: "Raleway";
+font-size: 15px;
+width: 24em;
+height: 4em;
+box-shadow: 1px 2px 4px #cecece;
+border-radius: .3em;
+text-align: left;
+}
 </style>

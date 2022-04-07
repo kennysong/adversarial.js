@@ -1,13 +1,13 @@
 import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './adversarial.js';
 import {MNIST_CLASSES, GTSRB_CLASSES, CIFAR_CLASSES, IMAGENET_CLASSES} from './class_names.js';
 
-
+/* eslint-disable no-unused-vars */
 import * as tf from '../../node_modules/@tensorflow/tfjs';
 import * as mobilenet from '../../node_modules/@tensorflow-models/mobilenet';
 /************************************************************************
 * Global constants
 ************************************************************************/
-/* eslint-disable no-unused-vars */
+
 const $ = query => document.querySelector(query);
 
 const MNIST_CONFIGS = {
@@ -121,27 +121,39 @@ loadedImagenetData.then(() => {
 
 /****************************** Load MNIST ******************************/
 
-let mnistLenet;
+let mnistXception;
 let mnistResnet;
 let mnistVgg16;
-let mnistModel;
+let mnistMobilenet;
 async function loadMnistModel() {
   if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/vgg16/model.json'); }
   if (mnistResnet == undefined) { mnistResnet = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
+  if (mnistXception == undefined) { mnistXception = await tf.loadLayersModel('data/mnist/xception/model.json'); }
+  if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadLayersModel('data/mnist/mobilenet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
 /****************************** Load CIFAR-10 ******************************/
 
-let cifarModel;
+let cifarVgg16;
+let cifarResnet;
+let cifarXception;
+let cifarMobilenet;
 async function loadCifarModel() {
-  if (cifarModel !== undefined) { return; }
-  cifarModel = await tf.loadLayersModel('data/cifar/cifar10_cnn.json');
+  if (cifarVgg16 == undefined) { cifarVgg16 = await tf.loadLayersModel('data/cifar/vgg16/model.json'); }
+  if (cifarResnet == undefined) { cifarResnet = await tf.loadLayersModel('data/cifar/resnet/model.json'); }
+  if (cifarXception == undefined) { cifarXception = await tf.loadLayersModel('data/cifar/xception/model.json'); }
+  if (cifarMobilenet == undefined) { cifarMobilenet = await tf.loadLayersModel('data/cifar/mobilenet/model.json'); }
 }
 
 /****************************** Load GTSRB ******************************/
 
 let gtsrbModel;
+let gtsrbVgg16;
+let gtsrbResnet;
+let gtsrbXception;
+let gtsrbMobilenet;
+
 async function loadGtsrbModel() {
   if (gtsrbModel !== undefined) { return; }
   gtsrbModel = await tf.loadLayersModel('data/gtsrb/gtsrb_cnn.json');
@@ -150,7 +162,17 @@ async function loadGtsrbModel() {
 /****************************** Load ImageNet ******************************/
 
 let imagenetModel;
+let imagenetVgg16;
+let imagenetResnet;
+let imagenetXception;
+let imagenetMobilenet;
 async function loadImagenetModel() {
+  if (imagenetVgg16 == undefined) { imagenetVgg16 = await tf.loadLayersModel('data/imagenet/vgg16/model.json'); }
+  if (imagenetResnet == undefined) { imagenetResnet = await tf.loadLayersModel('data/imagenet/resnet/model.json'); }
+  if (imagenetXception == undefined) { imagenetXception = await tf.loadLayersModel('data/imagenet/xception/model.json'); }
+  if (imagenetMobilenet == undefined) { imagenetMobilenet = await tf.loadLayersModel('data/imagenet/mobilenet/model.json'); }
+  
+  /*         Old Code for Mobilenet Imagnet Classifier
   if (imagenetModel !== undefined) { return; }
   imagenetModel = await mobilenet.load({version: 2, alpha: 1.0});
 
@@ -166,6 +188,7 @@ async function loadImagenetModel() {
     const logits1001 = this.model.predict(img);
     return logits1001.slice([0, 1], [-1, 1000]);
   }
+    */
 }
 
 /************************************************************************
@@ -258,12 +281,10 @@ export function attack(){
 /**
  * Gets image uploaded by the user. 
  */
+let loadedUpload;
 async function getImg(){
 	const input = document.getElementById("fileid");
 	let source = input.files[0];
-	
-	console.log(source);
-	console.log(URL.createObjectURL(source));
 	
 	let loadingUpload= [];
 	document.getElementsByClassName("upload_img").forEach(e => {
@@ -271,15 +292,12 @@ async function getImg(){
 	});
 	
 	let loadedUploadData = Promise.all(loadingUpload);
-	let loadedUpload;
 	
 	await loadedUploadData.then(() => {
 		let img = document.getElementsByClassName("upload_img")[0];
 		loadedUpload = tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]);
 	});
 	
-	console.log(loadedUpload);
-	console.log(loadedUpload.shape);
 	drawImg(loadedUpload, "original");
 }
 
@@ -321,14 +339,17 @@ async function predict() {
   let model;
   if (dataset === 'mnist') {
     
+    console.log(architecture);
     await loadMnistModel();
     await loadingMnist;
     
     if (architecture === 'resnet') { model = mnistResnet; }
     else if (architecture === 'vgg16') {model = mnistVgg16; }
+    else if (architecture === 'xception') {model = mnistXception; }
+    else if (architecture === 'mobilenet') {model = mnistMobilenet; }
     
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
-    
+    console.log("Got here");
     console.log(lblIdx);
     let img = mnistDataset[mnistIdx].xs;
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
@@ -339,17 +360,35 @@ async function predict() {
   } else if (dataset === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
+    
+    if (architecture === 'resnet') { model = cifarResnet; }
+    else if (architecture === 'vgg16') {model = cifarVgg16; }
+    else if (architecture === 'xception') {model = cifarXception; }
+    else if (architecture === 'mobilenet') {model = cifarMobilenet; }
+    
     let lblIdx = cifarDataset[cifarIdx].ys.argMax(1).dataSync()[0];
-    _predict(cifarModel, cifarDataset[cifarIdx].xs, lblIdx, CIFAR_CLASSES);
+    _predict(model, cifarDataset[cifarIdx].xs, lblIdx, CIFAR_CLASSES);
   } else if (dataset === 'gtsrb') {
     await loadGtsrbModel();
     await loadingGtsrb;
+    
+    if (architecture === 'resnet') { model = gtsrbResnet; }
+    else if (architecture === 'vgg16') {model = gtsrbVgg16; }
+    else if (architecture === 'xception') {model = gtsrbXception; }
+    else if (architecture === 'mobilenet') {model = gtsrbMobilenet; }
+    
     let lblIdx = gtsrbDataset[gtsrbIdx].ys.argMax(1).dataSync()[0];
-    _predict(gtsrbModel, gtsrbDataset[gtsrbIdx].xs, lblIdx, GTSRB_CLASSES);
+    _predict(model, gtsrbDataset[gtsrbIdx].xs, lblIdx, GTSRB_CLASSES);
   } else if (dataset === 'imagenet') {
     await loadImagenetModel();
     await loadedImagenetData;
-    _predict(imagenetModel, imagenetX[imagenetIdx], imagenetYLbls[imagenetIdx], IMAGENET_CLASSES);
+    
+    if (architecture === 'resnet') { model = imagenetResnet; }
+    else if (architecture === 'vgg16') {model = imagenetVgg16; }
+    else if (architecture === 'xception') {model = imagenetXception; }
+    else if (architecture === 'mobilenet') {model = imagenetMobilenet; }
+    
+    _predict(model, imagenetX[imagenetIdx], imagenetYLbls[imagenetIdx], IMAGENET_CLASSES);
   }
 
   //$('#predict-original').innerText = 'Run Neural Network';
@@ -357,7 +396,7 @@ async function predict() {
   function _predict(model, img, lblIdx, CLASS_NAMES) {
     // Generate prediction
     let pred = model.predict(img);
-    //console.log(pred.dataSync())
+    console.log(pred.dataSync())
     //console.log(pred.max().dataSync())
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
@@ -384,25 +423,50 @@ async function generateAdv() {
     case 'jsma': attack = jsma; break;
     case 'cw': attack = cw; break;
   }
-
+    
+  let adv_model;
   let modelName = $('#select-model').value;
   let targetLblIdx = parseInt($('#select-target').value);
   if (modelName === 'mnist') {
     await loadMnistModel();
     await loadingMnist;
-    await _generateAdv(mnistModel, mnistDataset[mnistIdx].xs, mnistDataset[mnistIdx].ys, MNIST_CLASSES, MNIST_CONFIGS[attack.name]);
+    
+    if (architecture === 'resnet') { adv_model = mnistResnet; }
+    else if (architecture === 'vgg16') {adv_model = mnistVgg16; }
+    else if (architecture === 'xception') {adv_model = mnistXception; }
+    else if (architecture === 'mobilenet') {adv_model = mnistMobilenet; }
+    
+    await _generateAdv(adv_model, mnistDataset[mnistIdx].xs, mnistDataset[mnistIdx].ys, MNIST_CLASSES, MNIST_CONFIGS[attack.name]);
   } else if (modelName === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
-    await _generateAdv(cifarModel, cifarDataset[cifarIdx].xs, cifarDataset[cifarIdx].ys, CIFAR_CLASSES, CIFAR_CONFIGS[attack.name]);
+    
+    if (architecture === 'resnet') { adv_model = cifarResnet; }
+    else if (architecture === 'vgg16') {adv_model = cifarVgg16; }
+    else if (architecture === 'xception') {adv_model = cifarXception; }
+    else if (architecture === 'mobilenet') {adv_model = cifarMobilenet; }
+    
+    await _generateAdv(adv_model, cifarDataset[cifarIdx].xs, cifarDataset[cifarIdx].ys, CIFAR_CLASSES, CIFAR_CONFIGS[attack.name]);
   } else if (modelName === 'gtsrb') {
     await loadGtsrbModel();
     await loadingGtsrb;
-    await _generateAdv(gtsrbModel, gtsrbDataset[gtsrbIdx].xs, gtsrbDataset[gtsrbIdx].ys, GTSRB_CLASSES, GTSRB_CONFIGS[attack.name]);
+    
+    if (architecture === 'resnet') { adv_model = gtsrbResnet; }
+    else if (architecture === 'vgg16') {adv_model = gtsrbVgg16; }
+    else if (architecture === 'xception') {adv_model = gtsrbXception; }
+    else if (architecture === 'mobilenet') {adv_model = gtsrbMobilenet; }
+    
+    await _generateAdv(adv_model, gtsrbDataset[gtsrbIdx].xs, gtsrbDataset[gtsrbIdx].ys, GTSRB_CLASSES, GTSRB_CONFIGS[attack.name]);
   } else if (modelName === 'imagenet') {
     await loadImagenetModel();
     await loadedImagenetData;
-    await _generateAdv(imagenetModel, imagenetX[imagenetIdx], imagenetY[imagenetIdx], IMAGENET_CLASSES, IMAGENET_CONFIGS[attack.name]);
+    
+    if (architecture === 'resnet') { adv_model = imagenetResnet; }
+    else if (architecture === 'vgg16') {adv_model = imagenetVgg16; }
+    else if (architecture === 'xception') {adv_model = imagenetXception; }
+    else if (architecture === 'mobilenet') {adv_model = imagenetMobilenet; }
+    
+    await _generateAdv(adv_model, imagenetX[imagenetIdx], imagenetY[imagenetIdx], IMAGENET_CLASSES, IMAGENET_CONFIGS[attack.name]);
   }
 
   $('#latency-msg').style.display = 'none';
