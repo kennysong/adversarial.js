@@ -2,13 +2,14 @@
 	<div class="wrapper">
 			<input class="button" type="button" v-model=value @click = "onClick()">
 		<div class="uploader">
-			<input id="fileid" type="file" accept="image/*" @change = "upload()" hidden/>
+			<input id="fileid" type="file" accept="image/*" @change = "upload()" @click = "update()" hidden/>
 		</div>
 	</div>
 </template>
 
 <script>
 import {nextImage, uploadImage, predictImg, attack} from "../../public/js/intro.js"
+import {updateImage} from './ImageContainer.vue'
 export default {
   name: 'Button',
   props: {
@@ -24,7 +25,10 @@ export default {
 	},
 	upload(){
 		uploadImage()
-	}
+	},
+  update(){
+    updateImage()
+  }
   }
 }
 </script>
