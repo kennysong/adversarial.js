@@ -6,16 +6,16 @@
 </template>
 
 <script>
-function updateImage() {
-  var frame = document.getElementById("frame")
-  frame.src = URL.createObjectURL(frame.files[0])
-}
 //notes: use getImg(), loadImage(), and drawImg() in intro.js as a base for scripts
 export default {
   name: 'ImageContainer',
   methods: {
-    updateImage
   }
+}
+export function updateImage() {
+  var frame = document.getElementById("frame")
+  var source = document.getElementById("fileid")
+  frame.src = URL.createObjectURL(source.files[0])
 }
 </script>
 

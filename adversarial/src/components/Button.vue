@@ -2,7 +2,7 @@
 	<div class="wrapper">
 			<input class="button" type="button" v-model=value @click = "onClick()">
 		<div class="uploader">
-			<input id="fileid" type="file" accept="image/*" @change = "upload()" @click = "update()" hidden/>
+			<input id="fileid" type="file" accept="image/*" @change = "upload()" hidden/>
 		</div>
 	</div>
 </template>
@@ -25,10 +25,8 @@ export default {
 	},
 	upload(){
 		uploadImage()
-	},
-  update(){
     updateImage()
-  }
+	}
   }
 }
 </script>
