@@ -128,8 +128,8 @@ let mnistMobilenet;
 async function loadMnistModel() {
   if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/vgg16/model.json'); }
   if (mnistResnet == undefined) { mnistResnet = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
-  if (mnistXception == undefined) { mnistXception = await tf.loadLayersModel('data/mnist/xception/model.json'); }
-  if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadLayersModel('data/mnist/mobilenet/model.json'); }
+  //if (mnistXception == undefined) { mnistXception = await tf.loadLayersModel('data/mnist/xception/model.json'); }
+    if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadLayersModel('data/mnist/mobilenet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -142,7 +142,7 @@ let cifarMobilenet;
 async function loadCifarModel() {
   if (cifarVgg16 == undefined) { cifarVgg16 = await tf.loadLayersModel('data/cifar/vgg16/model.json'); }
   if (cifarResnet == undefined) { cifarResnet = await tf.loadLayersModel('data/cifar/resnet/model.json'); }
-  if (cifarXception == undefined) { cifarXception = await tf.loadLayersModel('data/cifar/xception/model.json'); }
+  //if (cifarXception == undefined) { cifarXception = await tf.loadLayersModel('data/cifar/xception/model.json'); }
   if (cifarMobilenet == undefined) { cifarMobilenet = await tf.loadLayersModel('data/cifar/mobilenet/model.json'); }
 }
 
@@ -169,7 +169,7 @@ let imagenetMobilenet;
 async function loadImagenetModel() {
   if (imagenetVgg16 == undefined) { imagenetVgg16 = await tf.loadLayersModel('data/imagenet/vgg16/model.json'); }
   if (imagenetResnet == undefined) { imagenetResnet = await tf.loadLayersModel('data/imagenet/resnet/model.json'); }
-  if (imagenetXception == undefined) { imagenetXception = await tf.loadLayersModel('data/imagenet/xception/model.json'); }
+  //if (imagenetXception == undefined) { imagenetXception = await tf.loadLayersModel('data/imagenet/xception/model.json'); }
   if (imagenetMobilenet == undefined) { imagenetMobilenet = await tf.loadLayersModel('data/imagenet/mobilenet/model.json'); }
   
   /*         Old Code for Mobilenet Imagnet Classifier
@@ -342,6 +342,11 @@ async function predict() {
     console.log(architecture);
     await loadMnistModel();
     await loadingMnist;
+    console.log(mnistResnet);
+    console.log(mnistVgg16);
+    console.log(mnistXception);
+    console.log(mnistMobilenet);
+    
     
     if (architecture === 'resnet') { model = mnistResnet; }
     else if (architecture === 'vgg16') {model = mnistVgg16; }
@@ -349,8 +354,7 @@ async function predict() {
     else if (architecture === 'mobilenet') {model = mnistMobilenet; }
     
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
-    console.log("Got here");
-    console.log(lblIdx);
+
     let img = mnistDataset[mnistIdx].xs;
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
     let RGB = tf.image.grayscaleToRGB(resizedImg);
