@@ -9,6 +9,7 @@
 
 <script>
 import {nextImage, uploadImage, predictImg, attack} from "../../public/js/intro.js"
+import {updateImage} from './ImageContainer.vue'
 export default {
   name: 'Button',
   props: {
@@ -24,6 +25,7 @@ export default {
 	},
 	upload(){
 		uploadImage()
+    updateImage()
 	}
   }
 }
