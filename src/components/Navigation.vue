@@ -4,11 +4,8 @@
     <div class="headers page-title">-</div>
     <div class="headers page-title">{{ pageTitle }}</div>
     <div class="links">
-      <a href="#" class="nav">Home</a>
-      <a href="#" class="nav">FAQ</a>
-      <a href="#" class="nav">Demo</a>
-      <a href="#" class="nav">API</a>
-      <a href="#" class="nav">GitHub</a>
+      <a href="../../public/index.html" class="nav">Home</a>
+      <a href="https://github.com/Jbridg12/adversarial.js" target="_blank" class="nav">GitHub</a>
     </div>
   </div>
 </template>

@@ -13,7 +13,6 @@ import {updateImage} from './ImageContainer.vue'
 export default {
   name: 'Button',
   props: {
-    description: String,
     value: String
   },
   methods: {

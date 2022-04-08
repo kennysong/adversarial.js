@@ -61,6 +61,7 @@ export default {
 .wrap {
   background-color: #FFFFFF;
   width: 85%;
+  max-width: 1300px;
   height: fit-content;
   margin: auto;
   margin-top: 4em;
