@@ -6,6 +6,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras import models, layers, applications
 from tensorflow import keras
 
+'''
 (x_train,y_train),(x_test,y_test)= keras.datasets.mnist.load_data()
 # expand new axis, channel axis 
 x_train = np.expand_dims(x_train, axis=-1)
@@ -28,12 +29,15 @@ model = applications.ResNet50(weights='imagenet', include_top = False, input_ten
 global_pool = layers.GlobalMaxPooling2D()(model.output)
 out = layers.Dense(10, activation='softmax', use_bias=True)(global_pool)
 
-resnet = keras.Model(model.input, out)
+model = keras.Model(model.input, out)
 
 
-resnet.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.metrics.CategoricalAccuracy(), optimizer = keras.optimizers.Adam())
+model.compile(loss = keras.losses.CategoricalCrossentropy(), metrics = keras.metrics.CategoricalAccuracy(), optimizer = keras.optimizers.Adam())
 
-resnet.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
+model.fit(x_train, y_train, batch_size=128, epochs=10, verbose=2)
+'''
 
-tfjs.converters.save_keras_model(resnet, '../mnist/resnet')
-#model.save('./js/resnet/resnet.h5')
+
+model = applications.ResNet152V2(weights='imagenet')
+tfjs.converters.save_keras_model(model, '../imagenet/resnet')
+#model.save('../mnist/resnet/resnet.h5')

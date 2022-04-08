@@ -14,7 +14,7 @@
       <ImageContainer />
     </div>
     <div class="generate">
-      <Button value = "Generate"/>
+      <Button value = "Generate" description="adv"/>
     </div>
     <div class="upload">
       <Button value = "Upload Image" description="upload-image"/>
