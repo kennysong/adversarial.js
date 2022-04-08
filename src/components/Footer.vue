@@ -28,8 +28,8 @@ export default {
 
 @media (max-width: 600px) {
   .footer {
-    position: fixed;
-    bottom: 70px;
+    position: relative;
+    bottom: 0px;
     width: 100%;
     height: 2em;
     font-size: 12px;
