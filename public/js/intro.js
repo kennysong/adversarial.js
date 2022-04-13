@@ -126,10 +126,10 @@ let mnistResnet;
 let mnistVgg16;
 let mnistMobilenet;
 async function loadMnistModel() {
-  if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadLayersModel('data/mnist/vgg16/model.json'); }
-  if (mnistResnet == undefined) { mnistResnet = await tf.loadLayersModel('data/mnist/resnet/model.json'); }
-  if (mnistXception == undefined) { mnistXception = await tf.loadLayersModel('data/mnist/xception/model.json'); }
-  if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadLayersModel('data/mnist/mobilenet/model.json'); }
+  if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadGraphModel('data/mnist/vgg16/model.json'); }
+  if (mnistResnet == undefined) { mnistResnet = await tf.loadGraphModel('data/mnist/resnet/model.json'); }
+  if (mnistXception == undefined) { mnistXception = await tf.loadGraphModel('data/mnist/xception/model.json'); }
+  if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadGrahpModel('data/mnist/mobilenet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -402,7 +402,7 @@ async function predict() {
     let predProb = pred.max().dataSync()[0];
 
     // Display prediction
-    let status = {msg: '✅ Prediction is Zero.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
+    let status = {msg: '✅ Prediction is Correct.', statusClass: 'status-green'};  // Predictions on the sample should always be correct
     showPrediction(`Prediction: "${CLASS_NAMES[predLblIdx]}"<br/>Probability: ${(predProb * 100).toFixed(2)}%`, status);
   }
  }
