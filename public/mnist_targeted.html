@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MNIST: Targeted Attacks</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="data/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="row">
+        <div id="logo" class="one-half column"><a href="."><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="one-half column">
+          <a href=".">Intro</a>&ensp;·&ensp;<a href="examples.html" class="active">Examples</a>&ensp;·&ensp;<a href="faq.html">FAQ</a>&ensp;·&ensp;<a href="api.html">API</a>&ensp;·&ensp;<a href="https://github.com/kennysong/adversarial.js" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <a href="examples.html" class="back">‹ Back to all examples</a>
+
+      <h2>MNIST: Targeted Attacks</h2>
+
+      <h3>Fast Gradient Sign Method (FGSM)</h3>
+      <button id="fgsmTargeted-run" class="button-primary">Run FGSM</button>
+      <div id="fgsmTargeted-success-rate"></div>
+      <table id="fgsmTargeted" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="00 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="01 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="02 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="03 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="04 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="05 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="06 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="07 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="08 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="09 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="10 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="11 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="12 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="13 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="14 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="15 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="16 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="17 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="18 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="19 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="20 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="21 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="22 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="23 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="24 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="25 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="26 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="27 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="28 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="29 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="30 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="31 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="32 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="33 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="34 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="35 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="36 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="37 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="38 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="39 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="40 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="41 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="42 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="43 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="44 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="45 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="46 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="47 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="48 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="49 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="50 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="51 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="52 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="53 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="54 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="55 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="56 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="57 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="58 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="59 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="60 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="61 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="62 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="63 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="64 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="65 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="66 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="67 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="68 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="69 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="70 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="71 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="72 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="73 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="74 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="75 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="76 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="77 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="78 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="79 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="80 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="81 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="82 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="83 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="84 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="85 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="86 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="87 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="88 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="89 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="90 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="91 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="92 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="93 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="94 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="95 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="96 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="97 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="98 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="99 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Basic Iterative Method (BIM / PGD / I-FGSM)</h3>
+      <button id="bimTargeted-run" class="button-primary">Run BIM</button>
+      <div id="bimTargeted-success-rate"></div>
+      <table id="bimTargeted" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="00 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="01 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="02 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="03 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="04 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="05 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="06 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="07 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="08 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="09 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="10 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="11 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="12 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="13 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="14 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="15 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="16 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="17 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="18 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="19 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="20 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="21 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="22 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="23 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="24 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="25 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="26 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="27 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="28 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="29 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="30 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="31 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="32 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="33 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="34 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="35 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="36 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="37 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="38 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="39 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="40 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="41 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="42 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="43 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="44 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="45 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="46 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="47 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="48 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="49 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="50 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="51 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="52 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="53 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="54 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="55 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="56 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="57 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="58 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="59 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="60 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="61 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="62 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="63 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="64 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="65 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="66 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="67 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="68 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="69 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="70 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="71 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="72 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="73 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="74 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="75 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="76 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="77 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="78 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="79 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="80 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="81 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="82 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="83 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="84 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="85 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="86 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="87 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="88 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="89 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="90 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="91 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="92 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="93 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="94 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="95 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="96 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="97 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="98 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="99 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Jacobian-based Saliency Map Attack, One-Pixel (JSMA One-Pixel)</h3>
+      <button id="jsmaOnePixel-run" class="button-primary">Run JSMA One-Pixel</button>
+      <div id="jsmaOnePixel-success-rate"></div>
+      <table id="jsmaOnePixel" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="00 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="01 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="02 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="03 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="04 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="05 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="06 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="07 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="08 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="09 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="10 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="11 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="12 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="13 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="14 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="15 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="16 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="17 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="18 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="19 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="20 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="21 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="22 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="23 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="24 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="25 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="26 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="27 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="28 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="29 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="30 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="31 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="32 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="33 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="34 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="35 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="36 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="37 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="38 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="39 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="40 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="41 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="42 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="43 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="44 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="45 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="46 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="47 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="48 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="49 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="50 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="51 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="52 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="53 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="54 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="55 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="56 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="57 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="58 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="59 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="60 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="61 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="62 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="63 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="64 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="65 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="66 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="67 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="68 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="69 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="70 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="71 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="72 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="73 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="74 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="75 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="76 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="77 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="78 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="79 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="80 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="81 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="82 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="83 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="84 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="85 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="86 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="87 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="88 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="89 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="90 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="91 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="92 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="93 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="94 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="95 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="96 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="97 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="98 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="99 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Jacobian-based Saliency Map Attack (JSMA)</h3>
+      <button id="jsma-run" class="button-primary">Run JSMA</button>
+      <div id="jsma-success-rate"></div>
+      <table id="jsma" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="00 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="01 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="02 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="03 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="04 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="05 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="06 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="07 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="08 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="09 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="10 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="11 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="12 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="13 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="14 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="15 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="16 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="17 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="18 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="19 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="20 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="21 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="22 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="23 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="24 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="25 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="26 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="27 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="28 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="29 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="30 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="31 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="32 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="33 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="34 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="35 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="36 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="37 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="38 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="39 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="40 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="41 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="42 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="43 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="44 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="45 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="46 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="47 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="48 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="49 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="50 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="51 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="52 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="53 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="54 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="55 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="56 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="57 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="58 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="59 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="60 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="61 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="62 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="63 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="64 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="65 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="66 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="67 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="68 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="69 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="70 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="71 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="72 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="73 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="74 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="75 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="76 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="77 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="78 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="79 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="80 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="81 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="82 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="83 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="84 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="85 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="86 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="87 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="88 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="89 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="90 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="91 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="92 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="93 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="94 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="95 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="96 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="97 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="98 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="99 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Carlini & Wagner (C&W)</h3>
+      <button id="cw-run" class="button-primary">Run C&W</button>
+      <div id="cw-success-rate"></div>
+      <table id="cw" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>0</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><canvas class="0 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="00 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="01 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="02 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="03 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="04 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="05 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="06 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="07 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="08 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="09 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="1 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="10 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="11 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="12 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="13 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="14 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="15 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="16 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="17 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="18 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="19 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="2 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="20 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="21 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="22 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="23 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="24 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="25 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="26 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="27 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="28 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="29 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="3 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="30 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="31 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="32 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="33 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="34 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="35 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="36 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="37 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="38 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="39 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="4 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="40 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="41 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="42 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="43 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="44 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="45 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="46 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="47 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="48 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="49 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="5 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="50 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="51 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="52 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="53 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="54 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="55 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="56 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="57 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="58 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="59 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="6 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="60 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="61 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="62 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="63 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="64 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="65 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="66 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="67 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="68 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="69 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="7 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="70 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="71 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="72 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="73 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="74 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="75 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="76 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="77 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="78 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="79 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="8 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="80 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="81 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="82 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="83 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="84 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="85 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="86 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="87 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="88 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="89 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><canvas class="9 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="90 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="91 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="92 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="93 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="94 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="95 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="96 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="97 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="98 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+            <td><canvas class="99 tableimg" width="56" height="56"></canvas><span class="caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js" type="text/javascript"></script>
+    <script type="module">
+      import {fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw} from './js/adversarial.js';
+      import {runTargeted} from './js/mnist.js';
+
+      [fgsmTargeted, bimTargeted, jsmaOnePixel, jsma, cw].forEach((attack) => {
+        let name = attack.name;
+        document.getElementById(`${name}-run`).addEventListener("click", async () => {
+          document.getElementById(name).style.display = 'table';
+          document.getElementById(`${name}-run`).disabled = true;
+          document.getElementById(`${name}-run`).innerText = 'Running...';
+          await runTargeted(attack);
+          document.getElementById(`${name}-run`).innerText = 'Done!';
+        });
+      });
+    </script>
+  </body>
+</html>

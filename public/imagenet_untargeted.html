@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ImageNet: Untargeted Attacks</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="data/favicon.ico" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="row">
+        <div id="logo" class="one-half column"><a href="."><h1>adversarial.js</h1></a></div>
+        <div id="nav" class="one-half column">
+          <a href=".">Intro</a>&ensp;·&ensp;<a href="examples.html" class="active">Examples</a>&ensp;·&ensp;<a href="faq.html">FAQ</a>&ensp;·&ensp;<a href="api.html">API</a>&ensp;·&ensp;<a href="https://github.com/kennysong/adversarial.js" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <a href="examples.html" class="back">‹ Back to all examples</a>
+
+      <h2>ImageNet: Untargeted Attacks</h2>
+
+      <h3>Fast Gradient Sign Method (FGSM)</h3>
+      <button id="fgsm-run" class="button-primary">Run FGSM</button>
+      <div id="fgsm-success-rate"></div>
+      <table id="fgsm" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>Adversarial</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><img class="0 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="0a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="1 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="1a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="2 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="2a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="3 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="3a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="4 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="4a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="5 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="5a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Basic Iterative Method (BIM / PGD / I-FGSM)</h3>
+      <button id="bim-run" class="button-primary">Run BIM</button>
+      <div id="bim-success-rate"></div>
+      <table id="bim" style="display:none;">
+        <thead>
+          <td>Original</td>
+          <td>Adversarial</td>
+        </thead>
+        <tbody>
+          <tr>
+            <td><img class="0 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="0a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="1 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="1a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="2 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="2a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="3 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="3a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="4 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="4a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+          <tr>
+            <td><img class="5 tableimg"></img><span class="imagenet-caption"><br/><br/></span></td>
+            <td><canvas class="5a tableimg" width="224" height="224"></canvas><span class="imagenet-caption"><br/><br/></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.7.0/dist/tf.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.0.4"> </script>
+    <script type="module">
+      import {fgsm, bim} from './js/adversarial.js';
+      import {runUntargeted, loadModel} from './js/imagenet.js';
+
+      [fgsm, bim].forEach((attack) => {
+        let name = attack.name;
+        document.getElementById(`${name}-run`).addEventListener("click", async () => {
+          document.getElementById(name).style.display = 'table';
+          document.getElementById(`${name}-run`).disabled = true;
+          document.getElementById(`${name}-run`).innerText = 'Running...';
+          await loadModel();
+          await runUntargeted(attack);
+          document.getElementById(`${name}-run`).innerText = 'Done!';
+        });
+      });
+    </script>
+  </body>
+</html>
