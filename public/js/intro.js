@@ -129,7 +129,7 @@ async function loadMnistModel() {
   if (mnistVgg16 == undefined) { mnistVgg16 = await tf.loadGraphModel('data/mnist/vgg16/model.json'); }
   if (mnistResnet == undefined) { mnistResnet = await tf.loadGraphModel('data/mnist/resnet/model.json'); }
   if (mnistXception == undefined) { mnistXception = await tf.loadGraphModel('data/mnist/xception/model.json'); }
-  if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadGrahpModel('data/mnist/mobilenet/model.json'); }
+  if (mnistMobilenet == undefined) { mnistMobilenet = await tf.loadGraphModel('data/mnist/mobilenet/model.json'); }
   //mnistModel = await tf.loadLayersModel('data/mnist/mnist_dnn.json');
 }
 
@@ -167,8 +167,8 @@ let imagenetResnet;
 let imagenetXception;
 let imagenetMobilenet;
 async function loadImagenetModel() {
-  if (imagenetVgg16 == undefined) { imagenetVgg16 = await tf.loadLayersModel('data/imagenet/vgg16/model.json'); }
-  if (imagenetResnet == undefined) { imagenetResnet = await tf.loadLayersModel('data/imagenet/resnet/model.json'); }
+  if (imagenetVgg16 == undefined) { imagenetVgg16 = await tf.loadGraphModel('data/imagenet/vgg16/model.json'); }
+  if (imagenetResnet == undefined) { imagenetResnet = await tf.loadGraphModel('data/imagenet/resnet/model.json'); }
   //if (imagenetXception == undefined) { imagenetXception = await tf.loadLayersModel('data/imagenet/xception/model.json'); }
   //if (imagenetMobilenet == undefined) { imagenetMobilenet = await tf.loadLayersModel('data/imagenet/mobilenet/model.json'); }
   if (imagenetMobilenet == undefined) { imagenetMobilenet = await mobilenet.load({version: 2, alpha: 1.0}); }
@@ -282,7 +282,8 @@ export function changeAttack(attack){
 }
 
 // Generate button
-let flag = true;
+let flag = true; // They have to press button twice, once to genereate, once to predict
+
 export function attack(){
     console.log("Destroying all familiarity");
 	if(flag){

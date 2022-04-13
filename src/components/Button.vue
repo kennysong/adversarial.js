@@ -13,7 +13,8 @@ import {updateImage} from './ImageContainer.vue'
 export default {
   name: 'Button',
   props: {
-    value: String
+    value: String,
+	description: String
   },
   methods: {
     onClick(){
@@ -24,7 +25,7 @@ export default {
 	},
 	upload(){
 		uploadImage()
-    updateImage()
+		updateImage()
 	}
   }
 }
