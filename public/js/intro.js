@@ -142,7 +142,7 @@ let cifarMobilenet;
 async function loadCifarModel() {
   if (cifarVgg16 == undefined) { cifarVgg16 = await tf.loadLayersModel('data/cifar/vgg16/model.json'); }
   if (cifarResnet == undefined) { cifarResnet = await tf.loadLayersModel('data/cifar/resnet/model.json'); }
-  if (cifarXception == undefined) { cifarXception = await tf.loadLayersModel('data/cifar/xception/model.json'); }
+  //if (cifarXception == undefined) { cifarXception = await tf.loadLayersModel('data/cifar/xception/model.json'); }
   if (cifarMobilenet == undefined) { cifarMobilenet = await tf.loadLayersModel('data/cifar/mobilenet/model.json'); }
 }
 
@@ -169,9 +169,20 @@ let imagenetMobilenet;
 async function loadImagenetModel() {
   if (imagenetVgg16 == undefined) { imagenetVgg16 = await tf.loadLayersModel('data/imagenet/vgg16/model.json'); }
   if (imagenetResnet == undefined) { imagenetResnet = await tf.loadLayersModel('data/imagenet/resnet/model.json'); }
-  if (imagenetXception == undefined) { imagenetXception = await tf.loadLayersModel('data/imagenet/xception/model.json'); }
-  if (imagenetMobilenet == undefined) { imagenetMobilenet = await tf.loadLayersModel('data/imagenet/mobilenet/model.json'); }
+  //if (imagenetXception == undefined) { imagenetXception = await tf.loadLayersModel('data/imagenet/xception/model.json'); }
+  //if (imagenetMobilenet == undefined) { imagenetMobilenet = await tf.loadLayersModel('data/imagenet/mobilenet/model.json'); }
+  if (imagenetMobilenet == undefined) { imagenetMobilenet = await mobilenet.load({version: 2, alpha: 1.0}); }
   
+  
+  imagenetMobilenet.predict = function (img) {
+    return this.predictLogits(img).softmax();
+  }
+  imagenetMobilenet.predictLogits = function (img) {
+    // Remove the first "background noise" logit
+    // Copied from: https://github.com/tensorflow/tfjs-models/blob/708e3911fb01d0dfe70448acc3e8ca736fae82d3/mobilenet/src/index.ts#L232
+    const logits1001 = this.model.predict(img);
+    return logits1001.slice([0, 1], [-1, 1000]);
+  }
   /*         Old Code for Mobilenet Imagnet Classifier
   if (imagenetModel !== undefined) { return; }
   imagenetModel = await mobilenet.load({version: 2, alpha: 1.0});
@@ -223,6 +234,7 @@ export function changeDataset(ds){
 
 // Next image button
 export function nextImage(){
+	if (dataset === 'upload'){dataset = revertDataset;}
 	showNextImage();
 	resetOnNewImage();
 	//resetAttack();
@@ -233,9 +245,11 @@ export function nextImage(){
 
 // Upload image button
 
+let revertDataset;
 export function uploadImage(){
 	console.log("Stealing all your private data.");
-	
+	revertDataset = dataset;
+	dataset = 'upload';
 	getImg();
 	resetOnNewImage();
 
@@ -255,13 +269,30 @@ export function predictImg(){
 
 // Target label dropdown
 //$('#select-target').addEventListener('change', resetAttack);
+let selectedTarget = 0;
+export function changeTarget(target){
+	selectedTarget =  parseInt(target);
+}
 
 // Attack algorithm dropdown
 //$('#select-attack').addEventListener('change', resetAttack);
+let selectedAttack;
+export function changeAttack(attack){
+	selectedAttack = attack;
+}
 
 // Generate button
+let flag = true;
 export function attack(){
     console.log("Destroying all familiarity");
+	if(flag){
+		generateAdv();
+		flag = false;
+	}
+	else{
+		predictAdv();
+		flag = true;
+	}
     //removeTopRightOverlay();
 }
 //$('#generate-adv').addEventListener('click', generateAdv);
@@ -295,6 +326,7 @@ async function getImg(){
 	
 	await loadedUploadData.then(() => {
 		let img = document.getElementsByClassName("upload_img")[0];
+		console.log(tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]));
 		loadedUpload = tf.browser.fromPixels(img).div(255.0).reshape([1, 224, 224, 3]);
 	});
 	
@@ -341,7 +373,7 @@ async function predict() {
     
     console.log(architecture);
     await loadMnistModel();
-    await loadingMnist;
+    await loadingMnist;    
     
     if (architecture === 'resnet') { model = mnistResnet; }
     else if (architecture === 'vgg16') {model = mnistVgg16; }
@@ -349,8 +381,7 @@ async function predict() {
     else if (architecture === 'mobilenet') {model = mnistMobilenet; }
     
     let lblIdx = mnistDataset[mnistIdx].ys.argMax(1).dataSync()[0];
-    console.log("Got here");
-    console.log(lblIdx);
+
     let img = mnistDataset[mnistIdx].xs;
     let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
     let RGB = tf.image.grayscaleToRGB(resizedImg);
@@ -383,12 +414,27 @@ async function predict() {
     await loadImagenetModel();
     await loadedImagenetData;
     
+	console.log(architecture);
     if (architecture === 'resnet') { model = imagenetResnet; }
     else if (architecture === 'vgg16') {model = imagenetVgg16; }
     else if (architecture === 'xception') {model = imagenetXception; }
     else if (architecture === 'mobilenet') {model = imagenetMobilenet; }
     
+	console.log(imagenetIdx);
+	console.log(imagenetX[imagenetIdx].shape);
+	
     _predict(model, imagenetX[imagenetIdx], imagenetYLbls[imagenetIdx], IMAGENET_CLASSES);
+  } else if (dataset === 'upload') {
+    await loadImagenetModel();
+    await loadedImagenetData;
+    
+	console.log(architecture);
+    if (architecture === 'resnet') { model = imagenetResnet; }
+    else if (architecture === 'vgg16') {model = imagenetVgg16; }
+    else if (architecture === 'xception') {model = imagenetXception; }
+    else if (architecture === 'mobilenet') {model = imagenetMobilenet; }
+	
+    _predict(model, loadedUpload, 'upload', IMAGENET_CLASSES);
   }
 
   //$('#predict-original').innerText = 'Run Neural Network';
@@ -396,8 +442,8 @@ async function predict() {
   function _predict(model, img, lblIdx, CLASS_NAMES) {
     // Generate prediction
     let pred = model.predict(img);
-    console.log(pred.dataSync())
-    //console.log(pred.max().dataSync())
+    //console.log(pred.dataSync())
+    console.log(pred.max().dataSync())
     let predLblIdx = pred.argMax(1).dataSync()[0];
     let predProb = pred.max().dataSync()[0];
 
@@ -412,11 +458,11 @@ async function predict() {
  */
 let advPrediction, advStatus;
 async function generateAdv() {
-  $('#generate-adv').disabled = true;
-  $('#generate-adv').innerText = 'Loading...';
+  //$('#generate-adv').disabled = true;
+  //$('#generate-adv').innerText = 'Loading...';
 
   let attack;
-  switch ($('#select-attack').value) {
+  switch (selectedAttack) {
     case 'fgsmTargeted': attack = fgsmTargeted; break;
     case 'bimTargeted': attack = bimTargeted; break;
     case 'jsmaOnePixel': attack = jsmaOnePixel; break;
@@ -425,9 +471,9 @@ async function generateAdv() {
   }
     
   let adv_model;
-  let modelName = $('#select-model').value;
-  let targetLblIdx = parseInt($('#select-target').value);
-  if (modelName === 'mnist') {
+  let modelName = dataset;
+  let targetLblIdx = selectedTarget;
+  if (dataset === 'mnist') {
     await loadMnistModel();
     await loadingMnist;
     
@@ -435,9 +481,13 @@ async function generateAdv() {
     else if (architecture === 'vgg16') {adv_model = mnistVgg16; }
     else if (architecture === 'xception') {adv_model = mnistXception; }
     else if (architecture === 'mobilenet') {adv_model = mnistMobilenet; }
+	
+	let img = mnistDataset[mnistIdx].xs;
+    let resizedImg = tf.image.resizeNearestNeighbor(img.reshape([1, 28, 28, 1]), [32, 32]);
+    let RGB = tf.image.grayscaleToRGB(resizedImg);
     
-    await _generateAdv(adv_model, mnistDataset[mnistIdx].xs, mnistDataset[mnistIdx].ys, MNIST_CLASSES, MNIST_CONFIGS[attack.name]);
-  } else if (modelName === 'cifar') {
+    await _generateAdv(adv_model, RGB, mnistDataset[mnistIdx].ys, MNIST_CLASSES, MNIST_CONFIGS[attack.name]);
+  } else if (dataset === 'cifar') {
     await loadCifarModel();
     await loadingCifar;
     
@@ -447,7 +497,7 @@ async function generateAdv() {
     else if (architecture === 'mobilenet') {adv_model = cifarMobilenet; }
     
     await _generateAdv(adv_model, cifarDataset[cifarIdx].xs, cifarDataset[cifarIdx].ys, CIFAR_CLASSES, CIFAR_CONFIGS[attack.name]);
-  } else if (modelName === 'gtsrb') {
+  } else if (dataset === 'gtsrb') {
     await loadGtsrbModel();
     await loadingGtsrb;
     
@@ -457,7 +507,7 @@ async function generateAdv() {
     else if (architecture === 'mobilenet') {adv_model = gtsrbMobilenet; }
     
     await _generateAdv(adv_model, gtsrbDataset[gtsrbIdx].xs, gtsrbDataset[gtsrbIdx].ys, GTSRB_CLASSES, GTSRB_CONFIGS[attack.name]);
-  } else if (modelName === 'imagenet') {
+  } else if (dataset === 'imagenet') {
     await loadImagenetModel();
     await loadedImagenetData;
     
@@ -467,12 +517,22 @@ async function generateAdv() {
     else if (architecture === 'mobilenet') {adv_model = imagenetMobilenet; }
     
     await _generateAdv(adv_model, imagenetX[imagenetIdx], imagenetY[imagenetIdx], IMAGENET_CLASSES, IMAGENET_CONFIGS[attack.name]);
+  } else if (dataset === 'upload') {
+    await loadImagenetModel();
+    await loadedImagenetData;
+    
+    if (architecture === 'resnet') { adv_model = imagenetResnet; }
+    else if (architecture === 'vgg16') {adv_model = imagenetVgg16; }
+    else if (architecture === 'xception') {adv_model = imagenetXception; }
+    else if (architecture === 'mobilenet') {adv_model = imagenetMobilenet; }
+    
+    await _generateAdv(adv_model, loadedUpload, imagenetY[0], IMAGENET_CLASSES, IMAGENET_CONFIGS[attack.name]);
   }
 
-  $('#latency-msg').style.display = 'none';
-  $('#generate-adv').innerText = 'Generate';
-  $('#predict-adv').innerText = 'Run Neural Network';
-  $('#predict-adv').disabled = false;
+  //$('#latency-msg').style.display = 'none';
+  //$('#generate-adv').innerText = 'Generate';
+  //$('#predict-adv').innerText = 'Run Neural Network';
+  //$('#predict-adv').disabled = false;
 
   async function _generateAdv(model, img, lbl, CLASS_NAMES, CONFIG) {
     // Generate adversarial example
@@ -480,7 +540,7 @@ async function generateAdv() {
     let aimg = tf.tidy(() => attack(model, img, lbl, targetLbl, CONFIG));
 
     // Display adversarial example
-    $('#difference').style.display = 'block';
+    //$('#difference').style.display = 'block';
     await drawImg(aimg, 'adversarial');
 
     // Compute & store adversarial prediction
@@ -499,9 +559,11 @@ async function generateAdv() {
       advStatus = {msg: '✅ Prediction is still correct. Attack failed.', statusClass: 'status-green'};
     }
 
+	console.log(advStatus);
     // Also compute and draw the adversarial noise (hidden until the user clicks on it)
     let noise = tf.sub(aimg, img).add(0.5).clipByValue(0, 1);  // [Szegedy 14] Intriguing properties of neural networks
     drawImg(noise, 'adversarial-noise');
+	console.log("Adversified");
   }
 }
 
@@ -510,7 +572,7 @@ async function generateAdv() {
  * (This function just renders the status we've already computed in generateAdv())
  */
 function predictAdv() {
-  $('#predict-adv').disabled = true;
+  //$('#predict-adv').disabled = true;
   showAdvPrediction(advPrediction, advStatus);
 }
 
