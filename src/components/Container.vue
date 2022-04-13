@@ -14,17 +14,19 @@
       <ImageContainer />
       <PredictionData />
     </div>
-    <div class="generate">
-      <Button value = "Run Neural Network" description="predict"/>
-      <br>
-      <Button value = "Generate" description="adv"/>
-    </div>
-    <div class="upload">
-      <Button value = "Upload Image" description="upload-image"/>
-      <br>
-      <Button value = "Next Image" description="next-image"/>
-      <br>
-      <Button value = "Download Image"/>
+    <div class="buttonDiv">
+      <div class="generate">
+        <Button value = "Run Neural Network" description="predict"/>
+        <br>
+        <Button value = "Generate" description="adv"/>
+      </div>
+      <div class="upload">
+        <Button value = "Upload Image" description="upload-image"/>
+        <br>
+        <Button value = "Next Image" description="next-image"/>
+        <br>
+        <Button value = "Download Image"/>
+      </div>
     </div>
   </div>
 </template>
@@ -104,6 +106,13 @@ export default {
   padding-bottom: .5em;
 }
 
+
+
+.buttonDiv {
+  width:100%;
+  display:flex;
+}
+
 .drop-down {
   margin: auto;
   text-align: center;
@@ -143,10 +152,24 @@ export default {
     
   }
 
+
+  .button {
+  width:80%;
+  height:4em;
+  font-size:12px;
+}
+
+
+  .buttondiv{
+    width:50%;
+    display:flex;
+
+  }
   .generate {
-    width: 20%;
+    width: 50%;
     height: fit-content;
     padding: 1em;
+    margin:0em;
   }
 
   .imageContainer {
@@ -159,7 +182,7 @@ export default {
   }
 
   .upload {
-    width: 20%;
+    width: 50%;
     height: fit-content;
     padding: 1em;
   }
@@ -168,6 +191,11 @@ export default {
     text-align: left;
     padding-top: .8em;
     padding-bottom: .3em;
+  }
+
+
+  .dropdown-button {
+    height:3em;
   }
 
 

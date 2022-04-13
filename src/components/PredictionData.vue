@@ -67,6 +67,7 @@ table.predictionTable {
   font-size: 12px;
   font-weight: bold;
   text-align: center;
+  margin-top:1em;
 }
   
 }
