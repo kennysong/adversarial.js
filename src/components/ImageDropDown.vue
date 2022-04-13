@@ -1,25 +1,44 @@
 <template>
   <div class="dropdown">
-    <button class="dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-      Select Image
+    <button class="dropdown-button dropdown-toggle" type="button" id="select-target" data-bs-toggle="dropdown" aria-expanded="false" value = "">
+      {{key}}
     </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="dropdown-item" href="#">Potato</a></li>
-        <li><a class="dropdown-item" href="#">Street Lamp</a></li>
-        <li><a class="dropdown-item" href="#">Sushi</a></li>
-        <li><a class="dropdown-item" href="#">Donkey </a></li>
+      <ul class="dropdown-menu" aria-labelledby="select-target">
+        <li v-for="option in options" :key="option.key">
+          <a class="dropdown-item" @click="onClick(option.value); key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
+        </li>
       </ul>
   </div>
 </template>
-
+  
 <script>
+import {changeTarget} from "../../public/js/intro.js"
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
 export default {
   name: 'ModelDropDown',
+  id: 'select-model',
   props: {
     description: String
+  },
+  data: () => ({
+    options: [
+      { key: "Potato", value: '934' },
+      { key: "Street Lamp", value: '413' }, 
+      { key: "Sushi", value: '151' }, 
+      { key: "Donkey", value: '24'}
+      ],
+    key: "Select Target",
+    value: "0"
+  }),
+  methods: {
+	onClick(value){
+		changeTarget(value)
+	}
   }
-}
+}  
 </script>
+
 
 <style>
 .dropdown-button {
