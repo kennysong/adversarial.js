@@ -1,10 +1,10 @@
 <template>
-  <div class="dropdown">
+  <div v-if="imageDropdown">
     <button class="dropdown-button dropdown-toggle" type="button" id="select-target" data-bs-toggle="dropdown" aria-expanded="false" value = "">
       {{key}}
     </button>
       <ul class="dropdown-menu" aria-labelledby="select-target">
-        <li v-for="option in options" :key="option.key">
+        <li v-for="option in imageDropdown.options" :key="option.key">
           <a class="dropdown-item" @click="onClick(option.value); key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
         </li>
       </ul>
@@ -19,22 +19,61 @@ export default {
   name: 'ModelDropDown',
   id: 'select-model',
   props: {
-    description: String
+    description: String,
+    newDataset: String,
   },
   data: () => ({
-    options: [
-      { key: "Potato", value: '934' },
-      { key: "Street Lamp", value: '413' }, 
-      { key: "Sushi", value: '151' }, 
-      { key: "Donkey", value: '24'}
-      ],
+    datasets: [
+      {id: 'mnist', 
+        options: [
+          {key: "0", value: '0'},
+          {key: "1", value: '1'},
+          {key: "2", value: '2'},
+          {key: "3", value: '3'},
+          {key: "4", value: '4'},
+          {key: "5", value: '5'},
+          {key: "6", value: '6'},
+          {key: "7", value: '7'},
+          {key: "8", value: '8'},
+          {key: "9", value: '9'},
+        ]
+      },
+      {id: 'gtsrb',
+        options: [
+          {key: "120km/hr", value: '120'},
+          {key: "20km/hr", value: '20'},
+          {key: "stop", value: 'stop'},
+          {key: "Do Not Enter", value: 'Do Not Enter'},
+        ]
+      },
+      {id: 'cifar',
+        options: [
+          {key: "Car", value: "car"},
+          {key: "Bird", value: "bird"},
+          {key: "Cat", value: "cat"},
+          {key: "Deer", value: "deer"},
+          {key: "Dog", value: "dog"},
+          {key: "Frog", value: "frog"},
+          {key: "Horse", value: "Horse"},
+          {key: "Ship", value: "ship"},
+          {key: "Truck", value: "truck"},
+        ]
+      },        
+    ],
     key: "Select Target",
-    value: "0"
+    value: "0",
   }),
   methods: {
 	onClick(value){
 		changeTarget(value)
 	}
+  },
+  computed: {
+    imageDropdown() {
+      return (this.newDataset)
+        ? this.datasets.find(x => x.id === this.newDataset)
+        : this.datasets.find(x => x.id === "mnist")
+    }
   }
 }  
 </script>

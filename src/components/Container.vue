@@ -4,11 +4,11 @@
       <div class="label">Select a Model</div>
       <div class="drop-down"><ModelDropDown/></div>
       <div class="label">Select a Dataset</div>
-      <div class="drop-down"><DatasetDropDown/></div>
+      <div class="drop-down"><DatasetDropDown @changeDataset = "updateDropdowns"/></div>
       <div class="label">Select an Attack</div>
       <div class="drop-down"><AttackDropDown/></div>
       <div class="label">Turn This Image Into a/an:</div>
-      <div class="drop-down"><ImageDropDown/></div>
+      <div class="drop-down"><ImageDropDown :newDataset="newDataset"/></div>
     </div>
     <div class="imageContainer">
       <ImageContainer />
@@ -33,11 +33,11 @@
 
 <script>
 import Button from './Button.vue'
+import DatasetDropDown from './DatasetDropDown.vue'
 import ModelDropDown from './ModelDropDown.vue'
 import AttackDropDown from './AttackDropDown.vue'
 import ImageDropDown from './ImageDropDown.vue'
 import ImageContainer from './ImageContainer.vue'
-import DatasetDropDown from './DatasetDropDown.vue'
 import PredictionData from './PredictionData.vue'
 
 export default {
@@ -50,8 +50,15 @@ export default {
     ImageDropDown,
     ImageContainer,
     PredictionData
-  }
+  },
+  methods: {
+    updateDropdowns(val) {
+      this.newDataset = val
+    }
+  },
+  data() { return { newDataset: "mnist" } }
 }
+
 </script>
 
 <style>

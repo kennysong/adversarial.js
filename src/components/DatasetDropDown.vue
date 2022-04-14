@@ -1,10 +1,10 @@
 <template>
   <div class="dropdown">
-    <button class="dropdown-button dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false" value = "">
+    <button class="dropdown-button dropdown-toggle" type="button" id="select-model" data-bs-toggle="dropdown" aria-expanded="false">
       {{key}}
     </button>
       <ul class="dropdown-menu" aria-labelledby="select-model">
-        <li v-for="option in options" :key="option.key">
+        <li v-for="option in options" :key="option.key" :value="option.value">
           <a class="dropdown-item" @click="onClick(option.value); key = option.key; value = option.value" href="javascript: void(0)">{{option.key}}</a>
         </li>
       </ul>
@@ -19,7 +19,7 @@ export default {
   name: 'ModelDropDown',
   id: 'select-model',
   props: {
-    description: String
+    description: String,
   },
   data: () => ({
     options: [
@@ -29,12 +29,13 @@ export default {
       { key: "ImageNet (object recognition, large)", value: 'imagenet'}
       ],
     key: "Select Dataset",
-    value: ""
+    value: "mnist",
   }),
   methods: {
 	onClick(value){
 		changeDataset(value)
-	}
+    this.$emit('changeDataset', value)
+	},
   }
 }  
 </script>
