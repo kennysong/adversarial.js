@@ -113,8 +113,6 @@ export default {
   padding-bottom: .5em;
 }
 
-
-
 .buttonDiv {
   width:100%;
   display:flex;
@@ -159,13 +157,11 @@ export default {
     
   }
 
-
   .button {
   width:80%;
   height:4em;
   font-size:12px;
-}
-
+  }
 
   .buttondiv{
     width:50%;
@@ -200,22 +196,19 @@ export default {
     padding-bottom: .3em;
   }
 
-
   .dropdown-button {
     height:3em;
   }
-
 
   .drop-down {
     width: 100%;
     text-align: center;
   }
+
   .dropdown-button {
     width: 70%;
     text-align: center;
   }
-
-  
 }
 </style>
 
